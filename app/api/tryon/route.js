@@ -24,12 +24,15 @@ export async function POST(request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model_image: modelBase64,
-        garment_image: garmentUrl,
-        category: category,
-        mode: 'balanced',
-        garment_photo_type: 'model',
-        nsfw_filter: true,
+        model_name: 'fashn/tryon',
+        inputs: {
+          model_image: modelBase64,
+          garment_image: garmentUrl,
+          category: category,
+          mode: 'balanced',
+          garment_photo_type: 'model',
+          nsfw_filter: true,
+        }
       }),
     })
 
@@ -38,7 +41,7 @@ export async function POST(request) {
     if (!response.ok) {
       console.error('Fashn API error:', JSON.stringify(data))
       return Response.json({ 
-        error: data.detail || data.error || `Erreur API: ${response.status}` 
+        error: data.detail || data.error || data.message || `Erreur API: ${response.status}` 
       }, { status: response.status })
     }
 
@@ -48,16 +51,21 @@ export async function POST(request) {
 
     while (attempts < 40) {
       await new Promise(resolve => setTimeout(resolve, 3000))
+      
       const statusResponse = await fetch(`https://api.fashn.ai/v1/status/${predictionId}`, {
         headers: { 'Authorization': `Bearer ${apiKey}` },
       })
+      
       const statusData = await statusResponse.json()
+      
       if (statusData.status === 'completed') {
         result = statusData.output[0]
         break
       } else if (statusData.status === 'failed') {
+        console.error('Failed:', JSON.stringify(statusData))
         return Response.json({ error: 'Génération échouée — réessayez' }, { status: 500 })
       }
+      
       attempts++
     }
 
@@ -65,6 +73,7 @@ export async function POST(request) {
     return Response.json({ output: result })
 
   } catch (error) {
+    console.error('Erreur:', error)
     return Response.json({ error: error.message }, { status: 500 })
   }
 }
