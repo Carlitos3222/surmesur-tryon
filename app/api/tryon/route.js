@@ -3,7 +3,7 @@ export async function POST(request) {
     const formData = await request.formData()
     const modelImage = formData.get('model_image')
     const garmentUrl = formData.get('garment_url')
-    const category = formData.get('category') || 'tops'
+    const category = formData.get('category') || 'one-pieces'
 
     if (!modelImage || !garmentUrl) {
       return Response.json({ error: 'Images manquantes' }, { status: 400 })
@@ -28,7 +28,7 @@ export async function POST(request) {
         garment_image: garmentUrl,
         category: category,
         mode: 'balanced',
-        garment_photo_type: 'auto',
+        garment_photo_type: 'model',
         nsfw_filter: true,
       }),
     })
@@ -36,6 +36,7 @@ export async function POST(request) {
     const data = await response.json()
 
     if (!response.ok) {
+      console.error('Fashn API error:', JSON.stringify(data))
       return Response.json({ 
         error: data.detail || data.error || `Erreur API: ${response.status}` 
       }, { status: response.status })
@@ -55,7 +56,7 @@ export async function POST(request) {
         result = statusData.output[0]
         break
       } else if (statusData.status === 'failed') {
-        return Response.json({ error: 'Génération échouée' }, { status: 500 })
+        return Response.json({ error: 'Génération échouée — réessayez' }, { status: 500 })
       }
       attempts++
     }
