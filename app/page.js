@@ -89,14 +89,9 @@ export default function Home() {
     setResultat(null)
 
     try {
-      // Télécharger l'image de la tenue
-      const tenueResponse = await fetch(tenueSelectionnee.image)
-      const tenueBlob = await tenueResponse.blob()
-      const tenueFile = new File([tenueBlob], 'tenue.jpg', { type: 'image/jpeg' })
-
       const formData = new FormData()
       formData.append('model_image', photoClient)
-      formData.append('garment_image', tenueFile)
+      formData.append('garment_url', tenueSelectionnee.image)
       formData.append('category', tenueSelectionnee.categorie)
 
       const response = await fetch('/api/tryon', {
