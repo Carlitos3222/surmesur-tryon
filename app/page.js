@@ -8,7 +8,7 @@ const TENUES = [
     nom: 'Complet Navy Double-Breasted',
     nom_en: 'Navy Double-Breasted Suit',
     categorie: 'one-pieces',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+    image: 'https://images.pexels.com/photos/1300550/pexels-photo-1300550.jpeg?auto=compress&cs=tinysrgb&w=400',
     description: 'Laine fine · Coupe italienne',
   },
   {
@@ -16,7 +16,7 @@ const TENUES = [
     nom: 'Veston Tweed Structuré',
     nom_en: 'Structured Tweed Blazer',
     categorie: 'tops',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80',
+    image: 'https://images.pexels.com/photos/1192609/pexels-photo-1192609.jpeg?auto=compress&cs=tinysrgb&w=400',
     description: 'Tweed britannique · Revers cranté',
   },
   {
@@ -24,7 +24,7 @@ const TENUES = [
     nom: 'Tailleur Femme Rouge',
     nom_en: 'Women\'s Red Power Suit',
     categorie: 'one-pieces',
-    image: 'https://images.unsplash.com/photo-1594938298603-c8148c4b5c5e?w=400&q=80',
+    image: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=400',
     description: 'Laine stretch · Coupe architecturale',
   },
   {
@@ -32,7 +32,7 @@ const TENUES = [
     nom: 'Manteau Camel Premium',
     nom_en: 'Premium Camel Overcoat',
     categorie: 'tops',
-    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&q=80',
+    image: 'https://images.pexels.com/photos/6311475/pexels-photo-6311475.jpeg?auto=compress&cs=tinysrgb&w=400',
     description: 'Cachemire · Longueur mi-cuisse',
   },
   {
@@ -40,7 +40,7 @@ const TENUES = [
     nom: 'Complet Bordeaux Sur Mesure',
     nom_en: 'Custom Bordeaux Suit',
     categorie: 'one-pieces',
-    image: 'https://images.unsplash.com/photo-1617137968427-85924c800a22?w=400&q=80',
+    image: 'https://images.pexels.com/photos/3755706/pexels-photo-3755706.jpeg?auto=compress&cs=tinysrgb&w=400',
     description: 'Laine italienne · Monopièce',
   },
   {
@@ -48,7 +48,7 @@ const TENUES = [
     nom: 'Veston Blanc Cérémonie',
     nom_en: 'White Ceremony Blazer',
     categorie: 'tops',
-    image: 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=400&q=80',
+    image: 'https://images.pexels.com/photos/6311392/pexels-photo-6311392.jpeg?auto=compress&cs=tinysrgb&w=400',
     description: 'Lin premium · Mariage & gala',
   },
 ]
