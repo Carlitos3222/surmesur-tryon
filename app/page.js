@@ -2,54 +2,62 @@
 
 import { useState, useRef } from 'react'
 
+const BASE_URL = 'https://surmesur-tryon.vercel.app'
+
 const TENUES = [
   {
     id: 1,
-    nom: 'Complet Navy Double-Breasted',
-    nom_en: 'Navy Double-Breasted Suit',
+    nom: 'Oil Blue Wool Suit',
+    nom_fr: 'Complet Bleu Pétrole',
     categorie: 'one-pieces',
-    image: 'https://images.pexels.com/photos/1300550/pexels-photo-1300550.jpeg?auto=compress&cs=tinysrgb&w=400',
-    description: 'Laine fine · Coupe italienne',
+    image: `${BASE_URL}/suit1.png`,
+    prix: '$1,200',
+    description: '3-Piece · Pure Wool',
   },
   {
     id: 2,
-    nom: 'Veston Tweed Structuré',
-    nom_en: 'Structured Tweed Blazer',
-    categorie: 'tops',
-    image: 'https://images.pexels.com/photos/1192609/pexels-photo-1192609.jpeg?auto=compress&cs=tinysrgb&w=400',
-    description: 'Tweed britannique · Revers cranté',
+    nom: 'Charcoal Wool Suit',
+    nom_fr: 'Complet Charbon',
+    categorie: 'one-pieces',
+    image: `${BASE_URL}/suit2.png`,
+    prix: '$1,140',
+    description: '3-Piece · Plain Wool',
   },
   {
     id: 3,
-    nom: 'Tailleur Femme Rouge',
-    nom_en: 'Women\'s Red Power Suit',
+    nom: 'Prince of Wales Flannel',
+    nom_fr: 'Flanelle Prince de Galles',
     categorie: 'one-pieces',
-    image: 'https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&cs=tinysrgb&w=400',
-    description: 'Laine stretch · Coupe architecturale',
+    image: `${BASE_URL}/suit3.png`,
+    prix: '$1,165',
+    description: '3-Piece · Flannel',
   },
   {
     id: 4,
-    nom: 'Manteau Camel Premium',
-    nom_en: 'Premium Camel Overcoat',
-    categorie: 'tops',
-    image: 'https://images.pexels.com/photos/6311475/pexels-photo-6311475.jpeg?auto=compress&cs=tinysrgb&w=400',
-    description: 'Cachemire · Longueur mi-cuisse',
+    nom: 'Grey Herringbone Suit',
+    nom_fr: 'Complet Gris Chevron',
+    categorie: 'one-pieces',
+    image: `${BASE_URL}/suit4.png`,
+    prix: '$1,180',
+    description: '3-Piece · Herringbone',
   },
   {
     id: 5,
-    nom: 'Complet Bordeaux Sur Mesure',
-    nom_en: 'Custom Bordeaux Suit',
+    nom: 'Natural Linen Suit',
+    nom_fr: 'Complet Lin Naturel',
     categorie: 'one-pieces',
-    image: 'https://images.pexels.com/photos/3755706/pexels-photo-3755706.jpeg?auto=compress&cs=tinysrgb&w=400',
-    description: 'Laine italienne · Monopièce',
+    image: `${BASE_URL}/suit5.png`,
+    prix: '$1,100',
+    description: '3-Piece · Premium Linen',
   },
   {
     id: 6,
-    nom: 'Veston Blanc Cérémonie',
-    nom_en: 'White Ceremony Blazer',
-    categorie: 'tops',
-    image: 'https://images.pexels.com/photos/6311392/pexels-photo-6311392.jpeg?auto=compress&cs=tinysrgb&w=400',
-    description: 'Lin premium · Mariage & gala',
+    nom: 'Dark Brown Flannel Suit',
+    nom_fr: 'Complet Brun Foncé',
+    categorie: 'one-pieces',
+    image: `${BASE_URL}/suit6.png`,
+    prix: '$1,220',
+    description: '3-Piece · Wool Flannel',
   },
 ]
 
@@ -83,7 +91,6 @@ export default function Home() {
 
   const handleGenerer = async () => {
     if (!photoClient || !tenueSelectionnee) return
-
     setChargement(true)
     setErreur(null)
     setResultat(null)
@@ -108,7 +115,7 @@ export default function Home() {
         setEtape(4)
       }
     } catch (err) {
-      setErreur('Connexion impossible. Vérifiez votre connexion internet.')
+      setErreur('Erreur de connexion. Réessayez.')
     } finally {
       setChargement(false)
     }
@@ -124,145 +131,142 @@ export default function Home() {
   }
 
   return (
-    <main style={styles.main}>
-      {/* LIGNE DÉCORATIVE DORÉE */}
-      <div style={styles.ligneOr} />
+    <main style={s.main}>
+      {/* TOP BAR */}
+      <div style={s.topBar}>
+        <span style={s.topBarText}>CUSTOM CLOTHING MADE TO BE LIVED IN</span>
+        <span style={s.topBarDot}>·</span>
+        <span style={s.topBarText}>B CORP CERTIFIED</span>
+      </div>
 
       {/* HEADER */}
-      <header style={styles.header}>
-        <div style={styles.logoContainer}>
-          <div style={styles.logo}>SURMESUR</div>
-          <div style={styles.logoSub}>ESSAYAGE VIRTUEL · VIRTUAL TRY-ON</div>
+      <header style={s.header}>
+        <div style={s.headerInner}>
+          <div style={s.logo}>SURMESUR</div>
+          <nav style={s.nav}>
+            <span style={s.navItem}>Collections</span>
+            <span style={s.navItem}>Nos Boutiques</span>
+            <span style={s.navItem}>Mariages</span>
+            <span style={s.navItemActive}>Virtual Try-On ✦</span>
+          </nav>
         </div>
       </header>
 
       {/* HERO */}
-      <section style={styles.hero}>
-        <p style={styles.heroEyebrow}>Technologie IA exclusive</p>
-        <h1 style={styles.heroTitre}>
-          Essayez nos tenues.<br />
-          <em style={styles.heroTitreEm}>Sur vous.</em>
-        </h1>
-        <p style={styles.heroSous}>
-          Uploadez votre photo et découvrez comment chaque pièce Surmesur<br />
-          transforme votre silhouette — avant même votre rendez-vous.
-        </p>
-        <p style={styles.heroSousEn}>
-          Upload your photo and see how each Surmesur piece transforms your look.
-        </p>
+      <section style={s.hero}>
+        <div style={s.heroInner}>
+          <p style={s.heroEyebrow}>NOUVELLE EXPÉRIENCE · NEW EXPERIENCE</p>
+          <h1 style={s.heroTitre}>
+            Voyez-vous dans<br />
+            <em style={s.heroEm}>nos collections.</em>
+          </h1>
+          <p style={s.heroSub}>
+            Uploadez votre photo. Choisissez votre complet.<br />
+            Notre IA vous habille en 30 secondes.
+          </p>
+          <p style={s.heroSubEn}>
+            Upload your photo. Choose your suit. Our AI dresses you in 30 seconds.
+          </p>
+        </div>
+        <div style={s.heroLine} />
       </section>
 
-      {/* ÉTAPES */}
-      <div style={styles.etapesContainer}>
+      {/* PROGRESS */}
+      <div style={s.progress}>
         {[
-          { num: 1, label: 'Votre photo', label_en: 'Your photo' },
-          { num: 2, label: 'Choisir la tenue', label_en: 'Choose outfit' },
-          { num: 3, label: 'Générer', label_en: 'Generate' },
-          { num: 4, label: 'Résultat', label_en: 'Result' },
-        ].map((e) => (
-          <div key={e.num} style={styles.etapeItem}>
+          { n: 1, label: 'Votre photo' },
+          { n: 2, label: 'Votre tenue' },
+          { n: 3, label: 'Générer' },
+          { n: 4, label: 'Résultat' },
+        ].map((e, i) => (
+          <div key={e.n} style={s.progressItem}>
             <div style={{
-              ...styles.etapeNum,
-              background: etape >= e.num ? 'var(--or)' : 'transparent',
-              color: etape >= e.num ? 'var(--noir)' : 'var(--gris)',
-              border: etape >= e.num ? 'none' : '1px solid var(--gris)',
+              ...s.progressDot,
+              background: etape >= e.n ? '#000' : 'transparent',
+              borderColor: etape >= e.n ? '#000' : '#ccc',
             }}>
-              {e.num}
+              <span style={{ color: etape >= e.n ? '#fff' : '#999', fontSize: '11px', fontWeight: 500 }}>{e.n}</span>
             </div>
-            <span style={{
-              ...styles.etapeLabel,
-              color: etape >= e.num ? 'var(--creme)' : 'var(--gris)',
-            }}>
-              {e.label}
-            </span>
+            <span style={{ ...s.progressLabel, color: etape >= e.n ? '#000' : '#bbb' }}>{e.label}</span>
+            {i < 3 && <div style={{ ...s.progressLine, background: etape > e.n ? '#000' : '#e5e5e5' }} />}
           </div>
         ))}
       </div>
 
-      {/* SECTION PRINCIPALE */}
-      <div style={styles.contenu}>
+      {/* CONTENT */}
+      <div style={s.content}>
 
-        {/* ÉTAPE 1 — UPLOAD PHOTO */}
-        <section style={styles.section}>
-          <div style={styles.sectionHeader}>
-            <div style={styles.sectionNum}>01</div>
+        {/* STEP 1 */}
+        <section style={s.section}>
+          <div style={s.sectionHead}>
+            <span style={s.sectionNum}>01</span>
             <div>
-              <h2 style={styles.sectionTitre}>Votre photo</h2>
-              <p style={styles.sectionSous}>Uploadez une photo de vous, debout, fond simple de préférence</p>
+              <h2 style={s.sectionTitle}>Votre photo <span style={s.sectionTitleEn}>/ Your photo</span></h2>
+              <p style={s.sectionSub}>Photo debout, fond neutre de préférence · Standing photo, neutral background preferred</p>
             </div>
           </div>
 
           <div
             style={{
-              ...styles.uploadZone,
-              borderColor: photoClientPreview ? 'var(--or)' : 'rgba(201,169,110,0.3)',
+              ...s.uploadZone,
+              borderColor: photoClientPreview ? '#000' : '#ddd',
+              background: photoClientPreview ? '#f9f9f9' : '#fff',
             }}
             onClick={() => fileInputRef.current?.click()}
           >
             {photoClientPreview ? (
-              <div style={styles.photoPreviewContainer}>
-                <img src={photoClientPreview} alt="Votre photo" style={styles.photoPreview} />
-                <div style={styles.photoOverlay}>
-                  <span style={styles.photoOverlayText}>Changer la photo</span>
+              <div style={s.previewWrap}>
+                <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
+                <div style={s.previewOverlay}>
+                  <span style={s.previewOverlayText}>CHANGER · CHANGE</span>
                 </div>
               </div>
             ) : (
-              <div style={styles.uploadPlaceholder}>
-                <div style={styles.uploadIcone}>↑</div>
-                <p style={styles.uploadTexte}>Cliquez pour uploader votre photo</p>
-                <p style={styles.uploadSous}>JPG, PNG · Max 10MB</p>
-                <p style={styles.uploadSousEn}>Click to upload your photo</p>
+              <div style={s.uploadPlaceholder}>
+                <div style={s.uploadArrow}>↑</div>
+                <p style={s.uploadText}>Cliquez pour uploader votre photo</p>
+                <p style={s.uploadTextEn}>Click to upload your photo</p>
+                <p style={s.uploadMeta}>JPG, PNG · Max 10MB</p>
               </div>
             )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoUpload}
-              style={{ display: 'none' }}
-            />
+            <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
           </div>
         </section>
 
-        {/* ÉTAPE 2 — CHOISIR TENUE */}
+        {/* STEP 2 */}
         {etape >= 2 && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
-              <div style={styles.sectionNum}>02</div>
+          <section style={s.section}>
+            <div style={s.sectionHead}>
+              <span style={s.sectionNum}>02</span>
               <div>
-                <h2 style={styles.sectionTitre}>Choisissez votre tenue</h2>
-                <p style={styles.sectionSous}>Sélectionnez une pièce de la collection Surmesur</p>
+                <h2 style={s.sectionTitle}>Choisissez votre complet <span style={s.sectionTitleEn}>/ Choose your suit</span></h2>
+                <p style={s.sectionSub}>Collection exclusive · Sur mesure pour vous</p>
               </div>
             </div>
 
-            <div style={styles.tenuesGrille}>
-              {TENUES.map((tenue) => (
+            <div style={s.grid}>
+              {TENUES.map((t) => (
                 <div
-                  key={tenue.id}
+                  key={t.id}
                   style={{
-                    ...styles.tenueCard,
-                    border: tenueSelectionnee?.id === tenue.id
-                      ? '2px solid var(--or)'
-                      : '1px solid rgba(201,169,110,0.15)',
-                    background: tenueSelectionnee?.id === tenue.id
-                      ? 'rgba(201,169,110,0.08)'
-                      : 'rgba(255,255,255,0.02)',
+                    ...s.card,
+                    border: tenueSelectionnee?.id === t.id ? '2px solid #000' : '1px solid #e5e5e5',
                   }}
-                  onClick={() => handleTenueSelect(tenue)}
+                  onClick={() => handleTenueSelect(t)}
                 >
-                  <div style={styles.tenueImageContainer}>
-                    <img
-                      src={tenue.image}
-                      alt={tenue.nom}
-                      style={styles.tenueImage}
-                    />
-                    {tenueSelectionnee?.id === tenue.id && (
-                      <div style={styles.tenueCheck}>✓</div>
+                  <div style={s.cardImgWrap}>
+                    <img src={t.image} alt={t.nom} style={s.cardImg} />
+                    {tenueSelectionnee?.id === t.id && (
+                      <div style={s.cardCheck}>✓</div>
                     )}
                   </div>
-                  <div style={styles.tenueInfo}>
-                    <p style={styles.tenueNom}>{tenue.nom}</p>
-                    <p style={styles.tenueDesc}>{tenue.description}</p>
+                  <div style={s.cardInfo}>
+                    <p style={s.cardNom}>{t.nom_fr}</p>
+                    <p style={s.cardNomEn}>{t.nom}</p>
+                    <div style={s.cardFooter}>
+                      <span style={s.cardDesc}>{t.description}</span>
+                      <span style={s.cardPrix}>{t.prix}</span>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -270,99 +274,84 @@ export default function Home() {
           </section>
         )}
 
-        {/* ÉTAPE 3 — GÉNÉRER */}
+        {/* STEP 3 */}
         {etape >= 3 && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
-              <div style={styles.sectionNum}>03</div>
+          <section style={s.section}>
+            <div style={s.sectionHead}>
+              <span style={s.sectionNum}>03</span>
               <div>
-                <h2 style={styles.sectionTitre}>Générer votre look</h2>
-                <p style={styles.sectionSous}>L'IA va créer votre essayage virtuel en 30 secondes</p>
+                <h2 style={s.sectionTitle}>Générer votre look <span style={s.sectionTitleEn}>/ Generate your look</span></h2>
+                <p style={s.sectionSub}>Notre IA va créer votre essayage virtuel · Our AI will create your virtual try-on</p>
               </div>
             </div>
 
-            <div style={styles.resumeContainer}>
-              <div style={styles.resumeItem}>
-                {photoClientPreview && (
-                  <img src={photoClientPreview} alt="Vous" style={styles.resumePhoto} />
-                )}
-                <p style={styles.resumeLabel}>Votre photo</p>
+            <div style={s.resume}>
+              <div style={s.resumeItem}>
+                {photoClientPreview && <img src={photoClientPreview} alt="Vous" style={s.resumePhoto} />}
+                <p style={s.resumeLabel}>Votre photo</p>
               </div>
-              <div style={styles.resumePlus}>+</div>
-              <div style={styles.resumeItem}>
-                {tenueSelectionnee && (
-                  <img src={tenueSelectionnee.image} alt={tenueSelectionnee.nom} style={styles.resumePhoto} />
-                )}
-                <p style={styles.resumeLabel}>{tenueSelectionnee?.nom}</p>
+              <div style={s.resumePlus}>+</div>
+              <div style={s.resumeItem}>
+                {tenueSelectionnee && <img src={tenueSelectionnee.image} alt={tenueSelectionnee.nom} style={s.resumePhoto} />}
+                <p style={s.resumeLabel}>{tenueSelectionnee?.nom_fr}</p>
               </div>
             </div>
 
             {erreur && (
-              <div style={styles.erreurBox}>
-                <p>⚠ {erreur}</p>
-              </div>
+              <div style={s.erreur}>⚠ {erreur}</div>
             )}
 
             <button
               onClick={handleGenerer}
               disabled={chargement}
-              style={{
-                ...styles.btnGenerer,
-                opacity: chargement ? 0.7 : 1,
-                cursor: chargement ? 'not-allowed' : 'pointer',
-              }}
+              style={{ ...s.btnGenerer, opacity: chargement ? 0.6 : 1 }}
             >
-              {chargement ? (
-                <span style={styles.btnChargement}>
-                  <span style={styles.spinner} />
-                  Génération en cours... / Generating...
-                </span>
-              ) : (
-                'Voir comment ça me va → See how it fits'
-              )}
+              {chargement
+                ? 'Génération en cours... · Generating...'
+                : 'VOIR COMMENT ÇA ME VA · SEE HOW IT FITS →'
+              }
             </button>
 
             {chargement && (
-              <p style={styles.chargementInfo}>
-                Notre IA analyse votre silhouette et adapte la tenue à votre morphologie.<br />
-                <em>Our AI is analyzing your silhouette and adapting the outfit to your body.</em>
+              <p style={s.loadingText}>
+                Notre IA analyse votre silhouette et adapte le complet à votre morphologie.<br />
+                <em>Our AI is tailoring the suit to your exact body shape. Please wait 30–60 seconds.</em>
               </p>
             )}
           </section>
         )}
 
-        {/* ÉTAPE 4 — RÉSULTAT */}
+        {/* STEP 4 */}
         {resultat && (
-          <section style={styles.section}>
-            <div style={styles.sectionHeader}>
-              <div style={styles.sectionNum}>04</div>
+          <section style={s.section}>
+            <div style={s.sectionHead}>
+              <span style={s.sectionNum}>04</span>
               <div>
-                <h2 style={styles.sectionTitre}>Votre look Surmesur</h2>
-                <p style={styles.sectionSous}>Taillé pour vous · Made to fit you</p>
+                <h2 style={s.sectionTitle}>Votre look Surmesur <span style={s.sectionTitleEn}>/ Your Surmesur look</span></h2>
+                <p style={s.sectionSub}>Taillé sur mesure pour vous · Custom tailored for you</p>
               </div>
             </div>
 
-            <div style={styles.resultatContainer}>
-              <img src={resultat} alt="Votre look Surmesur" style={styles.resultatImage} />
-              <div style={styles.resultatBadge}>Généré par IA · AI Generated</div>
+            <div style={s.resultatWrap}>
+              <img src={resultat} alt="Votre look" style={s.resultatImg} />
+              <div style={s.resultatBadge}>AI GENERATED · IA GÉNÉRÉE</div>
             </div>
 
-            <div style={styles.ctaContainer}>
-              <p style={styles.ctaTexte}>
+            <div style={s.ctaWrap}>
+              <p style={s.ctaText}>
                 Prêt à le faire tailler à vos mesures exactes ?<br />
-                <em>Ready to have it tailored to your exact measurements?</em>
+                <em>Ready to have it made to your exact measurements?</em>
               </p>
               <a
                 href="https://www.surmesur.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={styles.btnRDV}
+                style={s.btnRDV}
               >
-                Prendre mon rendez-vous gratuit
-                <br />
-                <span style={styles.btnRDVSous}>Book my free appointment</span>
+                PRENDRE MON RENDEZ-VOUS GRATUIT<br />
+                <span style={s.btnRDVSub}>BOOK MY FREE APPOINTMENT</span>
               </a>
-              <button onClick={recommencer} style={styles.btnRecommencer}>
+              <button onClick={recommencer} style={s.btnReset}>
                 Essayer une autre tenue · Try another outfit
               </button>
             </div>
@@ -371,456 +360,87 @@ export default function Home() {
       </div>
 
       {/* FOOTER */}
-      <footer style={styles.footer}>
-        <div style={styles.footerLigne} />
-        <p style={styles.footerTexte}>
-          SURMESUR · MTL · TOR · VAN · OTT · PIT · MEX
-        </p>
-        <p style={styles.footerSous}>
-          Custom Clothing Made To Be Lived In · B Corp Certified
-        </p>
+      <footer style={s.footer}>
+        <div style={s.footerLine} />
+        <p style={s.footerLogo}>SURMESUR</p>
+        <p style={s.footerCities}>MTL · TOR · VAN · OTT · PIТ · MEX</p>
+        <p style={s.footerSub}>Custom Clothing Made To Be Lived In · B Corp Certified</p>
       </footer>
     </main>
   )
 }
 
-const styles = {
-  main: {
-    minHeight: '100vh',
-    background: 'linear-gradient(180deg, #0A0A0A 0%, #111108 100%)',
-    position: 'relative',
-  },
-  ligneOr: {
-    height: '2px',
-    background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)',
-  },
-  header: {
-    padding: '2rem 2rem 1rem',
-    textAlign: 'center',
-    borderBottom: '1px solid rgba(201,169,110,0.1)',
-  },
-  logoContainer: {},
-  logo: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
-    fontWeight: 300,
-    letterSpacing: '0.4em',
-    color: '#F5F0E8',
-  },
-  logoSub: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.6rem',
-    letterSpacing: '0.3em',
-    color: '#C9A96E',
-    marginTop: '0.25rem',
-  },
-  hero: {
-    textAlign: 'center',
-    padding: 'clamp(2rem, 6vw, 4rem) 1.5rem clamp(1.5rem, 4vw, 2.5rem)',
-    maxWidth: '700px',
-    margin: '0 auto',
-  },
-  heroEyebrow: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.65rem',
-    letterSpacing: '0.25em',
-    color: '#C9A96E',
-    textTransform: 'uppercase',
-    marginBottom: '1rem',
-  },
-  heroTitre: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: 'clamp(2.5rem, 8vw, 5rem)',
-    fontWeight: 300,
-    lineHeight: 1.1,
-    color: '#F5F0E8',
-    marginBottom: '1.5rem',
-  },
-  heroTitreEm: {
-    fontStyle: 'italic',
-    color: '#C9A96E',
-  },
-  heroSous: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: 'clamp(0.8rem, 2vw, 0.95rem)',
-    fontWeight: 300,
-    color: '#888880',
-    lineHeight: 1.7,
-    marginBottom: '0.5rem',
-  },
-  heroSousEn: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.75rem',
-    color: 'rgba(136,136,128,0.6)',
-    fontStyle: 'italic',
-  },
-  etapesContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: 'clamp(1rem, 4vw, 3rem)',
-    padding: '1.5rem 1rem',
-    borderTop: '1px solid rgba(201,169,110,0.1)',
-    borderBottom: '1px solid rgba(201,169,110,0.1)',
-    flexWrap: 'wrap',
-  },
-  etapeItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.6rem',
-  },
-  etapeNum: {
-    width: '28px',
-    height: '28px',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    transition: 'all 0.3s ease',
-  },
-  etapeLabel: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.7rem',
-    letterSpacing: '0.1em',
-    textTransform: 'uppercase',
-    transition: 'color 0.3s ease',
-  },
-  contenu: {
-    maxWidth: '900px',
-    margin: '0 auto',
-    padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem)',
-  },
-  section: {
-    marginBottom: 'clamp(2rem, 6vw, 4rem)',
-    animation: 'fadeUp 0.6s ease both',
-  },
-  sectionHeader: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '1.25rem',
-    marginBottom: '1.5rem',
-  },
-  sectionNum: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: '3rem',
-    fontWeight: 300,
-    color: 'rgba(201,169,110,0.3)',
-    lineHeight: 1,
-    flexShrink: 0,
-  },
-  sectionTitre: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: 'clamp(1.4rem, 4vw, 2rem)',
-    fontWeight: 400,
-    color: '#F5F0E8',
-    marginBottom: '0.25rem',
-  },
-  sectionSous: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.75rem',
-    color: '#888880',
-    letterSpacing: '0.05em',
-  },
-  uploadZone: {
-    border: '1px dashed',
-    borderRadius: '2px',
-    minHeight: '280px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  uploadPlaceholder: {
-    textAlign: 'center',
-    padding: '2rem',
-  },
-  uploadIcone: {
-    fontSize: '2.5rem',
-    color: '#C9A96E',
-    marginBottom: '1rem',
-    display: 'block',
-  },
-  uploadTexte: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.9rem',
-    color: '#F5F0E8',
-    marginBottom: '0.5rem',
-  },
-  uploadSous: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.7rem',
-    color: '#888880',
-    marginBottom: '0.25rem',
-  },
-  uploadSousEn: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.65rem',
-    color: 'rgba(136,136,128,0.5)',
-    fontStyle: 'italic',
-  },
-  photoPreviewContainer: {
-    width: '100%',
-    position: 'relative',
-  },
-  photoPreview: {
-    width: '100%',
-    maxHeight: '400px',
-    objectFit: 'cover',
-    display: 'block',
-  },
-  photoOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    background: 'rgba(10,10,10,0.8)',
-    padding: '0.75rem',
-    textAlign: 'center',
-  },
-  photoOverlayText: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.7rem',
-    color: '#C9A96E',
-    letterSpacing: '0.15em',
-    textTransform: 'uppercase',
-  },
-  tenuesGrille: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-    gap: '1rem',
-  },
-  tenueCard: {
-    borderRadius: '2px',
-    overflow: 'hidden',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  tenueImageContainer: {
-    position: 'relative',
-    height: '280px',
-    overflow: 'hidden',
-  },
-  tenueImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    transition: 'transform 0.4s ease',
-  },
-  tenueCheck: {
-    position: 'absolute',
-    top: '0.75rem',
-    right: '0.75rem',
-    width: '28px',
-    height: '28px',
-    background: '#C9A96E',
-    color: '#0A0A0A',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '0.85rem',
-    fontWeight: 600,
-  },
-  tenueInfo: {
-    padding: '0.85rem 1rem',
-  },
-  tenueNom: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: '1rem',
-    color: '#F5F0E8',
-    marginBottom: '0.25rem',
-  },
-  tenueDesc: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.65rem',
-    color: '#888880',
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-  },
-  resumeContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '1.5rem',
-    marginBottom: '2rem',
-    padding: '1.5rem',
-    background: 'rgba(201,169,110,0.05)',
-    border: '1px solid rgba(201,169,110,0.15)',
-    borderRadius: '2px',
-    flexWrap: 'wrap',
-  },
-  resumeItem: {
-    textAlign: 'center',
-    flex: 1,
-    minWidth: '120px',
-  },
-  resumePhoto: {
-    width: '100px',
-    height: '120px',
-    objectFit: 'cover',
-    borderRadius: '2px',
-    marginBottom: '0.5rem',
-    border: '1px solid rgba(201,169,110,0.2)',
-  },
-  resumeLabel: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.7rem',
-    color: '#888880',
-  },
-  resumePlus: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: '2rem',
-    color: '#C9A96E',
-    flexShrink: 0,
-  },
-  erreurBox: {
-    background: 'rgba(180,50,50,0.1)',
-    border: '1px solid rgba(180,50,50,0.3)',
-    borderRadius: '2px',
-    padding: '1rem',
-    marginBottom: '1.5rem',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.8rem',
-    color: '#ff8080',
-  },
-  btnGenerer: {
-    width: '100%',
-    padding: '1.25rem 2rem',
-    background: 'linear-gradient(135deg, #C9A96E, #E8D5B0)',
-    color: '#0A0A0A',
-    border: 'none',
-    borderRadius: '2px',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.85rem',
-    fontWeight: 500,
-    letterSpacing: '0.15em',
-    textTransform: 'uppercase',
-    transition: 'all 0.3s ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '0.75rem',
-  },
-  btnChargement: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.75rem',
-  },
-  spinner: {
-    width: '16px',
-    height: '16px',
-    border: '2px solid rgba(10,10,10,0.3)',
-    borderTop: '2px solid #0A0A0A',
-    borderRadius: '50%',
-    display: 'inline-block',
-    animation: 'spin 1s linear infinite',
-  },
-  chargementInfo: {
-    textAlign: 'center',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.75rem',
-    color: '#888880',
-    marginTop: '1.25rem',
-    lineHeight: 1.7,
-  },
-  resultatContainer: {
-    position: 'relative',
-    borderRadius: '2px',
-    overflow: 'hidden',
-    marginBottom: '2rem',
-  },
-  resultatImage: {
-    width: '100%',
-    maxHeight: '600px',
-    objectFit: 'contain',
-    background: '#111',
-    display: 'block',
-  },
-  resultatBadge: {
-    position: 'absolute',
-    bottom: '1rem',
-    right: '1rem',
-    background: 'rgba(10,10,10,0.85)',
-    border: '1px solid rgba(201,169,110,0.3)',
-    padding: '0.4rem 0.85rem',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.6rem',
-    color: '#C9A96E',
-    letterSpacing: '0.15em',
-    textTransform: 'uppercase',
-    borderRadius: '1px',
-  },
-  ctaContainer: {
-    textAlign: 'center',
-  },
-  ctaTexte: {
-    fontFamily: 'var(--font-titre)',
-    fontSize: 'clamp(1.1rem, 3vw, 1.5rem)',
-    color: '#F5F0E8',
-    lineHeight: 1.5,
-    marginBottom: '1.5rem',
-  },
-  btnRDV: {
-    display: 'inline-block',
-    padding: '1.25rem 2.5rem',
-    background: 'transparent',
-    color: '#C9A96E',
-    border: '1px solid #C9A96E',
-    borderRadius: '2px',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.8rem',
-    fontWeight: 500,
-    letterSpacing: '0.15em',
-    textTransform: 'uppercase',
-    textDecoration: 'none',
-    transition: 'all 0.3s ease',
-    marginBottom: '1rem',
-  },
-  btnRDVSous: {
-    fontSize: '0.65rem',
-    opacity: 0.7,
-    fontWeight: 300,
-  },
-  btnRecommencer: {
-    display: 'block',
-    width: '100%',
-    padding: '0.85rem',
-    background: 'transparent',
-    color: '#888880',
-    border: '1px solid rgba(136,136,128,0.2)',
-    borderRadius: '2px',
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.75rem',
-    letterSpacing: '0.1em',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    marginTop: '0.75rem',
-  },
-  footer: {
-    textAlign: 'center',
-    padding: '2.5rem 1rem',
-    marginTop: '2rem',
-  },
-  footerLigne: {
-    height: '1px',
-    background: 'linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent)',
-    marginBottom: '1.5rem',
-  },
-  footerTexte: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.7rem',
-    letterSpacing: '0.25em',
-    color: '#888880',
-    marginBottom: '0.5rem',
-  },
-  footerSous: {
-    fontFamily: 'var(--font-corps)',
-    fontSize: '0.6rem',
-    color: 'rgba(136,136,128,0.5)',
-    letterSpacing: '0.1em',
-  },
+const s = {
+  main: { minHeight: '100vh', background: '#fff', color: '#000', fontFamily: "'Montserrat', sans-serif", fontWeight: 300 },
+  topBar: { background: '#000', color: '#fff', textAlign: 'center', padding: '8px 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' },
+  topBarText: { fontSize: '10px', letterSpacing: '0.2em', fontWeight: 400 },
+  topBarDot: { color: '#666', fontSize: '10px' },
+  header: { borderBottom: '1px solid #e5e5e5', padding: '0 2rem' },
+  headerInner: { maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px' },
+  logo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.6rem', fontWeight: 400, letterSpacing: '0.3em' },
+  nav: { display: 'flex', gap: '2rem', alignItems: 'center' },
+  navItem: { fontSize: '11px', letterSpacing: '0.12em', color: '#666', cursor: 'pointer' },
+  navItemActive: { fontSize: '11px', letterSpacing: '0.12em', color: '#000', fontWeight: 500, cursor: 'pointer', borderBottom: '1px solid #000', paddingBottom: '2px' },
+  hero: { maxWidth: '1200px', margin: '0 auto', padding: 'clamp(3rem, 8vw, 6rem) 2rem clamp(2rem, 4vw, 3rem)' },
+  heroInner: { maxWidth: '600px' },
+  heroEyebrow: { fontSize: '10px', letterSpacing: '0.25em', color: '#999', marginBottom: '1.5rem' },
+  heroTitre: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 300, lineHeight: 1.1, marginBottom: '1.5rem', color: '#000' },
+  heroEm: { fontStyle: 'italic' },
+  heroSub: { fontSize: '14px', color: '#444', lineHeight: 1.7, marginBottom: '0.5rem' },
+  heroSubEn: { fontSize: '12px', color: '#999', fontStyle: 'italic', lineHeight: 1.7 },
+  heroLine: { height: '1px', background: '#e5e5e5', marginTop: '3rem' },
+  progress: { maxWidth: '1200px', margin: '0 auto', padding: '1.5rem 2rem', display: 'flex', alignItems: 'center' },
+  progressItem: { display: 'flex', alignItems: 'center', gap: '0.5rem' },
+  progressDot: { width: '24px', height: '24px', borderRadius: '50%', border: '1px solid', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  progressLabel: { fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' },
+  progressLine: { width: 'clamp(1rem, 5vw, 4rem)', height: '1px', margin: '0 0.5rem' },
+  content: { maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 4rem' },
+  section: { marginBottom: '4rem', paddingTop: '2rem', borderTop: '1px solid #f0f0f0' },
+  sectionHead: { display: 'flex', gap: '1.5rem', alignItems: 'flex-start', marginBottom: '2rem' },
+  sectionNum: { fontFamily: "'Cormorant Garamond', serif", fontSize: '3.5rem', fontWeight: 300, color: '#e5e5e5', lineHeight: 1, flexShrink: 0 },
+  sectionTitle: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 400, marginBottom: '0.5rem' },
+  sectionTitleEn: { fontStyle: 'italic', color: '#999', fontSize: '0.75em' },
+  sectionSub: { fontSize: '11px', color: '#999', letterSpacing: '0.05em' },
+  uploadZone: { border: '1px dashed', borderRadius: '2px', minHeight: '300px', cursor: 'pointer', overflow: 'hidden', position: 'relative', transition: 'all 0.2s' },
+  uploadPlaceholder: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '300px', padding: '2rem', textAlign: 'center' },
+  uploadArrow: { fontSize: '2rem', marginBottom: '1rem', color: '#000' },
+  uploadText: { fontSize: '14px', color: '#000', marginBottom: '0.25rem' },
+  uploadTextEn: { fontSize: '12px', color: '#999', fontStyle: 'italic', marginBottom: '0.5rem' },
+  uploadMeta: { fontSize: '11px', color: '#bbb' },
+  previewWrap: { position: 'relative' },
+  previewImg: { width: '100%', maxHeight: '500px', objectFit: 'cover', display: 'block' },
+  previewOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.7)', padding: '0.75rem', textAlign: 'center' },
+  previewOverlayText: { fontSize: '10px', color: '#fff', letterSpacing: '0.2em' },
+  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1px', background: '#e5e5e5', border: '1px solid #e5e5e5' },
+  card: { background: '#fff', cursor: 'pointer', transition: 'all 0.2s', position: 'relative' },
+  cardImgWrap: { height: '380px', overflow: 'hidden', position: 'relative', background: '#f9f9f9' },
+  cardImg: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', transition: 'transform 0.4s ease' },
+  cardCheck: { position: 'absolute', top: '1rem', right: '1rem', width: '28px', height: '28px', background: '#000', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600 },
+  cardInfo: { padding: '1rem' },
+  cardNom: { fontSize: '13px', fontWeight: 500, color: '#000', marginBottom: '2px' },
+  cardNomEn: { fontSize: '11px', color: '#999', fontStyle: 'italic', marginBottom: '0.5rem' },
+  cardFooter: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  cardDesc: { fontSize: '10px', color: '#999', letterSpacing: '0.08em', textTransform: 'uppercase' },
+  cardPrix: { fontSize: '13px', fontWeight: 500, color: '#000' },
+  resume: { display: 'flex', alignItems: 'center', gap: '2rem', padding: '1.5rem', background: '#f9f9f9', border: '1px solid #e5e5e5', marginBottom: '2rem', flexWrap: 'wrap' },
+  resumeItem: { textAlign: 'center', flex: 1, minWidth: '120px' },
+  resumePhoto: { width: '100px', height: '120px', objectFit: 'cover', objectPosition: 'top', display: 'block', margin: '0 auto 0.5rem', border: '1px solid #e5e5e5' },
+  resumeLabel: { fontSize: '11px', color: '#666' },
+  resumePlus: { fontSize: '1.5rem', color: '#ccc', flexShrink: 0 },
+  erreur: { background: '#fff5f5', border: '1px solid #ffcccc', padding: '1rem', marginBottom: '1.5rem', fontSize: '13px', color: '#cc0000', borderRadius: '2px' },
+  btnGenerer: { width: '100%', padding: '1.25rem', background: '#000', color: '#fff', border: 'none', fontSize: '12px', letterSpacing: '0.15em', cursor: 'pointer', transition: 'opacity 0.2s', fontFamily: "'Montserrat', sans-serif", fontWeight: 400 },
+  loadingText: { textAlign: 'center', fontSize: '12px', color: '#999', marginTop: '1.25rem', lineHeight: 1.7 },
+  resultatWrap: { position: 'relative', marginBottom: '2rem', border: '1px solid #e5e5e5' },
+  resultatImg: { width: '100%', maxHeight: '700px', objectFit: 'contain', background: '#f9f9f9', display: 'block' },
+  resultatBadge: { position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(0,0,0,0.8)', color: '#fff', padding: '0.4rem 0.85rem', fontSize: '9px', letterSpacing: '0.2em' },
+  ctaWrap: { textAlign: 'center' },
+  ctaText: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)', marginBottom: '2rem', lineHeight: 1.5, color: '#000' },
+  btnRDV: { display: 'inline-block', padding: '1.25rem 3rem', background: '#000', color: '#fff', textDecoration: 'none', fontSize: '11px', letterSpacing: '0.15em', marginBottom: '1rem', lineHeight: 1.8 },
+  btnRDVSub: { fontSize: '9px', opacity: 0.7, letterSpacing: '0.1em' },
+  btnReset: { display: 'block', width: '100%', padding: '0.85rem', background: '#fff', border: '1px solid #e5e5e5', color: '#999', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', marginTop: '0.75rem', fontFamily: "'Montserrat', sans-serif' " },
+  footer: { borderTop: '1px solid #e5e5e5', textAlign: 'center', padding: '3rem 1rem' },
+  footerLine: { display: 'none' },
+  footerLogo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.5rem', letterSpacing: '0.35em', marginBottom: '0.75rem' },
+  footerCities: { fontSize: '10px', letterSpacing: '0.2em', color: '#999', marginBottom: '0.5rem' },
+  footerSub: { fontSize: '10px', color: '#bbb', letterSpacing: '0.1em' },
 }
