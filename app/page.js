@@ -224,12 +224,12 @@ export default function Home() {
             ) : (
               <div style={s.uploadPlaceholder}>
                 <div style={s.uploadArrow}>↑</div>
-                <p style={s.uploadText}>Cliquez pour uploader votre photo</p>
-                <p style={s.uploadTextEn}>Click to upload your photo</p>
-                <p style={s.uploadMeta}>JPG, PNG · Max 10MB</p>
+                <p style={s.uploadText}>Prenez une photo ou uploadez</p>
+<p style={s.uploadTextEn}>Take a photo or upload from gallery</p>
+<p style={s.uploadMeta}>📷 Caméra · 🖼 Galerie · JPG, PNG</p>
               </div>
             )}
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
+            <input ref={fileInputRef} type="file" accept="image/*" capture="user" onChange={handlePhotoUpload} style={{ display: 'none' }} />
           </div>
         </section>
 
