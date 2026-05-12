@@ -95,12 +95,21 @@ export default function SurmesurTryOn() {
   // Camera
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
+      })
       streamRef.current = stream
-      if (videoRef.current) { videoRef.current.srcObject = stream; videoRef.current.play() }
       setCameraActive(true)
       setPhotoConfirmation(null)
-    } catch { setError('Caméra non disponible') }
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+          videoRef.current.play().catch(() => {})
+        }
+      }, 150)
+    } catch {
+      setError('Caméra non disponible — vérifiez les permissions du navigateur')
+    }
   }
 
   const stopCamera = useCallback(() => {
@@ -250,7 +259,7 @@ export default function SurmesurTryOn() {
     goldLine: { width: '50px', height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)' },
 
     // Photo phase
-    photoWrap: { maxWidth: '680px', margin: '0 auto', padding: '3rem 2rem' },
+    photoWrap: { maxWidth: '860px', margin: '0 auto', padding: '3rem 2rem' },
     hero: { textAlign: 'center', padding: '4rem 2rem 3rem', background: '#fff', borderBottom: '1px solid #e8e4df' },
     eyebrow: { fontSize: '0.72rem', letterSpacing: '0.28em', color: '#C9A96E', marginBottom: '1.2rem', fontFamily: 'sans-serif' },
     title: { fontSize: 'clamp(2.2rem,5vw,4rem)', fontWeight: 300, lineHeight: 1.15, marginBottom: '0.8rem' },
@@ -393,10 +402,10 @@ export default function SurmesurTryOn() {
                   <div style={s.uploadTxt}>Cliquez pour uploader votre photo</div>
                   <div style={s.uploadSub}>JPG, PNG · Max 10MB</div>
                 </div>
-                <div style={s.btnRow}>
-                  <button style={s.btnBlack} onClick={startCamera}>📷 PRENDRE UNE PHOTO</button>
-                  <button style={s.btnOutline} onClick={() => fileInputRef.current?.click()}>🖼 MA GALERIE</button>
-                </div>
+                <button style={{...s.btnBlack, marginTop: '0.75rem', width: '100%', padding: '1.2rem'}} onClick={startCamera}>
+                  📷 PRENDRE UNE PHOTO · TAKE A PHOTO
+                </button>
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
               </>
             )}
 
@@ -407,10 +416,7 @@ export default function SurmesurTryOn() {
                 <button onClick={capturePhoto} disabled={countdown !== null} style={s.capBtn}>
                   {countdown ? <span style={{ color: '#C9A96E', fontSize: '1.6rem', fontWeight: 300 }}>{countdown}</span> : <div style={s.capInner} />}
                 </button>
-                <div style={s.btnRow}>
-                  <button style={s.btnOutline} onClick={() => fileInputRef.current?.click()}>🖼 GALERIE</button>
-                  <button style={s.btnGhost} onClick={stopCamera}>ANNULER</button>
-                </div>
+                <button style={{...s.btnGhost, width: '100%', marginTop: '0.5rem'}} onClick={stopCamera}>ANNULER</button>
               </>
             )}
 
@@ -424,7 +430,6 @@ export default function SurmesurTryOn() {
               </>
             )}
 
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
             <canvas ref={canvasRef} style={{ display: 'none' }} />
           </div>
         </>
@@ -446,8 +451,7 @@ export default function SurmesurTryOn() {
                 </button>
                 {!cameraActive && (
                   <button style={{ ...s.changeBtn, marginLeft: '0.75rem' }} onClick={startCamera}>📷 Prendre une photo</button>
-                )}
-              </div>
+                )}              </div>
             </div>
 
             {/* Camera in build phase */}
