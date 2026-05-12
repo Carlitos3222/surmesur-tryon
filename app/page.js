@@ -5,60 +5,12 @@ import { useState, useRef, useCallback } from 'react'
 const BASE_URL = 'https://surmesur-tryon.vercel.app'
 
 const TENUES = [
-  {
-    id: 1,
-    nom: 'Oil Blue Wool Suit',
-    nom_fr: 'Complet Bleu Pétrole',
-    categorie: 'one-pieces',
-    image: `${BASE_URL}/suit1.png`,
-    prix: '$1,200',
-    description: '3-Piece · Pure Wool',
-  },
-  {
-    id: 2,
-    nom: 'Charcoal Wool Suit',
-    nom_fr: 'Complet Charbon',
-    categorie: 'one-pieces',
-    image: `${BASE_URL}/suit2.png`,
-    prix: '$1,140',
-    description: '3-Piece · Plain Wool',
-  },
-  {
-    id: 3,
-    nom: 'Prince of Wales Flannel',
-    nom_fr: 'Flanelle Prince de Galles',
-    categorie: 'one-pieces',
-    image: `${BASE_URL}/suit3.png`,
-    prix: '$1,165',
-    description: '3-Piece · Flannel',
-  },
-  {
-    id: 4,
-    nom: 'Grey Herringbone Suit',
-    nom_fr: 'Complet Gris Chevron',
-    categorie: 'one-pieces',
-    image: `${BASE_URL}/suit4.png`,
-    prix: '$1,180',
-    description: '3-Piece · Herringbone',
-  },
-  {
-    id: 5,
-    nom: 'Natural Linen Suit',
-    nom_fr: 'Complet Lin Naturel',
-    categorie: 'one-pieces',
-    image: `${BASE_URL}/suit5.png`,
-    prix: '$1,100',
-    description: '3-Piece · Premium Linen',
-  },
-  {
-    id: 6,
-    nom: 'Dark Brown Flannel Suit',
-    nom_fr: 'Complet Brun Foncé',
-    categorie: 'one-pieces',
-    image: `${BASE_URL}/suit6.png`,
-    prix: '$1,220',
-    description: '3-Piece · Wool Flannel',
-  },
+  { id: 1, nom: 'Oil Blue Wool Suit', nom_fr: 'Complet Bleu Pétrole', categorie: 'one-pieces', image: `${BASE_URL}/suit1.png`, prix: '$1,200', description: '3-Piece · Pure Wool' },
+  { id: 2, nom: 'Charcoal Wool Suit', nom_fr: 'Complet Charbon', categorie: 'one-pieces', image: `${BASE_URL}/suit2.png`, prix: '$1,140', description: '3-Piece · Plain Wool' },
+  { id: 3, nom: 'Prince of Wales Flannel', nom_fr: 'Flanelle Prince de Galles', categorie: 'one-pieces', image: `${BASE_URL}/suit3.png`, prix: '$1,165', description: '3-Piece · Flannel' },
+  { id: 4, nom: 'Grey Herringbone Suit', nom_fr: 'Complet Gris Chevron', categorie: 'one-pieces', image: `${BASE_URL}/suit4.png`, prix: '$1,180', description: '3-Piece · Herringbone' },
+  { id: 5, nom: 'Natural Linen Suit', nom_fr: 'Complet Lin Naturel', categorie: 'one-pieces', image: `${BASE_URL}/suit5.png`, prix: '$1,100', description: '3-Piece · Premium Linen' },
+  { id: 6, nom: 'Dark Brown Flannel Suit', nom_fr: 'Complet Brun Foncé', categorie: 'one-pieces', image: `${BASE_URL}/suit6.png`, prix: '$1,220', description: '3-Piece · Wool Flannel' },
 ]
 
 export default function Home() {
@@ -73,6 +25,7 @@ export default function Home() {
   const [cameraStream, setCameraStream] = useState(null)
   const [photoConfirmation, setPhotoConfirmation] = useState(null)
   const [countdown, setCountdown] = useState(null)
+  const [hoveredCard, setHoveredCard] = useState(null)
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
@@ -154,7 +107,6 @@ export default function Home() {
 
   const retakePhoto = () => {
     setPhotoConfirmation(null)
-    // Redémarrer le stream vidéo sur l'élément video
     setTimeout(() => {
       if (videoRef.current && cameraStream) {
         videoRef.current.srcObject = cameraStream
@@ -175,20 +127,13 @@ export default function Home() {
     setChargement(true)
     setErreur(null)
     setResultat(null)
-
     try {
       const formData = new FormData()
       formData.append('model_image', photoClient)
       formData.append('garment_url', tenueSelectionnee.image)
       formData.append('category', tenueSelectionnee.categorie)
-
-      const response = await fetch('/api/tryon', {
-        method: 'POST',
-        body: formData,
-      })
-
+      const response = await fetch('/api/tryon', { method: 'POST', body: formData })
       const data = await response.json()
-
       if (!response.ok) {
         setErreur(data.error || 'Une erreur est survenue')
       } else {
@@ -214,41 +159,127 @@ export default function Home() {
 
   return (
     <main style={s.main}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Montserrat:wght@300;400;500&display=swap');
+        
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes loadingBar {
+          0% { width: 0%; }
+          50% { width: 70%; }
+          100% { width: 95%; }
+        }
+        @keyframes goldPulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.6; }
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        .fade-up { animation: fadeUp 0.8s ease both; }
+        .fade-up-1 { animation: fadeUp 0.8s 0.1s ease both; }
+        .fade-up-2 { animation: fadeUp 0.8s 0.2s ease both; }
+        .fade-up-3 { animation: fadeUp 0.8s 0.3s ease both; }
+        .fade-up-4 { animation: fadeUp 0.8s 0.4s ease both; }
+
+        .suit-card { transition: all 0.4s ease; }
+        .suit-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+        .suit-card:hover .suit-img { transform: scale(1.04); }
+        .suit-img { transition: transform 0.6s ease; }
+
+        .btn-generate { transition: all 0.3s ease; }
+        .btn-generate:hover:not(:disabled) { background: #111 !important; box-shadow: inset 0 0 0 1px #C9A96E; letter-spacing: 0.2em !important; }
+
+        .gold-shimmer {
+          background: linear-gradient(90deg, #C9A96E 0%, #E8D5B0 40%, #C9A96E 60%, #9A7A45 100%);
+          background-size: 200% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: shimmer 4s linear infinite;
+        }
+
+        .nav-item { transition: color 0.2s; cursor: pointer; }
+        .nav-item:hover { color: #000 !important; }
+
+        .progress-dot { transition: all 0.4s ease; }
+        .section-reveal { animation: fadeUp 0.6s ease both; }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #fafafa; }
+        ::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
+      `}</style>
+
       {/* TOP BAR */}
       <div style={s.topBar}>
         <span style={s.topBarText}>CUSTOM CLOTHING MADE TO BE LIVED IN</span>
         <span style={s.topBarDot}>·</span>
         <span style={s.topBarText}>B CORP CERTIFIED</span>
+        <span style={s.topBarDot}>·</span>
+        <span style={s.topBarText}>MTL · TOR · VAN · OTT · PIТ · MEX</span>
       </div>
 
       {/* HEADER */}
-      <header style={s.header}>
+      <header style={s.header} className="fade-up">
         <div style={s.headerInner}>
-          <div style={s.logo}>SURMESUR</div>
+          <div>
+            <div style={s.logo}>SURMESUR</div>
+            <div style={s.logoGoldLine} />
+          </div>
           <nav style={s.nav}>
-            <span style={s.navItem}>Collections</span>
-            <span style={s.navItem}>Nos Boutiques</span>
-            <span style={s.navItem}>Mariages</span>
-            <span style={s.navItemActive}>Virtual Try-On ✦</span>
+            <span style={s.navItem} className="nav-item">Collections</span>
+            <span style={s.navItem} className="nav-item">Nos Boutiques</span>
+            <span style={s.navItem} className="nav-item">Mariages</span>
+            <span style={{...s.navItem, ...s.navItemActive}} className="nav-item">Virtual Try-On ✦</span>
           </nav>
         </div>
       </header>
 
       {/* HERO */}
       <section style={s.hero}>
+        <div style={s.heroBg} />
         <div style={s.heroInner}>
-          <p style={s.heroEyebrow}>NOUVELLE EXPÉRIENCE · NEW EXPERIENCE</p>
-          <h1 style={s.heroTitre}>
-            Voyez-vous dans<br />
-            <em style={s.heroEm}>nos collections.</em>
+          <p style={s.heroEyebrow} className="fade-up">NOUVELLE EXPÉRIENCE EXCLUSIVE · NEW EXCLUSIVE EXPERIENCE</p>
+          <h1 style={s.heroTitre} className="fade-up-1">
+            Essayez nos{' '}
+            <em className="gold-shimmer">collections</em>
+            <br />sans sortir de chez vous.
           </h1>
-          <p style={s.heroSub}>
-            Prenez une photo ou uploadez la vôtre. Choisissez votre complet.<br />
-            Notre IA vous habille en 30 secondes.
+          <p style={s.heroSub} className="fade-up-2">
+            Uploadez votre photo ou prenez-en une en direct.<br />
+            Notre IA vous habille en 30 secondes — avant même votre rendez-vous.
           </p>
-          <p style={s.heroSubEn}>
-            Take a photo or upload yours. Choose your suit. Our AI dresses you in 30 seconds.
+          <p style={s.heroSubEn} className="fade-up-3">
+            Try our collections without leaving home. Upload your photo or take one live. Our AI dresses you in 30 seconds.
           </p>
+          <div style={s.heroStats} className="fade-up-4">
+            <div style={s.heroStat}>
+              <span style={s.heroStatNum}>30s</span>
+              <span style={s.heroStatLabel}>Génération · Generation</span>
+            </div>
+            <div style={s.heroStatDivider} />
+            <div style={s.heroStat}>
+              <span style={s.heroStatNum}>6</span>
+              <span style={s.heroStatLabel}>Collections disponibles</span>
+            </div>
+            <div style={s.heroStatDivider} />
+            <div style={s.heroStat}>
+              <span style={s.heroStatNum}>100%</span>
+              <span style={s.heroStatLabel}>Sur mesure · Custom</span>
+            </div>
+          </div>
         </div>
         <div style={s.heroLine} />
       </section>
@@ -262,15 +293,16 @@ export default function Home() {
           { n: 4, label: 'Résultat' },
         ].map((e, i) => (
           <div key={e.n} style={s.progressItem}>
-            <div style={{
+            <div className="progress-dot" style={{
               ...s.progressDot,
               background: etape >= e.n ? '#000' : 'transparent',
-              borderColor: etape >= e.n ? '#000' : '#ccc',
+              borderColor: etape >= e.n ? '#000' : '#ddd',
+              boxShadow: etape === e.n ? '0 0 0 3px rgba(201,169,110,0.2)' : 'none',
             }}>
-              <span style={{ color: etape >= e.n ? '#fff' : '#999', fontSize: '11px', fontWeight: 500 }}>{e.n}</span>
+              <span style={{ color: etape >= e.n ? '#fff' : '#bbb', fontSize: '11px', fontWeight: 500 }}>{e.n}</span>
             </div>
-            <span style={{ ...s.progressLabel, color: etape >= e.n ? '#000' : '#bbb' }}>{e.label}</span>
-            {i < 3 && <div style={{ ...s.progressLine, background: etape > e.n ? '#000' : '#e5e5e5' }} />}
+            <span style={{ ...s.progressLabel, color: etape >= e.n ? '#000' : '#ccc', fontWeight: etape === e.n ? 500 : 300 }}>{e.label}</span>
+            {i < 3 && <div style={{ ...s.progressLine, background: etape > e.n ? 'linear-gradient(90deg, #000, #C9A96E)' : '#eee' }} />}
           </div>
         ))}
       </div>
@@ -278,8 +310,8 @@ export default function Home() {
       {/* CONTENT */}
       <div style={s.content}>
 
-        {/* STEP 1 — PHOTO */}
-        <section style={s.section}>
+        {/* STEP 1 */}
+        <section style={s.section} className="section-reveal">
           <div style={s.sectionHead}>
             <span style={s.sectionNum}>01</span>
             <div>
@@ -288,21 +320,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* CAMERA ACTIVE */}
+          {/* CAMERA */}
           {cameraActive && (
             <div style={s.cameraContainer}>
               {!photoConfirmation ? (
                 <>
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    style={s.cameraVideo}
-                  />
-                  <div style={s.cameraGuide}>
-                    <div style={s.cameraGuideInner} />
-                  </div>
+                  <video ref={videoRef} autoPlay playsInline muted style={s.cameraVideo} />
+                  <div style={s.cameraGuide}><div style={s.cameraGuideInner} /></div>
                   <p style={s.cameraHint}>Placez-vous debout, corps entier visible · Stand upright, full body visible</p>
                   <p style={s.cameraTimer}>⏱ Appuyez sur le bouton — vous aurez 3 secondes pour vous placer · Press the button — you'll have 3 seconds to get in position</p>
                   <div style={s.cameraControls}>
@@ -335,16 +359,14 @@ export default function Home() {
           {!cameraActive && photoClientPreview && (
             <div style={s.previewWrap}>
               <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
+              <div style={s.previewBadge}>✓ Photo sélectionnée</div>
             </div>
           )}
 
           {/* TOUJOURS VISIBLE — LES DEUX BOUTONS */}
           {!cameraActive && (
             <div style={s.uploadOptions}>
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                style={photoClientPreview ? s.btnGalleryActive : s.btnGallery}
-              >
+              <button onClick={() => fileInputRef.current?.click()} style={photoClientPreview ? s.btnGalleryActive : s.btnGallery}>
                 <span style={s.btnIcon}>🖼</span>
                 <div>
                   <p style={s.btnLabel}>{photoClientPreview ? 'Changer la photo · Change photo' : 'Choisir dans ma galerie'}</p>
@@ -356,14 +378,7 @@ export default function Home() {
                 <span style={s.uploadDividerText}>ou · or</span>
                 <div style={s.uploadDividerLine} />
               </div>
-              <button
-                onClick={() => {
-                  setPhotoClient(null)
-                  setPhotoClientPreview(null)
-                  startCamera()
-                }}
-                style={s.btnCamera}
-              >
+              <button onClick={() => { setPhotoClient(null); setPhotoClientPreview(null); startCamera() }} style={s.btnCamera}>
                 <span style={s.btnIcon}>📷</span>
                 <div>
                   <p style={s.btnLabel}>Prendre une photo en direct</p>
@@ -379,39 +394,41 @@ export default function Home() {
           <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
         </section>
 
-        {/* STEP 2 — TENUE */}
+        {/* STEP 2 */}
         {etape >= 2 && (
-          <section style={s.section}>
+          <section style={s.section} className="section-reveal">
             <div style={s.sectionHead}>
               <span style={s.sectionNum}>02</span>
               <div>
                 <h2 style={s.sectionTitle}>Choisissez votre complet <span style={s.sectionTitleEn}>/ Choose your suit</span></h2>
-                <p style={s.sectionSub}>Collection exclusive · Sur mesure pour vous</p>
+                <p style={s.sectionSub}>Collection exclusive · Chaque pièce taillée sur mesure pour vous</p>
               </div>
             </div>
-
             <div style={s.grid}>
               {TENUES.map((t) => (
                 <div
                   key={t.id}
+                  className="suit-card"
                   style={{
                     ...s.card,
-                    border: tenueSelectionnee?.id === t.id ? '2px solid #000' : '1px solid #e5e5e5',
+                    border: tenueSelectionnee?.id === t.id ? '2px solid #C9A96E' : '1px solid #e8e8e8',
+                    background: tenueSelectionnee?.id === t.id ? '#fdfbf7' : '#fff',
                   }}
                   onClick={() => handleTenueSelect(t)}
                 >
                   <div style={s.cardImgWrap}>
-                    <img src={t.image} alt={t.nom} style={s.cardImg} />
+                    <img src={t.image} alt={t.nom} style={s.cardImg} className="suit-img" />
                     {tenueSelectionnee?.id === t.id && (
                       <div style={s.cardCheck}>✓</div>
                     )}
+                    <div style={s.cardImgOverlay} />
                   </div>
                   <div style={s.cardInfo}>
                     <p style={s.cardNom}>{t.nom_fr}</p>
                     <p style={s.cardNomEn}>{t.nom}</p>
                     <div style={s.cardFooter}>
                       <span style={s.cardDesc}>{t.description}</span>
-                      <span style={s.cardPrix}>{t.prix}</span>
+                      <span style={tenueSelectionnee?.id === t.id ? s.cardPrixActive : s.cardPrix}>{t.prix}</span>
                     </div>
                   </div>
                 </div>
@@ -420,14 +437,14 @@ export default function Home() {
           </section>
         )}
 
-        {/* STEP 3 — GÉNÉRER */}
+        {/* STEP 3 */}
         {etape >= 3 && (
-          <section style={s.section}>
+          <section style={s.section} className="section-reveal">
             <div style={s.sectionHead}>
               <span style={s.sectionNum}>03</span>
               <div>
                 <h2 style={s.sectionTitle}>Générer votre look <span style={s.sectionTitleEn}>/ Generate your look</span></h2>
-                <p style={s.sectionSub}>Notre IA va créer votre essayage virtuel · Our AI will create your virtual try-on</p>
+                <p style={s.sectionSub}>Notre IA analyse votre silhouette et adapte le complet à votre morphologie</p>
               </div>
             </div>
 
@@ -436,21 +453,31 @@ export default function Home() {
                 {photoClientPreview && <img src={photoClientPreview} alt="Vous" style={s.resumePhoto} />}
                 <p style={s.resumeLabel}>Votre photo</p>
               </div>
-              <div style={s.resumePlus}>+</div>
+              <div style={s.resumePlus}>
+                <span style={s.resumePlusIcon}>+</span>
+              </div>
               <div style={s.resumeItem}>
                 {tenueSelectionnee && <img src={tenueSelectionnee.image} alt={tenueSelectionnee.nom} style={s.resumePhoto} />}
                 <p style={s.resumeLabel}>{tenueSelectionnee?.nom_fr}</p>
+              </div>
+              <div style={s.resumeArrow}>→</div>
+              <div style={s.resumeResultPlaceholder}>
+                <p style={s.resumeResultText}>Votre look</p>
+                <p style={s.resumeResultSub}>généré par IA</p>
               </div>
             </div>
 
             {erreur && <div style={s.erreur}>⚠ {erreur}</div>}
 
-            <button
-              onClick={handleGenerer}
-              disabled={chargement}
-              style={{ ...s.btnGenerer, opacity: chargement ? 0.6 : 1 }}
-            >
-              {chargement ? 'Génération en cours... · Generating...' : 'VOIR COMMENT ÇA ME VA · SEE HOW IT FITS →'}
+            <button onClick={handleGenerer} disabled={chargement} style={s.btnGenerer} className="btn-generate">
+              {chargement ? (
+                <span style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'center' }}>
+                  <span style={s.spinner} />
+                  Génération en cours... · Generating...
+                </span>
+              ) : (
+                'VOIR COMMENT ÇA ME VA · SEE HOW IT FITS →'
+              )}
             </button>
 
             {chargement && (
@@ -467,9 +494,9 @@ export default function Home() {
           </section>
         )}
 
-        {/* STEP 4 — RÉSULTAT */}
+        {/* STEP 4 */}
         {resultat && (
-          <section style={s.section}>
+          <section style={s.section} className="section-reveal">
             <div style={s.sectionHead}>
               <span style={s.sectionNum}>04</span>
               <div>
@@ -493,16 +520,12 @@ export default function Home() {
             </div>
 
             <div style={s.ctaWrap}>
+              <div style={s.ctaGoldLine} />
               <p style={s.ctaText}>
                 Prêt à le faire tailler à vos mesures exactes ?<br />
                 <em>Ready to have it made to your exact measurements?</em>
               </p>
-              <a
-                href="https://www.surmesur.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={s.btnRDV}
-              >
+              <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer" style={s.btnRDV}>
                 PRENDRE MON RENDEZ-VOUS GRATUIT<br />
                 <span style={s.btnRDVSub}>BOOK MY FREE APPOINTMENT</span>
               </a>
@@ -516,144 +539,139 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer style={s.footer}>
+        <div style={s.footerGoldLine} />
         <p style={s.footerLogo}>SURMESUR</p>
         <p style={s.footerCities}>MTL · TOR · VAN · OTT · PIТ · MEX</p>
         <p style={s.footerSub}>Custom Clothing Made To Be Lived In · B Corp Certified</p>
       </footer>
-
-      {/* LOADING ANIMATION */}
-      <style>{`
-        @keyframes loadingBar {
-          0% { width: 0%; }
-          50% { width: 70%; }
-          100% { width: 95%; }
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-      `}</style>
     </main>
   )
 }
 
 const s = {
-  main: { minHeight: '100vh', background: '#fff', color: '#000', fontFamily: "'Montserrat', sans-serif", fontWeight: 300 },
-  topBar: { background: '#000', color: '#fff', textAlign: 'center', padding: '8px 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' },
-  topBarText: { fontSize: '10px', letterSpacing: '0.2em', fontWeight: 400 },
-  topBarDot: { color: '#666', fontSize: '10px' },
-  header: { borderBottom: '1px solid #e5e5e5', padding: '0 2rem' },
-  headerInner: { maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px', flexWrap: 'wrap', gap: '1rem' },
-  logo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.6rem', fontWeight: 400, letterSpacing: '0.3em' },
-  nav: { display: 'flex', gap: '1.5rem', alignItems: 'center', flexWrap: 'wrap' },
-  navItem: { fontSize: '11px', letterSpacing: '0.12em', color: '#666', cursor: 'pointer' },
-  navItemActive: { fontSize: '11px', letterSpacing: '0.12em', color: '#000', fontWeight: 500, cursor: 'pointer', borderBottom: '1px solid #000', paddingBottom: '2px' },
-  hero: { maxWidth: '1200px', margin: '0 auto', padding: 'clamp(2rem, 6vw, 5rem) 2rem clamp(1.5rem, 3vw, 2.5rem)' },
-  heroInner: { maxWidth: '600px' },
-  heroEyebrow: { fontSize: '10px', letterSpacing: '0.25em', color: '#999', marginBottom: '1.5rem' },
-  heroTitre: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2rem, 6vw, 4.5rem)', fontWeight: 300, lineHeight: 1.1, marginBottom: '1.5rem', color: '#000' },
-  heroEm: { fontStyle: 'italic' },
-  heroSub: { fontSize: '14px', color: '#444', lineHeight: 1.7, marginBottom: '0.5rem' },
-  heroSubEn: { fontSize: '12px', color: '#999', fontStyle: 'italic', lineHeight: 1.7 },
-  heroLine: { height: '1px', background: '#e5e5e5', marginTop: '3rem' },
-  progress: { maxWidth: '1200px', margin: '0 auto', padding: '1.5rem 2rem', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' },
-  progressItem: { display: 'flex', alignItems: 'center', gap: '0.5rem' },
-  progressDot: { width: '24px', height: '24px', borderRadius: '50%', border: '1px solid', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.3s' },
-  progressLabel: { fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap', transition: 'color 0.3s' },
-  progressLine: { width: 'clamp(0.5rem, 3vw, 3rem)', height: '1px', margin: '0 0.5rem', transition: 'background 0.3s' },
-  content: { maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 4rem' },
-  section: { marginBottom: '4rem', paddingTop: '2rem', borderTop: '1px solid #f0f0f0' },
-  sectionHead: { display: 'flex', gap: '1.5rem', alignItems: 'flex-start', marginBottom: '2rem' },
-  sectionNum: { fontFamily: "'Cormorant Garamond', serif", fontSize: '3.5rem', fontWeight: 300, color: '#e5e5e5', lineHeight: 1, flexShrink: 0 },
-  sectionTitle: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.3rem, 3vw, 2rem)', fontWeight: 400, marginBottom: '0.5rem' },
-  sectionTitleEn: { fontStyle: 'italic', color: '#999', fontSize: '0.75em' },
-  sectionSub: { fontSize: '11px', color: '#999', letterSpacing: '0.05em' },
+  main: { minHeight: '100vh', background: '#FAFAF8', color: '#000', fontFamily: "'Montserrat', sans-serif", fontWeight: 300 },
+  
+  topBar: { background: '#0A0A0A', color: '#888', textAlign: 'center', padding: '7px 1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.85rem', flexWrap: 'wrap' },
+  topBarText: { fontSize: '9px', letterSpacing: '0.22em', fontWeight: 400 },
+  topBarDot: { color: '#444', fontSize: '9px' },
 
-  // CAMERA
+  header: { background: '#fff', borderBottom: '1px solid #efefef', padding: '0 2.5rem' },
+  headerInner: { maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '80px', flexWrap: 'wrap', gap: '1rem' },
+  logo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.75rem', fontWeight: 400, letterSpacing: '0.38em', color: '#000' },
+  logoGoldLine: { height: '1.5px', background: 'linear-gradient(90deg, #C9A96E, #E8D5B0, #C9A96E)', marginTop: '3px', width: '100%' },
+  nav: { display: 'flex', gap: '2rem', alignItems: 'center', flexWrap: 'wrap' },
+  navItem: { fontSize: '10px', letterSpacing: '0.14em', color: '#888', textTransform: 'uppercase' },
+  navItemActive: { color: '#000', fontWeight: 500, borderBottom: '1px solid #C9A96E', paddingBottom: '2px' },
+
+  hero: { position: 'relative', maxWidth: '100%', overflow: 'hidden', background: '#fff' },
+  heroBg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(ellipse at 80% 50%, rgba(201,169,110,0.04) 0%, transparent 70%)', pointerEvents: 'none' },
+  heroInner: { maxWidth: '1200px', margin: '0 auto', padding: 'clamp(3rem, 8vw, 6rem) 2.5rem clamp(2rem, 4vw, 3rem)', position: 'relative' },
+  heroEyebrow: { fontSize: '9px', letterSpacing: '0.28em', color: '#C9A96E', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 400 },
+  heroTitre: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.8rem, 7vw, 5.5rem)', fontWeight: 300, lineHeight: 1.05, marginBottom: '2rem', color: '#000', maxWidth: '700px' },
+  heroSub: { fontSize: 'clamp(13px, 1.5vw, 15px)', color: '#555', lineHeight: 1.8, marginBottom: '0.5rem', maxWidth: '520px' },
+  heroSubEn: { fontSize: '12px', color: '#aaa', fontStyle: 'italic', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px' },
+  heroStats: { display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' },
+  heroStat: { display: 'flex', flexDirection: 'column', gap: '4px' },
+  heroStatNum: { fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 300, color: '#000', lineHeight: 1 },
+  heroStatLabel: { fontSize: '9px', letterSpacing: '0.15em', color: '#999', textTransform: 'uppercase' },
+  heroStatDivider: { width: '1px', height: '40px', background: '#e5e5e5' },
+  heroLine: { height: '1px', background: 'linear-gradient(90deg, transparent, #e5e5e5 20%, #C9A96E 50%, #e5e5e5 80%, transparent)' },
+
+  progress: { maxWidth: '1200px', margin: '0 auto', padding: '1.75rem 2.5rem', display: 'flex', alignItems: 'center', background: '#fff', borderBottom: '1px solid #f0f0f0', flexWrap: 'wrap', gap: '0.5rem' },
+  progressItem: { display: 'flex', alignItems: 'center', gap: '0.6rem' },
+  progressDot: { width: '26px', height: '26px', borderRadius: '50%', border: '1.5px solid', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  progressLabel: { fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', whiteSpace: 'nowrap' },
+  progressLine: { width: 'clamp(1rem, 4vw, 4rem)', height: '1px', margin: '0 0.5rem' },
+
+  content: { maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem 5rem' },
+  section: { marginBottom: '5rem', paddingTop: '3rem', borderTop: '1px solid #f0f0f0' },
+  sectionHead: { display: 'flex', gap: '1.5rem', alignItems: 'flex-start', marginBottom: '2.5rem' },
+  sectionNum: { fontFamily: "'Cormorant Garamond', serif", fontSize: '5rem', fontWeight: 300, color: '#f0ede8', lineHeight: 1, flexShrink: 0, letterSpacing: '-0.02em' },
+  sectionTitle: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 400, marginBottom: '0.4rem', letterSpacing: '0.01em' },
+  sectionTitleEn: { fontStyle: 'italic', color: '#bbb', fontSize: '0.7em' },
+  sectionSub: { fontSize: '11px', color: '#aaa', letterSpacing: '0.06em', lineHeight: 1.6 },
+
   cameraContainer: { position: 'relative', background: '#000', borderRadius: '2px', overflow: 'hidden', marginBottom: '1rem' },
   cameraVideo: { width: '100%', maxHeight: '500px', objectFit: 'cover', display: 'block' },
-  cameraGuide: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '200px', height: '400px', border: '2px dashed rgba(255,255,255,0.4)', borderRadius: '100px', pointerEvents: 'none' },
+  cameraGuide: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '200px', height: '400px', border: '1.5px dashed rgba(201,169,110,0.6)', borderRadius: '100px', pointerEvents: 'none' },
   cameraGuideInner: { width: '100%', height: '100%' },
-  cameraHint: { textAlign: 'center', color: '#fff', fontSize: '11px', padding: '0.75rem', background: 'rgba(0,0,0,0.6)', letterSpacing: '0.05em' },
-  cameraTimer: { textAlign: 'center', color: '#C9A96E', fontSize: '10px', padding: '0.5rem 1rem', background: 'rgba(0,0,0,0.8)', letterSpacing: '0.08em', fontStyle: 'italic' },
-  cameraControls: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem 2rem', background: '#000' },
-  btnCameraCancel: { background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '0.6rem 1.2rem', fontSize: '12px', cursor: 'pointer', borderRadius: '2px', fontFamily: "'Montserrat', sans-serif", letterSpacing: '0.08em' },
-  btnCapture: { width: '64px', height: '64px', borderRadius: '50%', background: 'transparent', border: '3px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 },
-  btnCaptureInner: { width: '52px', height: '52px', borderRadius: '50%', background: '#fff' },
-  btnCameraConfirm: { background: '#fff', border: 'none', color: '#000', padding: '0.75rem 1.5rem', fontSize: '12px', cursor: 'pointer', borderRadius: '2px', fontFamily: "'Montserrat', sans-serif", fontWeight: 500, letterSpacing: '0.08em' },
+  cameraHint: { textAlign: 'center', color: '#fff', fontSize: '11px', padding: '0.75rem', background: 'rgba(0,0,0,0.7)', letterSpacing: '0.05em' },
+  cameraTimer: { textAlign: 'center', color: '#C9A96E', fontSize: '10px', padding: '0.5rem 1rem', background: 'rgba(0,0,0,0.85)', letterSpacing: '0.08em', fontStyle: 'italic' },
+  cameraControls: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem 2rem', background: '#0A0A0A' },
+  btnCameraCancel: { background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '0.6rem 1.2rem', fontSize: '11px', cursor: 'pointer', borderRadius: '2px', fontFamily: "'Montserrat', sans-serif", letterSpacing: '0.1em' },
+  btnCapture: { width: '68px', height: '68px', borderRadius: '50%', background: 'transparent', border: '3px solid #C9A96E', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 },
+  btnCaptureInner: { width: '54px', height: '54px', borderRadius: '50%', background: '#C9A96E' },
+  btnCameraConfirm: { background: '#C9A96E', border: 'none', color: '#000', padding: '0.75rem 1.5rem', fontSize: '11px', cursor: 'pointer', borderRadius: '2px', fontFamily: "'Montserrat', sans-serif", fontWeight: 500, letterSpacing: '0.1em' },
 
-  // UPLOAD OPTIONS
-  uploadOptions: { border: '1px dashed #ddd', borderRadius: '2px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'stretch' },
-  btnCamera: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'opacity 0.2s' },
-  btnGallery: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#fff', color: '#000', border: '1px solid #000', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'all 0.2s' },
-  btnIcon: { fontSize: '1.5rem', flexShrink: 0 },
-  btnLabel: { fontSize: '13px', fontWeight: 500, marginBottom: '2px', letterSpacing: '0.05em' },
-  btnLabelEn: { fontSize: '11px', color: '#999', fontStyle: 'italic' },
-  uploadDivider: { display: 'flex', alignItems: 'center', gap: '1rem' },
-  uploadDividerLine: { flex: 1, height: '1px', background: '#e5e5e5' },
-  uploadDividerText: { fontSize: '11px', color: '#bbb', letterSpacing: '0.1em', whiteSpace: 'nowrap' },
-  uploadTip: { fontSize: '11px', color: '#999', textAlign: 'center', fontStyle: 'italic' },
-
-  // PREVIEW
-  previewWrap: { position: 'relative', cursor: 'pointer', borderRadius: '2px', overflow: 'hidden' },
+  previewWrap: { position: 'relative', borderRadius: '2px', overflow: 'hidden', marginBottom: '1rem', border: '1px solid #e8e8e8' },
   previewImg: { width: '100%', maxHeight: '500px', objectFit: 'cover', display: 'block' },
-  previewOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, background: 'rgba(0,0,0,0.7)', padding: '0.75rem', textAlign: 'center' },
-  previewOverlayText: { fontSize: '10px', color: '#fff', letterSpacing: '0.2em' },
+  previewBadge: { position: 'absolute', top: '1rem', left: '1rem', background: 'rgba(201,169,110,0.9)', color: '#000', padding: '0.4rem 0.85rem', fontSize: '10px', letterSpacing: '0.15em', fontWeight: 500 },
 
-  // GRID
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1px', background: '#e5e5e5', border: '1px solid #e5e5e5' },
-  card: { background: '#fff', cursor: 'pointer', transition: 'all 0.2s', position: 'relative' },
-  cardImgWrap: { height: '360px', overflow: 'hidden', position: 'relative', background: '#f9f9f9' },
+  uploadOptions: { border: '1px solid #efefef', borderRadius: '2px', padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'stretch', background: '#fff' },
+  btnCamera: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#0A0A0A', color: '#fff', border: 'none', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'background 0.2s' },
+  btnGallery: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#fff', color: '#000', border: '1px solid #ddd', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'all 0.2s' },
+  btnGalleryActive: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#fff', color: '#000', border: '1px solid #C9A96E', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'all 0.2s' },
+  btnIcon: { fontSize: '1.4rem', flexShrink: 0 },
+  btnLabel: { fontSize: '12px', fontWeight: 500, marginBottom: '2px', letterSpacing: '0.06em' },
+  btnLabelEn: { fontSize: '10px', color: '#999', fontStyle: 'italic' },
+  uploadDivider: { display: 'flex', alignItems: 'center', gap: '1rem' },
+  uploadDividerLine: { flex: 1, height: '1px', background: '#efefef' },
+  uploadDividerText: { fontSize: '10px', color: '#ccc', letterSpacing: '0.12em', whiteSpace: 'nowrap' },
+  uploadTip: { fontSize: '11px', color: '#bbb', textAlign: 'center', fontStyle: 'italic', paddingTop: '0.5rem' },
+
+  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5px', background: '#e8e8e8', border: '1px solid #e8e8e8' },
+  card: { background: '#fff', cursor: 'pointer', position: 'relative', overflow: 'hidden' },
+  cardImgWrap: { height: '380px', overflow: 'hidden', position: 'relative', background: '#f7f7f5' },
   cardImg: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' },
-  cardCheck: { position: 'absolute', top: '1rem', right: '1rem', width: '28px', height: '28px', background: '#000', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 600 },
-  cardInfo: { padding: '1rem' },
-  cardNom: { fontSize: '13px', fontWeight: 500, color: '#000', marginBottom: '2px' },
-  cardNomEn: { fontSize: '11px', color: '#999', fontStyle: 'italic', marginBottom: '0.5rem' },
+  cardImgOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, height: '60px', background: 'linear-gradient(transparent, rgba(0,0,0,0.04))' },
+  cardCheck: { position: 'absolute', top: '1rem', right: '1rem', width: '30px', height: '30px', background: '#C9A96E', color: '#000', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: 600 },
+  cardInfo: { padding: '1.1rem 1.25rem' },
+  cardNom: { fontSize: '13px', fontWeight: 500, color: '#000', marginBottom: '2px', letterSpacing: '0.02em' },
+  cardNomEn: { fontSize: '10px', color: '#bbb', fontStyle: 'italic', marginBottom: '0.6rem' },
   cardFooter: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  cardDesc: { fontSize: '10px', color: '#999', letterSpacing: '0.08em', textTransform: 'uppercase' },
-  cardPrix: { fontSize: '13px', fontWeight: 500, color: '#000' },
+  cardDesc: { fontSize: '9px', color: '#bbb', letterSpacing: '0.1em', textTransform: 'uppercase' },
+  cardPrix: { fontSize: '13px', fontWeight: 400, color: '#666' },
+  cardPrixActive: { fontSize: '13px', fontWeight: 500, color: '#C9A96E' },
 
-  // RESUME
-  resume: { display: 'flex', alignItems: 'center', gap: '2rem', padding: '1.5rem', background: '#f9f9f9', border: '1px solid #e5e5e5', marginBottom: '2rem', flexWrap: 'wrap' },
-  resumeItem: { textAlign: 'center', flex: 1, minWidth: '100px' },
-  resumePhoto: { width: '90px', height: '110px', objectFit: 'cover', objectPosition: 'top', display: 'block', margin: '0 auto 0.5rem', border: '1px solid #e5e5e5' },
-  resumeLabel: { fontSize: '11px', color: '#666' },
-  resumePlus: { fontSize: '1.5rem', color: '#ccc', flexShrink: 0 },
+  resume: { display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1.75rem', background: '#fff', border: '1px solid #efefef', marginBottom: '2rem', flexWrap: 'wrap', borderRadius: '2px' },
+  resumeItem: { textAlign: 'center', flex: 1, minWidth: '90px' },
+  resumePhoto: { width: '90px', height: '110px', objectFit: 'cover', objectPosition: 'top', display: 'block', margin: '0 auto 0.5rem', border: '1px solid #efefef' },
+  resumeLabel: { fontSize: '10px', color: '#aaa', letterSpacing: '0.08em' },
+  resumePlus: { flexShrink: 0 },
+  resumePlusIcon: { fontSize: '1.25rem', color: '#ddd', display: 'block' },
+  resumeArrow: { fontSize: '1.25rem', color: '#C9A96E', flexShrink: 0 },
+  resumeResultPlaceholder: { flex: 1, minWidth: '90px', textAlign: 'center', padding: '1rem', border: '1px dashed #e0d5c5', borderRadius: '2px', background: '#fdfbf7' },
+  resumeResultText: { fontSize: '12px', color: '#C9A96E', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', marginBottom: '2px' },
+  resumeResultSub: { fontSize: '9px', color: '#ccc', letterSpacing: '0.1em' },
 
-  // ERRORS & BUTTONS
-  erreur: { background: '#fff5f5', border: '1px solid #ffcccc', padding: '1rem', marginBottom: '1.5rem', fontSize: '13px', color: '#cc0000', borderRadius: '2px' },
-  btnGenerer: { width: '100%', padding: '1.25rem', background: '#000', color: '#fff', border: 'none', fontSize: '12px', letterSpacing: '0.15em', cursor: 'pointer', transition: 'opacity 0.2s', fontFamily: "'Montserrat', sans-serif", fontWeight: 400 },
+  erreur: { background: '#fff8f8', border: '1px solid #f5cccc', padding: '1rem 1.25rem', marginBottom: '1.5rem', fontSize: '12px', color: '#cc3333', borderRadius: '2px', letterSpacing: '0.03em' },
+  btnGenerer: { width: '100%', padding: '1.35rem', background: '#0A0A0A', color: '#fff', border: '1px solid transparent', fontSize: '11px', letterSpacing: '0.18em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", fontWeight: 400, display: 'block' },
+  spinner: { width: '14px', height: '14px', border: '1.5px solid rgba(255,255,255,0.3)', borderTop: '1.5px solid #fff', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.8s linear infinite', flexShrink: 0 },
 
-  // LOADING
   loadingWrap: { marginTop: '1.5rem', textAlign: 'center' },
-  loadingBar: { height: '2px', background: '#e5e5e5', borderRadius: '1px', overflow: 'hidden', marginBottom: '1rem' },
-  loadingBarInner: { height: '100%', background: '#000', animation: 'loadingBar 60s ease forwards', borderRadius: '1px' },
-  loadingText: { fontSize: '12px', color: '#999', lineHeight: 1.7 },
+  loadingBar: { height: '1.5px', background: '#efefef', overflow: 'hidden', marginBottom: '1.25rem' },
+  loadingBarInner: { height: '100%', background: 'linear-gradient(90deg, #C9A96E, #E8D5B0)', animation: 'loadingBar 60s ease forwards' },
+  loadingText: { fontSize: '11px', color: '#aaa', lineHeight: 1.8 },
 
-  // RÉSULTAT
-  resultatGrid: { display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem', marginBottom: '2rem' },
+  resultatGrid: { display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem', marginBottom: '2.5rem' },
   resultatAvant: { textAlign: 'center' },
   resultatApres: { textAlign: 'center' },
-  resultatLabel: { fontSize: '9px', letterSpacing: '0.25em', color: '#999', marginBottom: '0.75rem' },
-  resultatImgSmall: { width: '100%', maxHeight: '500px', objectFit: 'cover', objectPosition: 'top', border: '1px solid #e5e5e5', display: 'block' },
+  resultatLabel: { fontSize: '9px', letterSpacing: '0.28em', color: '#C9A96E', marginBottom: '0.85rem', fontWeight: 400 },
+  resultatImgSmall: { width: '100%', maxHeight: '500px', objectFit: 'cover', objectPosition: 'top', border: '1px solid #efefef', display: 'block' },
   resultatWrap: { position: 'relative' },
-  resultatImg: { width: '100%', maxHeight: '600px', objectFit: 'contain', background: '#f9f9f9', display: 'block', border: '1px solid #e5e5e5' },
-  resultatBadge: { position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(0,0,0,0.8)', color: '#fff', padding: '0.4rem 0.85rem', fontSize: '9px', letterSpacing: '0.2em' },
+  resultatImg: { width: '100%', maxHeight: '650px', objectFit: 'contain', background: '#f7f7f5', display: 'block', border: '1px solid #efefef' },
+  resultatBadge: { position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(10,10,10,0.85)', color: '#C9A96E', padding: '0.4rem 0.9rem', fontSize: '8px', letterSpacing: '0.22em', fontWeight: 400 },
 
-  // CTA
-  ctaWrap: { textAlign: 'center' },
-  ctaText: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.1rem, 2.5vw, 1.5rem)', marginBottom: '2rem', lineHeight: 1.5, color: '#000' },
-  btnRDV: { display: 'inline-block', padding: '1.25rem 3rem', background: '#000', color: '#fff', textDecoration: 'none', fontSize: '11px', letterSpacing: '0.15em', marginBottom: '1rem', lineHeight: 1.8 },
-  btnRDVSub: { fontSize: '9px', opacity: 0.7, letterSpacing: '0.1em' },
-  btnReset: { display: 'block', width: '100%', padding: '0.85rem', background: '#fff', border: '1px solid #e5e5e5', color: '#999', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', marginTop: '0.75rem', fontFamily: "'Montserrat', sans-serif" },
+  ctaWrap: { textAlign: 'center', paddingTop: '1rem' },
+  ctaGoldLine: { height: '1px', background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)', marginBottom: '2rem' },
+  ctaText: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.2rem, 2.5vw, 1.6rem)', marginBottom: '2rem', lineHeight: 1.5, color: '#333', fontWeight: 300 },
+  btnRDV: { display: 'inline-block', padding: '1.25rem 3.5rem', background: '#0A0A0A', color: '#fff', textDecoration: 'none', fontSize: '10px', letterSpacing: '0.2em', marginBottom: '1rem', lineHeight: 2, border: '1px solid transparent', transition: 'all 0.3s' },
+  btnRDVSub: { fontSize: '9px', opacity: 0.5, letterSpacing: '0.12em', display: 'block' },
+  btnReset: { display: 'block', width: '100%', padding: '0.9rem', background: 'transparent', border: '1px solid #efefef', color: '#bbb', fontSize: '10px', letterSpacing: '0.14em', cursor: 'pointer', marginTop: '0.75rem', fontFamily: "'Montserrat', sans-serif", transition: 'all 0.2s' },
 
-  // FOOTER
-  footer: { borderTop: '1px solid #e5e5e5', textAlign: 'center', padding: '3rem 1rem' },
-  footerLogo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.5rem', letterSpacing: '0.35em', marginBottom: '0.75rem' },
-  footerCities: { fontSize: '10px', letterSpacing: '0.2em', color: '#999', marginBottom: '0.5rem' },
-  footerSub: { fontSize: '10px', color: '#bbb', letterSpacing: '0.1em' },
-  previewActions: { display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' },
-  btnPreviewChange: { flex: 1, padding: '0.85rem 1rem', background: '#fff', border: '1px solid #000', color: '#000', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", borderRadius: '2px' },
-  btnPreviewCamera: { flex: 1, padding: '0.85rem 1rem', background: '#000', border: 'none', color: '#fff', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", borderRadius: '2px' },
-  btnGalleryActive: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#fff', color: '#000', border: '1px solid #000', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'all 0.2s' },
+  footer: { borderTop: '1px solid #efefef', textAlign: 'center', padding: '3.5rem 1rem', background: '#fff' },
+  footerGoldLine: { height: '1px', background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)', marginBottom: '2rem', maxWidth: '200px', margin: '0 auto 2rem' },
+  footerLogo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.6rem', letterSpacing: '0.38em', marginBottom: '0.75rem', fontWeight: 300 },
+  footerCities: { fontSize: '9px', letterSpacing: '0.24em', color: '#bbb', marginBottom: '0.5rem' },
+  footerSub: { fontSize: '9px', color: '#ccc', letterSpacing: '0.12em' },
 }
