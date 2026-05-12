@@ -87,6 +87,7 @@ export default function Home() {
   const [gallery, setGallery] = useState([]) // toutes les générations sauvegardées
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null) // photo active dans la galerie
   const [replacingIndex, setReplacingIndex] = useState(null) // index de la pièce qu'on veut remplacer
+  const [selectedBackground, setSelectedBackground] = useState('neutral') // background sélectionné
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
@@ -183,6 +184,7 @@ export default function Home() {
       const formData = new FormData()
       formData.append('garment_url', currentSelection.image)
       formData.append('category', CATALOGUE[activeTab].categorie)
+      formData.append('background', selectedBackground)
 
       if (replacingIndex !== null) {
         // REMPLACEMENT PRÉCIS — utiliser la photo AVANT la pièce remplacée comme base
@@ -269,6 +271,14 @@ export default function Home() {
   }
 
   const allItems = Object.values(CATALOGUE).flatMap(c => c.items)
+
+  const BACKGROUNDS = [
+    { id: 'neutral', label: 'Studio', label_en: 'Studio', icon: '⬜', desc: 'Fond blanc neutre · White background' },
+    { id: 'office', label: 'Bureau', label_en: 'Office', icon: '🏢', desc: 'Environnement professionnel · Corporate setting' },
+    { id: 'wedding', label: 'Mariage', label_en: 'Wedding', icon: '💍', desc: 'Jardin élégant · Elegant garden' },
+    { id: 'party', label: 'Soirée', label_en: 'Evening', icon: '🥂', desc: 'Gala & restaurant luxueux · Luxury gala' },
+    { id: 'city', label: 'Ville', label_en: 'City', icon: '🏙️', desc: 'Marche dans la ville · City walk' },
+  ]
 
   return (
     <main style={s.main}>
@@ -531,6 +541,30 @@ export default function Home() {
                     <p style={s.selectionDesc}>{currentSelection.desc} · {currentSelection.prix}</p>
                   </div>
                 </div>
+                {/* SÉLECTION DU BACKGROUND */}
+                <div style={s.bgSection}>
+                  <p style={s.bgTitle}>🎨 Choisissez votre arrière-plan · Choose your background</p>
+                  <div style={s.bgGrid}>
+                    {BACKGROUNDS.map(bg => (
+                      <button
+                        key={bg.id}
+                        onClick={() => setSelectedBackground(bg.id)}
+                        style={{
+                          ...s.bgCard,
+                          border: selectedBackground === bg.id ? '2px solid #C9A96E' : '1px solid #e5e5e5',
+                          background: selectedBackground === bg.id ? '#fdfbf7' : '#fff',
+                        }}
+                      >
+                        <span style={s.bgIcon}>{bg.icon}</span>
+                        <p style={s.bgLabel}>{bg.label}</p>
+                        <p style={s.bgLabelEn}>{bg.label_en}</p>
+                        <p style={s.bgDesc}>{bg.desc}</p>
+                        {selectedBackground === bg.id && <div style={s.bgCheck}>✓</div>}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {erreur && <div style={s.erreur}>⚠ {erreur}</div>}
                 <button onClick={handleGenerer} disabled={chargement} style={s.btnGenerer} className="btn-generate">
                   {chargement ? (
@@ -865,4 +899,13 @@ const s = {
   replacingBanner: { display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.85rem 1rem', background:'#fff8f5', border:'1px solid #E85D30', borderRadius:'2px', fontSize:'11px', color:'#E85D30', marginTop:'0.5rem', flexWrap:'wrap' },
   replacingBannerIcon: { fontSize:'14px', flexShrink:0 },
   replacingBannerCancel: { marginLeft:'auto', background:'transparent', border:'1px solid #E85D30', color:'#E85D30', padding:'0.3rem 0.75rem', fontSize:'10px', cursor:'pointer', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", letterSpacing:'0.08em' },
+  bgSection: { marginBottom:'1.25rem', padding:'1.25rem', background:'#fafaf8', border:'1px solid #efefef', borderRadius:'2px' },
+  bgTitle: { fontSize:'11px', color:'#666', letterSpacing:'0.08em', marginBottom:'1rem', fontWeight:500 },
+  bgGrid: { display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'8px' },
+  bgCard: { position:'relative', padding:'0.75rem 0.5rem', borderRadius:'2px', cursor:'pointer', textAlign:'center', transition:'all 0.2s', fontFamily:"'Montserrat',sans-serif" },
+  bgIcon: { fontSize:'1.4rem', display:'block', marginBottom:'4px' },
+  bgLabel: { fontSize:'10px', fontWeight:500, color:'#000', marginBottom:'1px', letterSpacing:'0.04em' },
+  bgLabelEn: { fontSize:'8px', color:'#aaa', marginBottom:'3px', fontStyle:'italic' },
+  bgDesc: { fontSize:'8px', color:'#bbb', lineHeight:1.3, letterSpacing:'0.03em' },
+  bgCheck: { position:'absolute', top:'4px', right:'4px', width:'14px', height:'14px', background:'#C9A96E', color:'#000', borderRadius:'50%', fontSize:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 },
 }
