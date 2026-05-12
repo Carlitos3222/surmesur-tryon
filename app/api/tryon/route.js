@@ -5,6 +5,18 @@ export async function POST(request) {
     const modelImageUrl = formData.get('model_image_url')
     const garmentUrl = formData.get('garment_url')
     const category = formData.get('category') || 'one-pieces'
+    const background = formData.get('background') || 'neutral'
+    const seed = Math.floor(Math.random() * 2147483647) // seed aléatoire pour varier les résultats
+
+    const BACKGROUNDS = {
+      neutral: 'Clean white studio background, professional photography, soft lighting',
+      office: 'Modern luxury office environment, glass walls, city view, professional corporate setting, natural light',
+      wedding: 'Elegant wedding venue, beautiful garden with flowers, soft romantic lighting, luxury château or vineyard',
+      party: 'Upscale restaurant or hotel rooftop, warm ambient lighting, luxury gala dinner setting, sophisticated evening atmosphere',
+      city: 'Walking in a vibrant city street, urban environment, stylish neighborhood, natural daylight, cinematic look',
+    }
+
+    const backgroundPrompt = BACKGROUNDS[background] || BACKGROUNDS.neutral
 
     if ((!modelImageFile && !modelImageUrl) || !garmentUrl) {
       return Response.json({ error: 'Images manquantes' }, { status: 400 })
@@ -37,6 +49,8 @@ export async function POST(request) {
           product_image: garmentUrl,
           resolution: '1k',
           generation_mode: 'balanced',
+          prompt: `Keep the exact original colors, patterns, textures and design of the garment. Preserve every detail of the fabric including plaid patterns, stripes, floral prints, and material texture. The garment must look identical to the product image. ${backgroundPrompt}. Highly realistic and photographic result.`,
+          seed: seed,
         }
       }),
     })
