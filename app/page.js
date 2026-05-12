@@ -86,6 +86,7 @@ export default function Home() {
   const [generationCount, setGenerationCount] = useState(0)
   const [gallery, setGallery] = useState([]) // toutes les générations sauvegardées
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null) // photo active dans la galerie
+  const [replacingIndex, setReplacingIndex] = useState(null) // index de la pièce qu'on veut remplacer
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
@@ -183,11 +184,19 @@ export default function Home() {
       formData.append('garment_url', currentSelection.image)
       formData.append('category', CATALOGUE[activeTab].categorie)
 
-      if (currentResultUrl && generationCount > 0) {
-        // Génération séquentielle — utiliser le résultat précédent comme modèle
+      if (replacingIndex !== null) {
+        // REMPLACEMENT — utiliser la photo AVANT la pièce remplacée comme base
+        const basePhoto = replacingIndex === 0 ? null : gallery[replacingIndex - 1]?.url
+        if (basePhoto) {
+          formData.append('model_image_url', basePhoto)
+        } else {
+          formData.append('model_image', photoClient)
+        }
+      } else if (currentResultUrl && generationCount > 0) {
+        // Génération séquentielle normale
         formData.append('model_image_url', currentResultUrl)
       } else {
-        // Première génération — utiliser la photo originale
+        // Première génération
         formData.append('model_image', photoClient)
       }
 
@@ -203,15 +212,30 @@ export default function Home() {
       } else {
         const newResult = data.output
         const newPiece = { ...currentSelection, categorie: activeTab }
-        setCurrentResultUrl(newResult)
-        setOutfitSelections(prev => [...prev, newPiece])
-        setGallery(prev => [...prev, { 
-          url: newResult, 
-          piece: newPiece,
-          index: prev.length 
-        }])
-        setActiveGalleryIndex(generationCount)
-        setGenerationCount(prev => prev + 1)
+
+        if (replacingIndex !== null) {
+          // Remplacer dans la galerie et les sélections
+          setGallery(prev => {
+            const newGallery = [...prev]
+            newGallery[replacingIndex] = { url: newResult, piece: newPiece, index: replacingIndex }
+            return newGallery
+          })
+          setOutfitSelections(prev => {
+            const newSel = [...prev]
+            newSel[replacingIndex] = newPiece
+            return newSel
+          })
+          setCurrentResultUrl(newResult)
+          setActiveGalleryIndex(replacingIndex)
+          setReplacingIndex(null)
+        } else {
+          // Ajout normal
+          setCurrentResultUrl(newResult)
+          setOutfitSelections(prev => [...prev, newPiece])
+          setGallery(prev => [...prev, { url: newResult, piece: newPiece, index: prev.length }])
+          setActiveGalleryIndex(generationCount)
+          setGenerationCount(prev => prev + 1)
+        }
         setCurrentSelection(null)
         setEtape(3)
       }
@@ -232,6 +256,7 @@ export default function Home() {
     setGenerationCount(0)
     setGallery([])
     setActiveGalleryIndex(null)
+    setReplacingIndex(null)
     setErreur(null)
     stopCamera()
   }
@@ -239,6 +264,7 @@ export default function Home() {
   const ajouterPiece = () => {
     setEtape(2)
     setCurrentSelection(null)
+    setReplacingIndex(null)
   }
 
   const allItems = Object.values(CATALOGUE).flatMap(c => c.items)
@@ -491,7 +517,7 @@ export default function Home() {
                       Génération en cours... · Generating...
                     </span>
                   ) : generationCount > 0 ? (
-                    'AJOUTER CETTE PIÈCE → ADD THIS PIECE'
+                    replacingIndex !== null ? 'REMPLACER CETTE PIÈCE → REPLACE PIECE' : 'AJOUTER CETTE PIÈCE → ADD THIS PIECE'
                   ) : (
                     'ESSAYER CETTE PIÈCE → TRY THIS PIECE'
                   )}
@@ -531,18 +557,25 @@ export default function Home() {
                       {gallery.map((item, i) => (
                         <div
                           key={i}
-                          onClick={() => setActiveGalleryIndex(i)}
                           style={{
                             ...s.galleryThumb,
-                            border: activeGalleryIndex === i ? '2px solid #C9A96E' : '1px solid #e8e8e8',
-                            opacity: activeGalleryIndex === i ? 1 : 0.6,
+                            border: replacingIndex === i ? '2px solid #E85D30' : activeGalleryIndex === i ? '2px solid #C9A96E' : '1px solid #e8e8e8',
+                            opacity: activeGalleryIndex === i || replacingIndex === i ? 1 : 0.6,
                           }}
                         >
-                          <img src={item.url} alt={item.piece.nom_fr} style={s.galleryThumbImg} />
+                          <div onClick={() => setActiveGalleryIndex(i)} style={{cursor:'pointer'}}>
+                            <img src={item.url} alt={item.piece.nom_fr} style={s.galleryThumbImg} />
+                          </div>
                           <div style={s.galleryThumbLabel}>
                             <span style={s.galleryThumbNum}>{i + 1}</span>
                             <span style={s.galleryThumbNom}>{item.piece.nom_fr}</span>
                           </div>
+                          <button
+                            onClick={() => { setReplacingIndex(i); setActiveGalleryIndex(i); setEtape(2); setCurrentSelection(null) }}
+                            style={s.galleryThumbReplace}
+                          >
+                            ✎ Changer
+                          </button>
                         </div>
                       ))}
                     </div>
@@ -568,12 +601,41 @@ export default function Home() {
                 <p style={s.outfitTitle}>VOTRE SÉLECTION · YOUR OUTFIT</p>
                 <div style={s.outfitItems}>
                   {outfitSelections.map((item, i) => (
-                    <div key={i} style={s.outfitItem}>
+                    <div key={i} style={{
+                      ...s.outfitItem,
+                      border: replacingIndex === i ? '1px solid #E85D30' : '1px solid #efefef',
+                      background: replacingIndex === i ? '#fff8f6' : '#fff',
+                    }}>
                       <img src={item.image} alt={item.nom_fr} style={s.outfitItemImg} />
-                      <div>
+                      <div style={{flex:1}}>
                         <p style={s.outfitItemNom}>{item.nom_fr}</p>
                         <p style={s.outfitItemDesc}>{item.desc}</p>
                         <p style={s.outfitItemPrix}>{item.prix}</p>
+                      </div>
+                      <div style={s.outfitItemActions}>
+                        <button
+                          onClick={() => { setReplacingIndex(i); setActiveGalleryIndex(i); setEtape(2); setCurrentSelection(null) }}
+                          style={s.btnItemReplace}
+                          title="Changer cette pièce"
+                        >✎</button>
+                        <button
+                          onClick={() => {
+                            setOutfitSelections(prev => prev.filter((_, idx) => idx !== i))
+                            setGallery(prev => prev.filter((_, idx) => idx !== i))
+                            if (gallery.length > 1) {
+                              const newActive = Math.max(0, i - 1)
+                              setActiveGalleryIndex(newActive)
+                              setCurrentResultUrl(gallery[newActive]?.url || null)
+                            } else {
+                              setCurrentResultUrl(null)
+                              setActiveGalleryIndex(null)
+                              setEtape(2)
+                            }
+                            setGenerationCount(prev => prev - 1)
+                          }}
+                          style={s.btnItemDelete}
+                          title="Supprimer cette pièce"
+                        >✕</button>
                       </div>
                     </div>
                   ))}
@@ -744,4 +806,8 @@ const s = {
   galleryThumbNum: { fontSize:'8px', color:'#C9A96E', letterSpacing:'0.15em', display:'block', marginBottom:'1px' },
   galleryThumbNom: { fontSize:'9px', color:'#333', letterSpacing:'0.04em', display:'block', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' },
   galleryOldBadge: { position:'absolute', top:'1rem', left:'1rem', background:'rgba(201,169,110,0.9)', color:'#000', padding:'0.4rem 0.85rem', fontSize:'9px', letterSpacing:'0.15em', fontWeight:500 },
+  galleryThumbReplace: { width:'100%', padding:'4px', background:'#f5f5f5', border:'none', fontSize:'9px', color:'#666', cursor:'pointer', letterSpacing:'0.08em', fontFamily:"'Montserrat',sans-serif", borderTop:'1px solid #efefef' },
+  outfitItemActions: { display:'flex', flexDirection:'column', gap:'4px', flexShrink:0 },
+  btnItemReplace: { width:'28px', height:'28px', background:'#f5f5f5', border:'1px solid #e5e5e5', borderRadius:'2px', fontSize:'12px', cursor:'pointer', color:'#666', display:'flex', alignItems:'center', justifyContent:'center' },
+  btnItemDelete: { width:'28px', height:'28px', background:'#fff5f5', border:'1px solid #ffcccc', borderRadius:'2px', fontSize:'11px', cursor:'pointer', color:'#cc3333', display:'flex', alignItems:'center', justifyContent:'center' },
 }
