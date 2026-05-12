@@ -1,25 +1,18 @@
 export async function POST(request) {
   try {
     const formData = await request.formData()
-    const modelImageFile = formData.get('model_image')
-    const modelImageUrl = formData.get('model_image_url')
+    const modelImage = formData.get('model_image')   // File upload (première génération)
+    const modelUrl = formData.get('model_url')        // URL string (générations suivantes)
     const garmentUrl = formData.get('garment_url')
-    const category = formData.get('category') || 'one-pieces'
-    const background = formData.get('background') || 'neutral'
-    const seed = Math.floor(Math.random() * 2147483647) // seed aléatoire pour varier les résultats
+    const backgroundPrompt = formData.get('background_prompt') || ''
+    const seed = parseInt(formData.get('seed') || Math.floor(Math.random() * 1000000))
 
-    const BACKGROUNDS = {
-      neutral: 'Clean white studio background, professional photography, soft lighting',
-      office: 'Modern luxury office environment, glass walls, city view, professional corporate setting, natural light',
-      wedding: 'Elegant wedding venue, beautiful garden with flowers, soft romantic lighting, luxury château or vineyard',
-      party: 'Upscale restaurant or hotel rooftop, warm ambient lighting, luxury gala dinner setting, sophisticated evening atmosphere',
-      city: 'Walking in a vibrant city street, urban environment, stylish neighborhood, natural daylight, cinematic look',
+    if (!garmentUrl) {
+      return Response.json({ error: 'Images manquantes' }, { status: 400 })
     }
 
-    const backgroundPrompt = BACKGROUNDS[background] || BACKGROUNDS.neutral
-
-    if ((!modelImageFile && !modelImageUrl) || !garmentUrl) {
-      return Response.json({ error: 'Images manquantes' }, { status: 400 })
+    if (!modelImage && !modelUrl) {
+      return Response.json({ error: 'Photo du modèle manquante' }, { status: 400 })
     }
 
     const apiKey = process.env.FASHN_API_KEY
@@ -27,14 +20,23 @@ export async function POST(request) {
       return Response.json({ error: 'Clé API non configurée' }, { status: 500 })
     }
 
-    // Model image: soit fichier uploadé (base64) soit URL (génération séquentielle)
-    let modelImage
-    if (modelImageUrl) {
-      modelImage = modelImageUrl
+    // Construire le model_image : soit base64 depuis fichier, soit URL directe
+    let modelImageValue
+    if (modelImage && typeof modelImage === 'object' && modelImage.arrayBuffer) {
+      // C'est un fichier uploadé — convertir en base64
+      const buffer = await modelImage.arrayBuffer()
+      modelImageValue = `data:image/jpeg;base64,${Buffer.from(buffer).toString('base64')}`
+    } else if (modelUrl) {
+      // C'est une URL — l'envoyer directement à Fashn.ai
+      modelImageValue = modelUrl
     } else {
-      const modelBuffer = await modelImageFile.arrayBuffer()
-      modelImage = `data:image/jpeg;base64,${Buffer.from(modelBuffer).toString('base64')}`
+      return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
     }
+
+    // Construire le prompt avec le background
+    const prompt = backgroundPrompt
+      ? `Keep exact original colors, patterns and design of the garment. ${backgroundPrompt}.`
+      : 'Keep exact original colors, patterns, textures and design of the garment. Highly realistic result.'
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
@@ -45,39 +47,41 @@ export async function POST(request) {
       body: JSON.stringify({
         model_name: 'tryon-max',
         inputs: {
-          model_image: modelImage,
+          model_image: modelImageValue,
           product_image: garmentUrl,
+          prompt,
+          seed,
           resolution: '1k',
           generation_mode: 'balanced',
-          prompt: `Keep the exact original colors, patterns, textures and design of the garment. Preserve every detail of the fabric including plaid patterns, stripes, floral prints, and material texture. The garment must look identical to the product image. ${backgroundPrompt}. Highly realistic and photographic result.`,
-          seed: seed,
         }
       }),
     })
 
     const data = await response.json()
+    console.log('Fashn response:', JSON.stringify(data).slice(0, 200))
 
     if (!response.ok) {
-      console.error('Fashn API error:', JSON.stringify(data))
-      return Response.json({ 
-        error: data.detail || data.error || data.message || `Erreur: ${response.status}` 
+      return Response.json({
+        error: data.detail || data.error || data.message || `Erreur API: ${response.status}`
       }, { status: response.status })
     }
 
     const predictionId = data.id
     if (!predictionId) {
-      return Response.json({ error: `Pas d'ID: ${JSON.stringify(data)}` }, { status: 500 })
+      return Response.json({ error: `Pas d'ID de prédiction: ${JSON.stringify(data)}` }, { status: 500 })
     }
 
+    // Polling jusqu'au résultat
     let result = null
     let attempts = 0
-
     while (attempts < 40) {
-      await new Promise(resolve => setTimeout(resolve, 3000))
-      const statusResponse = await fetch(`https://api.fashn.ai/v1/status/${predictionId}`, {
+      await new Promise(r => setTimeout(r, 3000))
+      const statusRes = await fetch(`https://api.fashn.ai/v1/status/${predictionId}`, {
         headers: { 'Authorization': `Bearer ${apiKey}` },
       })
-      const statusData = await statusResponse.json()
+      const statusData = await statusRes.json()
+      console.log(`Status ${attempts}:`, statusData.status)
+
       if (statusData.status === 'completed') {
         result = statusData.output?.[0]
         break
@@ -87,11 +91,11 @@ export async function POST(request) {
       attempts++
     }
 
-    if (!result) return Response.json({ error: 'Timeout - réessayez' }, { status: 408 })
+    if (!result) return Response.json({ error: 'Timeout — réessayez' }, { status: 408 })
     return Response.json({ output: result })
 
   } catch (error) {
-    console.error('Erreur:', error)
+    console.error('Erreur serveur:', error)
     return Response.json({ error: error.message }, { status: 500 })
   }
 }
