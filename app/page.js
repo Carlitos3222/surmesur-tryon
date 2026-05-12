@@ -185,7 +185,8 @@ export default function Home() {
       formData.append('category', CATALOGUE[activeTab].categorie)
 
       if (replacingIndex !== null) {
-        // REMPLACEMENT — utiliser la photo AVANT la pièce remplacée comme base
+        // REMPLACEMENT PRÉCIS — utiliser la photo AVANT la pièce remplacée comme base
+        // Les autres étapes restent intactes
         const basePhoto = replacingIndex === 0 ? null : gallery[replacingIndex - 1]?.url
         if (basePhoto) {
           formData.append('model_image_url', basePhoto)
@@ -289,9 +290,19 @@ export default function Home() {
         .suit-card img { transition: transform 0.5s ease; }
         .tab-btn { transition: all 0.2s ease; cursor: pointer; }
         .btn-generate { transition: all 0.3s ease; }
+        @media (max-width: 768px) {
+          .header-inner { flex-direction: column !important; height: auto !important; padding: 1rem !important; text-align: center; }
+          .logo-wrap { text-align: center; width: 100%; }
+          .nav-wrap { justify-content: center !important; width: 100%; gap: 1rem !important; }
+        }
         .btn-generate:hover:not(:disabled) { box-shadow: inset 0 0 0 1px #C9A96E; letter-spacing: 0.22em !important; }
         ::-webkit-scrollbar { width: 3px; height: 3px; }
         ::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
+        @media (max-width: 768px) {
+          .header-inner-wrap { flex-direction: column !important; align-items: center !important; height: auto !important; padding: 1rem 0 !important; }
+          .logo-section { text-align: center !important; width: 100% !important; }
+          .nav-section { justify-content: center !important; width: 100% !important; gap: 1rem !important; flex-wrap: wrap !important; }
+        }
       `}</style>
 
       {/* TOP BAR */}
@@ -305,12 +316,12 @@ export default function Home() {
 
       {/* HEADER */}
       <header style={s.header}>
-        <div style={s.headerInner}>
-          <div>
+        <div style={s.headerInner} className="header-inner-wrap">
+          <div className="logo-section">
             <div style={s.logo}>SURMESUR</div>
             <div style={s.logoLine} />
           </div>
-          <nav style={s.nav}>
+          <nav style={s.nav} className="nav-section">
             <span style={s.navItem}>Collections</span>
             <span style={s.navItem}>Nos Boutiques</span>
             <span style={s.navItem}>Mariages</span>
@@ -438,14 +449,25 @@ export default function Home() {
               <span style={s.sectionNum}>02</span>
               <div>
                 <h2 style={s.sectionTitle}>
-                  {generationCount > 0 ? 'Ajouter une pièce' : 'Choisissez votre première pièce'}
-                  <span style={s.sectionEn}> / {generationCount > 0 ? 'Add another piece' : 'Choose your first piece'}</span>
+                  {replacingIndex !== null 
+                    ? `Modifier l'étape ${replacingIndex + 1}`
+                    : generationCount > 0 ? 'Ajouter une pièce' : 'Choisissez votre première pièce'}
+                  <span style={s.sectionEn}> / {replacingIndex !== null ? `Edit step ${replacingIndex + 1}` : generationCount > 0 ? 'Add another piece' : 'Choose your first piece'}</span>
                 </h2>
                 <p style={s.sectionSub}>
-                  {generationCount > 0
-                    ? `${generationCount} pièce${generationCount > 1 ? 's' : ''} ajoutée${generationCount > 1 ? 's' : ''} · Continuez à construire votre tenue`
-                    : 'Sélectionnez une catégorie puis une pièce'}
+                  {replacingIndex !== null
+                    ? `Choisissez une nouvelle pièce pour remplacer "${outfitSelections[replacingIndex]?.nom_fr}" · Les autres étapes restent intactes`
+                    : generationCount > 0
+                      ? `${generationCount} pièce${generationCount > 1 ? 's' : ''} ajoutée${generationCount > 1 ? 's' : ''} · Continuez à construire votre tenue`
+                      : 'Sélectionnez une catégorie puis une pièce'}
                 </p>
+                {replacingIndex !== null && (
+                  <div style={s.replacingBanner}>
+                    <span style={s.replacingBannerIcon}>✎</span>
+                    <span>Vous modifiez l'étape {replacingIndex + 1} — <strong>{outfitSelections[replacingIndex]?.nom_fr}</strong> · Les étapes suivantes restent intactes</span>
+                    <button onClick={() => { setReplacingIndex(null); setEtape(3); }} style={s.replacingBannerCancel}>Annuler</button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -559,22 +581,52 @@ export default function Home() {
                           key={i}
                           style={{
                             ...s.galleryThumb,
-                            border: replacingIndex === i ? '2px solid #E85D30' : activeGalleryIndex === i ? '2px solid #C9A96E' : '1px solid #e8e8e8',
-                            opacity: activeGalleryIndex === i || replacingIndex === i ? 1 : 0.6,
+                            border: replacingIndex === i 
+                              ? '2px solid #E85D30' 
+                              : activeGalleryIndex === i 
+                                ? '2px solid #C9A96E' 
+                                : '1px solid #e8e8e8',
+                            opacity: activeGalleryIndex === i || replacingIndex === i ? 1 : 0.55,
+                            transform: activeGalleryIndex === i ? 'scale(1.03)' : 'scale(1)',
+                            transition: 'all 0.2s ease',
                           }}
                         >
-                          <div onClick={() => setActiveGalleryIndex(i)} style={{cursor:'pointer'}}>
+                          {/* Badge étape */}
+                          <div style={{
+                            position:'absolute', top:'4px', left:'4px', 
+                            background: replacingIndex === i ? '#E85D30' : activeGalleryIndex === i ? '#C9A96E' : 'rgba(0,0,0,0.5)',
+                            color: replacingIndex === i || activeGalleryIndex === i ? '#000' : '#fff',
+                            fontSize:'8px', fontWeight:600, padding:'2px 5px', borderRadius:'2px',
+                            letterSpacing:'0.05em'
+                          }}>
+                            {replacingIndex === i ? '✎' : i + 1}
+                          </div>
+
+                          {/* Image cliquable pour voir */}
+                          <div onClick={() => setActiveGalleryIndex(i)} style={{cursor:'pointer', position:'relative'}}>
                             <img src={item.url} alt={item.piece.nom_fr} style={s.galleryThumbImg} />
                           </div>
+
+                          {/* Info pièce */}
                           <div style={s.galleryThumbLabel}>
-                            <span style={s.galleryThumbNum}>{i + 1}</span>
                             <span style={s.galleryThumbNom}>{item.piece.nom_fr}</span>
                           </div>
+
+                          {/* Bouton changer cette étape précisément */}
                           <button
-                            onClick={() => { setReplacingIndex(i); setActiveGalleryIndex(i); setEtape(2); setCurrentSelection(null) }}
-                            style={s.galleryThumbReplace}
+                            onClick={() => { 
+                              setReplacingIndex(i)
+                              setActiveGalleryIndex(i)
+                              setEtape(2)
+                              setCurrentSelection(null)
+                            }}
+                            style={{
+                              ...s.galleryThumbReplace,
+                              background: replacingIndex === i ? '#E85D30' : '#f5f5f5',
+                              color: replacingIndex === i ? '#fff' : '#666',
+                            }}
                           >
-                            ✎ Changer
+                            {replacingIndex === i ? '✎ En modification...' : '✎ Modifier cette étape'}
                           </button>
                         </div>
                       ))}
@@ -687,10 +739,10 @@ const s = {
   topBarText: { fontSize:'9px', letterSpacing:'0.22em', fontWeight:400 },
   topBarDot: { color:'#444', fontSize:'9px' },
   header: { background:'#fff', borderBottom:'1px solid #efefef', padding:'0 2.5rem' },
-  headerInner: { maxWidth:'1200px', margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', height:'80px', flexWrap:'wrap', gap:'1rem' },
+  headerInner: { maxWidth:'1200px', margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', height:'80px', flexWrap:'wrap', gap:'1rem', padding:'0 0.5rem' },
   logo: { fontFamily:"'Cormorant Garamond',serif", fontSize:'1.75rem', fontWeight:400, letterSpacing:'0.38em' },
   logoLine: { height:'1.5px', background:'linear-gradient(90deg,#C9A96E,#E8D5B0,#C9A96E)', marginTop:'3px' },
-  nav: { display:'flex', gap:'2rem', alignItems:'center', flexWrap:'wrap' },
+  nav: { display:'flex', gap:'1.5rem', alignItems:'center', flexWrap:'wrap', justifyContent:'center' },
   navItem: { fontSize:'10px', letterSpacing:'0.14em', color:'#888', textTransform:'uppercase', cursor:'pointer' },
   navActive: { color:'#000', fontWeight:500, borderBottom:'1px solid #C9A96E', paddingBottom:'2px' },
   hero: { position:'relative', background:'#fff', overflow:'hidden' },
@@ -776,9 +828,9 @@ const s = {
   resultatWrap: { position:'relative' },
   resultatImg: { width:'100%', maxHeight:'700px', objectFit:'contain', background:'#f7f7f5', display:'block', border:'1px solid #efefef' },
   resultatBadge: { position:'absolute', bottom:'1rem', right:'1rem', background:'rgba(10,10,10,0.85)', color:'#C9A96E', padding:'0.4rem 0.9rem', fontSize:'8px', letterSpacing:'0.22em' },
-  outfitSidebar: { display:'flex', flexDirection:'column', gap:'1rem', position:'sticky', top:'2rem' },
+  outfitSidebar: { display:'flex', flexDirection:'column', gap:'0.75rem', position:'sticky', top:'1rem', maxHeight:'90vh', overflow:'hidden' },
   outfitTitle: { fontSize:'9px', letterSpacing:'0.25em', color:'#C9A96E', fontWeight:400 },
-  outfitItems: { display:'flex', flexDirection:'column', gap:'0.75rem' },
+  outfitItems: { display:'flex', flexDirection:'column', gap:'0.5rem', overflowY:'auto', maxHeight:'calc(90vh - 280px)', paddingRight:'4px' },
   outfitItem: { display:'flex', gap:'0.75rem', alignItems:'center', padding:'0.75rem', background:'#fff', border:'1px solid #efefef', borderRadius:'2px' },
   outfitItemImg: { width:'45px', height:'55px', objectFit:'cover', objectPosition:'top', flexShrink:0, border:'1px solid #f0f0f0' },
   outfitItemNom: { fontSize:'11px', fontWeight:500, marginBottom:'2px' },
@@ -800,14 +852,17 @@ const s = {
   galleryNav: { marginBottom: '1rem' },
   galleryNavLabel: { fontSize:'9px', letterSpacing:'0.25em', color:'#C9A96E', marginBottom:'0.75rem', fontWeight:400 },
   galleryNavItems: { display:'flex', gap:'0.75rem', overflowX:'auto', paddingBottom:'0.5rem' },
-  galleryThumb: { flexShrink:0, width:'90px', borderRadius:'2px', overflow:'hidden', cursor:'pointer', transition:'all 0.2s', background:'#f7f7f5' },
-  galleryThumbImg: { width:'100%', height:'110px', objectFit:'cover', objectPosition:'top', display:'block' },
+  galleryThumb: { flexShrink:0, width:'100px', borderRadius:'2px', overflow:'hidden', transition:'all 0.2s', background:'#f7f7f5', position:'relative' },
+  galleryThumbImg: { width:'100%', height:'120px', objectFit:'cover', objectPosition:'top', display:'block' },
   galleryThumbLabel: { padding:'0.4rem 0.5rem', background:'#fff' },
   galleryThumbNum: { fontSize:'8px', color:'#C9A96E', letterSpacing:'0.15em', display:'block', marginBottom:'1px' },
   galleryThumbNom: { fontSize:'9px', color:'#333', letterSpacing:'0.04em', display:'block', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' },
   galleryOldBadge: { position:'absolute', top:'1rem', left:'1rem', background:'rgba(201,169,110,0.9)', color:'#000', padding:'0.4rem 0.85rem', fontSize:'9px', letterSpacing:'0.15em', fontWeight:500 },
-  galleryThumbReplace: { width:'100%', padding:'4px', background:'#f5f5f5', border:'none', fontSize:'9px', color:'#666', cursor:'pointer', letterSpacing:'0.08em', fontFamily:"'Montserrat',sans-serif", borderTop:'1px solid #efefef' },
+  galleryThumbReplace: { width:'100%', padding:'5px 4px', border:'none', fontSize:'9px', cursor:'pointer', letterSpacing:'0.06em', fontFamily:"'Montserrat',sans-serif", borderTop:'1px solid #efefef', transition:'all 0.2s' },
   outfitItemActions: { display:'flex', flexDirection:'column', gap:'4px', flexShrink:0 },
   btnItemReplace: { width:'28px', height:'28px', background:'#f5f5f5', border:'1px solid #e5e5e5', borderRadius:'2px', fontSize:'12px', cursor:'pointer', color:'#666', display:'flex', alignItems:'center', justifyContent:'center' },
   btnItemDelete: { width:'28px', height:'28px', background:'#fff5f5', border:'1px solid #ffcccc', borderRadius:'2px', fontSize:'11px', cursor:'pointer', color:'#cc3333', display:'flex', alignItems:'center', justifyContent:'center' },
+  replacingBanner: { display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.85rem 1rem', background:'#fff8f5', border:'1px solid #E85D30', borderRadius:'2px', fontSize:'11px', color:'#E85D30', marginTop:'0.5rem', flexWrap:'wrap' },
+  replacingBannerIcon: { fontSize:'14px', flexShrink:0 },
+  replacingBannerCancel: { marginLeft:'auto', background:'transparent', border:'1px solid #E85D30', color:'#E85D30', padding:'0.3rem 0.75rem', fontSize:'10px', cursor:'pointer', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", letterSpacing:'0.08em' },
 }
