@@ -1,10 +1,12 @@
 export async function POST(request) {
   try {
     const formData = await request.formData()
-    const modelImage = formData.get('model_image')
+    const modelImageFile = formData.get('model_image')
+    const modelImageUrl = formData.get('model_image_url')
     const garmentUrl = formData.get('garment_url')
+    const category = formData.get('category') || 'one-pieces'
 
-    if (!modelImage || !garmentUrl) {
+    if ((!modelImageFile && !modelImageUrl) || !garmentUrl) {
       return Response.json({ error: 'Images manquantes' }, { status: 400 })
     }
 
@@ -13,8 +15,14 @@ export async function POST(request) {
       return Response.json({ error: 'Clé API non configurée' }, { status: 500 })
     }
 
-    const modelBuffer = await modelImage.arrayBuffer()
-    const modelBase64 = `data:image/jpeg;base64,${Buffer.from(modelBuffer).toString('base64')}`
+    // Model image: soit fichier uploadé (base64) soit URL (génération séquentielle)
+    let modelImage
+    if (modelImageUrl) {
+      modelImage = modelImageUrl
+    } else {
+      const modelBuffer = await modelImageFile.arrayBuffer()
+      modelImage = `data:image/jpeg;base64,${Buffer.from(modelBuffer).toString('base64')}`
+    }
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
@@ -25,7 +33,7 @@ export async function POST(request) {
       body: JSON.stringify({
         model_name: 'tryon-max',
         inputs: {
-          model_image: modelBase64,
+          model_image: modelImage,
           product_image: garmentUrl,
           resolution: '1k',
           generation_mode: 'balanced',
@@ -34,9 +42,9 @@ export async function POST(request) {
     })
 
     const data = await response.json()
-    console.log('Fashn response:', JSON.stringify(data))
 
     if (!response.ok) {
+      console.error('Fashn API error:', JSON.stringify(data))
       return Response.json({ 
         error: data.detail || data.error || data.message || `Erreur: ${response.status}` 
       }, { status: response.status })
@@ -52,21 +60,16 @@ export async function POST(request) {
 
     while (attempts < 40) {
       await new Promise(resolve => setTimeout(resolve, 3000))
-      
       const statusResponse = await fetch(`https://api.fashn.ai/v1/status/${predictionId}`, {
         headers: { 'Authorization': `Bearer ${apiKey}` },
       })
-      
       const statusData = await statusResponse.json()
-      console.log(`Status ${attempts}:`, statusData.status)
-      
       if (statusData.status === 'completed') {
         result = statusData.output?.[0]
         break
       } else if (statusData.status === 'failed') {
         return Response.json({ error: 'Génération échouée — réessayez' }, { status: 500 })
       }
-      
       attempts++
     }
 
