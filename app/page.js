@@ -84,6 +84,8 @@ export default function Home() {
   const [erreur, setErreur] = useState(null)
   const [currentResultUrl, setCurrentResultUrl] = useState(null)
   const [generationCount, setGenerationCount] = useState(0)
+  const [gallery, setGallery] = useState([]) // toutes les générations sauvegardées
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(null) // photo active dans la galerie
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
@@ -199,8 +201,16 @@ export default function Home() {
       if (!response.ok) {
         setErreur(data.error || 'Une erreur est survenue')
       } else {
-        setCurrentResultUrl(data.output)
-        setOutfitSelections(prev => [...prev, { ...currentSelection, categorie: activeTab }])
+        const newResult = data.output
+        const newPiece = { ...currentSelection, categorie: activeTab }
+        setCurrentResultUrl(newResult)
+        setOutfitSelections(prev => [...prev, newPiece])
+        setGallery(prev => [...prev, { 
+          url: newResult, 
+          piece: newPiece,
+          index: prev.length 
+        }])
+        setActiveGalleryIndex(generationCount)
         setGenerationCount(prev => prev + 1)
         setCurrentSelection(null)
         setEtape(3)
@@ -220,6 +230,8 @@ export default function Home() {
     setOutfitSelections([])
     setCurrentResultUrl(null)
     setGenerationCount(0)
+    setGallery([])
+    setActiveGalleryIndex(null)
     setErreur(null)
     stopCamera()
   }
@@ -510,8 +522,43 @@ export default function Home() {
               {/* RÉSULTAT PRINCIPAL */}
               <div style={s.resultatMain}>
                 <p style={s.resultatLabel}>VOTRE LOOK ACTUEL · YOUR CURRENT LOOK</p>
+                
+                {/* GALERIE DE NAVIGATION */}
+                {gallery.length > 1 && (
+                  <div style={s.galleryNav}>
+                    <p style={s.galleryNavLabel}>HISTORIQUE · HISTORY</p>
+                    <div style={s.galleryNavItems}>
+                      {gallery.map((item, i) => (
+                        <div
+                          key={i}
+                          onClick={() => setActiveGalleryIndex(i)}
+                          style={{
+                            ...s.galleryThumb,
+                            border: activeGalleryIndex === i ? '2px solid #C9A96E' : '1px solid #e8e8e8',
+                            opacity: activeGalleryIndex === i ? 1 : 0.6,
+                          }}
+                        >
+                          <img src={item.url} alt={item.piece.nom_fr} style={s.galleryThumbImg} />
+                          <div style={s.galleryThumbLabel}>
+                            <span style={s.galleryThumbNum}>{i + 1}</span>
+                            <span style={s.galleryThumbNom}>{item.piece.nom_fr}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <div style={s.resultatWrap}>
-                  <img src={currentResultUrl} alt="Votre look" style={s.resultatImg} />
+                  <img 
+                    src={activeGalleryIndex !== null && gallery[activeGalleryIndex] ? gallery[activeGalleryIndex].url : currentResultUrl} 
+                    alt="Votre look" 
+                    style={s.resultatImg} 
+                  />
+                  {activeGalleryIndex !== null && gallery[activeGalleryIndex] && activeGalleryIndex < gallery.length - 1 && (
+                    <div style={s.galleryOldBadge}>
+                      Étape {activeGalleryIndex + 1} · {gallery[activeGalleryIndex].piece.nom_fr}
+                    </div>
+                  )}
                   <div style={s.resultatBadge}>AI GENERATED · IA GÉNÉRÉE</div>
                 </div>
               </div>
@@ -688,4 +735,13 @@ const s = {
   footerLogo: { fontFamily:"'Cormorant Garamond',serif", fontSize:'1.6rem', letterSpacing:'0.38em', marginBottom:'0.75rem', fontWeight:300 },
   footerCities: { fontSize:'9px', letterSpacing:'0.24em', color:'#bbb', marginBottom:'0.5rem' },
   footerSub: { fontSize:'9px', color:'#ccc', letterSpacing:'0.12em' },
+  galleryNav: { marginBottom: '1rem' },
+  galleryNavLabel: { fontSize:'9px', letterSpacing:'0.25em', color:'#C9A96E', marginBottom:'0.75rem', fontWeight:400 },
+  galleryNavItems: { display:'flex', gap:'0.75rem', overflowX:'auto', paddingBottom:'0.5rem' },
+  galleryThumb: { flexShrink:0, width:'90px', borderRadius:'2px', overflow:'hidden', cursor:'pointer', transition:'all 0.2s', background:'#f7f7f5' },
+  galleryThumbImg: { width:'100%', height:'110px', objectFit:'cover', objectPosition:'top', display:'block' },
+  galleryThumbLabel: { padding:'0.4rem 0.5rem', background:'#fff' },
+  galleryThumbNum: { fontSize:'8px', color:'#C9A96E', letterSpacing:'0.15em', display:'block', marginBottom:'1px' },
+  galleryThumbNom: { fontSize:'9px', color:'#333', letterSpacing:'0.04em', display:'block', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' },
+  galleryOldBadge: { position:'absolute', top:'1rem', left:'1rem', background:'rgba(201,169,110,0.9)', color:'#000', padding:'0.4rem 0.85rem', fontSize:'9px', letterSpacing:'0.15em', fontWeight:500 },
 }
