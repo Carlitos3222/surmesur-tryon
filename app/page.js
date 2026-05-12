@@ -304,6 +304,7 @@ export default function Home() {
                     <div style={s.cameraGuideInner} />
                   </div>
                   <p style={s.cameraHint}>Placez-vous debout, corps entier visible · Stand upright, full body visible</p>
+                  <p style={s.cameraTimer}>⏱ Appuyez sur le bouton — vous aurez 3 secondes pour vous placer · Press the button — you'll have 3 seconds to get in position</p>
                   <div style={s.cameraControls}>
                     <button onClick={stopCamera} style={s.btnCameraCancel}>✕ Annuler</button>
                     <button onClick={capturePhoto} disabled={countdown !== null} style={s.btnCapture}>
@@ -574,6 +575,7 @@ const s = {
   cameraGuide: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '200px', height: '400px', border: '2px dashed rgba(255,255,255,0.4)', borderRadius: '100px', pointerEvents: 'none' },
   cameraGuideInner: { width: '100%', height: '100%' },
   cameraHint: { textAlign: 'center', color: '#fff', fontSize: '11px', padding: '0.75rem', background: 'rgba(0,0,0,0.6)', letterSpacing: '0.05em' },
+  cameraTimer: { textAlign: 'center', color: '#C9A96E', fontSize: '10px', padding: '0.5rem 1rem', background: 'rgba(0,0,0,0.8)', letterSpacing: '0.08em', fontStyle: 'italic' },
   cameraControls: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem 2rem', background: '#000' },
   btnCameraCancel: { background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '0.6rem 1.2rem', fontSize: '12px', cursor: 'pointer', borderRadius: '2px', fontFamily: "'Montserrat', sans-serif", letterSpacing: '0.08em' },
   btnCapture: { width: '64px', height: '64px', borderRadius: '50%', background: 'transparent', border: '3px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 },
