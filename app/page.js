@@ -330,31 +330,24 @@ export default function Home() {
             </div>
           )}
 
-          {/* PHOTO UPLOADED */}
+          {/* PHOTO PREVIEW */}
           {!cameraActive && photoClientPreview && (
-            <div>
-              <div style={s.previewWrap}>
-                <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
-              </div>
-              <div style={s.previewActions}>
-                <button onClick={() => fileInputRef.current?.click()} style={s.btnPreviewChange}>
-                  🖼 Changer la photo · Change photo
-                </button>
-                <button onClick={() => { setPhotoClient(null); setPhotoClientPreview(null); setEtape(1); }} style={s.btnPreviewCamera}>
-                  📷 Prendre une photo · Take a photo
-                </button>
-              </div>
+            <div style={s.previewWrap}>
+              <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
             </div>
           )}
 
-          {/* UPLOAD OPTIONS */}
-          {!cameraActive && !photoClientPreview && (
+          {/* TOUJOURS VISIBLE — LES DEUX BOUTONS */}
+          {!cameraActive && (
             <div style={s.uploadOptions}>
-              <button onClick={startCamera} style={s.btnCamera}>
-                <span style={s.btnIcon}>📷</span>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                style={photoClientPreview ? s.btnGalleryActive : s.btnGallery}
+              >
+                <span style={s.btnIcon}>🖼</span>
                 <div>
-                  <p style={s.btnLabel}>Prendre une photo</p>
-                  <p style={s.btnLabelEn}>Take a live photo</p>
+                  <p style={s.btnLabel}>{photoClientPreview ? 'Changer la photo · Change photo' : 'Choisir dans ma galerie'}</p>
+                  <p style={s.btnLabelEn}>{photoClientPreview ? '' : 'Choose from gallery'}</p>
                 </div>
               </button>
               <div style={s.uploadDivider}>
@@ -362,14 +355,23 @@ export default function Home() {
                 <span style={s.uploadDividerText}>ou · or</span>
                 <div style={s.uploadDividerLine} />
               </div>
-              <button onClick={() => fileInputRef.current?.click()} style={s.btnGallery}>
-                <span style={s.btnIcon}>🖼</span>
+              <button
+                onClick={() => {
+                  setPhotoClient(null)
+                  setPhotoClientPreview(null)
+                  startCamera()
+                }}
+                style={s.btnCamera}
+              >
+                <span style={s.btnIcon}>📷</span>
                 <div>
-                  <p style={s.btnLabel}>Choisir dans ma galerie</p>
-                  <p style={s.btnLabelEn}>Choose from gallery</p>
+                  <p style={s.btnLabel}>Prendre une photo en direct</p>
+                  <p style={s.btnLabelEn}>Take a live photo</p>
                 </div>
               </button>
-              <p style={s.uploadTip}>💡 Photo debout, corps entier, fond simple · Standing, full body, simple background</p>
+              {!photoClientPreview && (
+                <p style={s.uploadTip}>💡 Photo debout, corps entier, fond simple · Standing, full body, simple background</p>
+              )}
             </div>
           )}
 
@@ -651,4 +653,5 @@ const s = {
   previewActions: { display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' },
   btnPreviewChange: { flex: 1, padding: '0.85rem 1rem', background: '#fff', border: '1px solid #000', color: '#000', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", borderRadius: '2px' },
   btnPreviewCamera: { flex: 1, padding: '0.85rem 1rem', background: '#000', border: 'none', color: '#fff', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", borderRadius: '2px' },
+  btnGalleryActive: { display: 'flex', alignItems: 'center', gap: '1rem', padding: '1.25rem 1.5rem', background: '#fff', color: '#000', border: '1px solid #000', cursor: 'pointer', borderRadius: '2px', textAlign: 'left', fontFamily: "'Montserrat', sans-serif", transition: 'all 0.2s' },
 }
