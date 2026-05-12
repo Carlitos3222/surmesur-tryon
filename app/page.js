@@ -25,10 +25,10 @@ const CATALOGUE = {
     icon: '🧥',
     categorie: 'tops',
     items: [
-      { id: 'j1', nom_fr: 'Sport Coat Écossais', nom: 'H&S Crystal Springs Plaid Sport Coat', image: `${BASE_URL}/jacket1.png`, prix: '$2,164', desc: 'Wool-Silk Linen · Plaid' },
-      { id: 'j2', nom_fr: 'Blazer Lin Cobalt', nom: 'Cobalt Blue Single Breasted Linen Blazer', image: `${BASE_URL}/jacket2.png`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
-      { id: 'j3', nom_fr: 'Sport Jacket Framboise', nom: 'Reda Raspberry Red Wool Linen Silk Sport Jacket', image: `${BASE_URL}/jacket3.png`, prix: '$1,529', desc: 'Wool-Linen-Silk · Double Breasted' },
-      { id: 'j4', nom_fr: 'Blazer Rose Lavande', nom: 'Rose and Lavender Window Pane Blazer', image: `${BASE_URL}/jacket4.png`, prix: '$1,294', desc: 'Single Breasted · Window Pane' },
+      { id: 'j1', nom_fr: 'Sport Coat Écossais', nom: 'H&S Crystal Springs Plaid Sport Coat', image: `${BASE_URL}/jacket-1.png`, prix: '$2,164', desc: 'Wool-Silk Linen · Plaid' },
+      { id: 'j2', nom_fr: 'Blazer Lin Cobalt', nom: 'Cobalt Blue Single Breasted Linen Blazer', image: `${BASE_URL}/jacket-2.png`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
+      { id: 'j3', nom_fr: 'Sport Jacket Framboise', nom: 'Reda Raspberry Red Wool Linen Silk Sport Jacket', image: `${BASE_URL}/jacket-3.png`, prix: '$1,529', desc: 'Wool-Linen-Silk · Double Breasted' },
+      { id: 'j4', nom_fr: 'Blazer Rose Lavande', nom: 'Rose and Lavender Window Pane Blazer', image: `${BASE_URL}/jacket-4.png`, prix: '$1,294', desc: 'Single Breasted · Window Pane' },
     ]
   },
   coats: {
@@ -37,10 +37,10 @@ const CATALOGUE = {
     icon: '🧤',
     categorie: 'tops',
     items: [
-      { id: 'c1', nom_fr: 'Manteau Laine Orange', nom: 'Orange Wool Overcoat', image: `${BASE_URL}/coat1.png`, prix: '$1,600', desc: 'Pure Wool · Double Breasted' },
-      { id: 'c2', nom_fr: 'Manteau Camel Laine', nom: 'Camel Wool Overcoat', image: `${BASE_URL}/coat2.png`, prix: '$870', desc: 'Wool · Classic Cut' },
-      { id: 'c3', nom_fr: 'Tan Wool Greatcoat', nom: 'Tan Wool Greatcoat', image: `${BASE_URL}/coat3.png`, prix: '$1,340', desc: 'Pure Wool · Best Seller' },
-      { id: 'c4', nom_fr: 'Manteau Écossais Vert', nom: 'Black Watch Plaid Wool Greatcoat', image: `${BASE_URL}/coat4.png`, prix: '$1,250', desc: 'Wool · Double Breasted' },
+      { id: 'c1', nom_fr: 'Manteau Laine Orange', nom: 'Orange Wool Overcoat', image: `${BASE_URL}/coat-1.png`, prix: '$1,600', desc: 'Pure Wool · Double Breasted' },
+      { id: 'c2', nom_fr: 'Manteau Camel Laine', nom: 'Camel Wool Overcoat', image: `${BASE_URL}/coat-2.png`, prix: '$870', desc: 'Wool · Classic Cut' },
+      { id: 'c3', nom_fr: 'Tan Wool Greatcoat', nom: 'Tan Wool Greatcoat', image: `${BASE_URL}/coat-3.png`, prix: '$1,340', desc: 'Pure Wool · Best Seller' },
+      { id: 'c4', nom_fr: 'Manteau Écossais Vert', nom: 'Black Watch Plaid Wool Greatcoat', image: `${BASE_URL}/coat-4.png`, prix: '$1,250', desc: 'Wool · Double Breasted' },
     ]
   },
   shirts: {
@@ -49,10 +49,10 @@ const CATALOGUE = {
     icon: '👔',
     categorie: 'tops',
     items: [
-      { id: 'sh1', nom_fr: 'Chemise Lin Beige', nom: 'Beige Wool and Linen Shirt', image: `${BASE_URL}/shirt1.png`, prix: '$225', desc: 'Wool-Linen · Sport Shirt' },
-      { id: 'sh2', nom_fr: 'Chemise Florale Lin', nom: 'Beige Linen Shirt with Blue Floral Pattern', image: `${BASE_URL}/shirt2.png`, prix: '$225', desc: 'Linen · Sport Shirt' },
-      { id: 'sh3', nom_fr: 'Chemise Florale Bleue', nom: 'Blue Floral Linen Shirt', image: `${BASE_URL}/shirt3.png`, prix: '$350', desc: 'Linen · Sport Shirt' },
-      { id: 'sh4', nom_fr: 'Chemise Rayée Lin', nom: 'Yellow and Blue Pencil Stripe Linen Shirt', image: `${BASE_URL}/shirt4.png`, prix: '$350', desc: 'Linen · Dress Shirt' },
+      { id: 'sh1', nom_fr: 'Chemise Lin Beige', nom: 'Beige Wool and Linen Shirt', image: `${BASE_URL}/shirt-1.png`, prix: '$225', desc: 'Wool-Linen · Sport Shirt' },
+      { id: 'sh2', nom_fr: 'Chemise Florale Lin', nom: 'Beige Linen Shirt with Blue Floral Pattern', image: `${BASE_URL}/shirt-2.png`, prix: '$225', desc: 'Linen · Sport Shirt' },
+      { id: 'sh3', nom_fr: 'Chemise Florale Bleue', nom: 'Blue Floral Linen Shirt', image: `${BASE_URL}/shirt-3.png`, prix: '$350', desc: 'Linen · Sport Shirt' },
+      { id: 'sh4', nom_fr: 'Chemise Rayée Lin', nom: 'Yellow and Blue Pencil Stripe Linen Shirt', image: `${BASE_URL}/shirt-4.png`, prix: '$350', desc: 'Linen · Dress Shirt' },
     ]
   },
   jeans: {
@@ -61,10 +61,10 @@ const CATALOGUE = {
     icon: '👖',
     categorie: 'bottoms',
     items: [
-      { id: 'jn1', nom_fr: 'Jean Blanc Terio', nom: 'White Terio Jeans', image: `${BASE_URL}/jean1.png`, prix: '$250', desc: 'Custom Fit · White' },
-      { id: 'jn2', nom_fr: 'Jean Bleu Foncé Stretch', nom: 'Custom Fit Stretch Dark Blue Jeans', image: `${BASE_URL}/jean2.png`, prix: '$215', desc: 'Stretch · Dark Blue' },
-      { id: 'jn3', nom_fr: 'Jean Jogger Bleu Clair', nom: 'Light Wash Relaxed Fit Denim Joggers', image: `${BASE_URL}/jean3.png`, prix: '$165', desc: 'Relaxed Fit · Light Wash' },
-      { id: 'jn4', nom_fr: 'Jean Bleu Foncé Slim', nom: 'Custom Fit Dark Blue Jeans', image: `${BASE_URL}/jean4.png`, prix: '$215', desc: 'Custom Fit · Dark Blue' },
+      { id: 'jn1', nom_fr: 'Jean Blanc Terio', nom: 'White Terio Jeans', image: `${BASE_URL}/jean-1.png`, prix: '$250', desc: 'Custom Fit · White' },
+      { id: 'jn2', nom_fr: 'Jean Bleu Foncé Stretch', nom: 'Custom Fit Stretch Dark Blue Jeans', image: `${BASE_URL}/jean-2.png`, prix: '$215', desc: 'Stretch · Dark Blue' },
+      { id: 'jn3', nom_fr: 'Jean Jogger Bleu Clair', nom: 'Light Wash Relaxed Fit Denim Joggers', image: `${BASE_URL}/jean-3.png`, prix: '$165', desc: 'Relaxed Fit · Light Wash' },
+      { id: 'jn4', nom_fr: 'Jean Bleu Foncé Slim', nom: 'Custom Fit Dark Blue Jeans', image: `${BASE_URL}/jean-4.png`, prix: '$215', desc: 'Custom Fit · Dark Blue' },
     ]
   }
 }
