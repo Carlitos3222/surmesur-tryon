@@ -531,6 +531,31 @@ export default function Home() {
               ))}
             </div>
 
+            {/* SÉLECTION DU BACKGROUND — toujours visible, optionnel */}
+            <div style={s.bgSection}>
+              <p style={s.bgTitle}>🎨 Arrière-plan (optionnel) · Background (optional)</p>
+              <p style={s.bgSubtitle}>Par défaut : Studio blanc · Default: White studio</p>
+              <div style={s.bgGrid}>
+                {BACKGROUNDS.map(bg => (
+                  <button
+                    key={bg.id}
+                    onClick={() => setSelectedBackground(bg.id)}
+                    style={{
+                      ...s.bgCard,
+                      border: selectedBackground === bg.id ? '2px solid #C9A96E' : '1px solid #e5e5e5',
+                      background: selectedBackground === bg.id ? '#fdfbf7' : '#fff',
+                    }}
+                  >
+                    <span style={s.bgIcon}>{bg.icon}</span>
+                    <p style={s.bgLabel}>{bg.label}</p>
+                    <p style={s.bgLabelEn}>{bg.label_en}</p>
+                    <p style={s.bgDesc}>{bg.desc}</p>
+                    {selectedBackground === bg.id && <div style={s.bgCheck}>✓</div>}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* RÉSUMÉ DE SÉLECTION + BOUTON GÉNÉRER */}
             {currentSelection && (
               <div style={s.selectionBar}>
@@ -541,30 +566,6 @@ export default function Home() {
                     <p style={s.selectionDesc}>{currentSelection.desc} · {currentSelection.prix}</p>
                   </div>
                 </div>
-                {/* SÉLECTION DU BACKGROUND */}
-                <div style={s.bgSection}>
-                  <p style={s.bgTitle}>🎨 Choisissez votre arrière-plan · Choose your background</p>
-                  <div style={s.bgGrid}>
-                    {BACKGROUNDS.map(bg => (
-                      <button
-                        key={bg.id}
-                        onClick={() => setSelectedBackground(bg.id)}
-                        style={{
-                          ...s.bgCard,
-                          border: selectedBackground === bg.id ? '2px solid #C9A96E' : '1px solid #e5e5e5',
-                          background: selectedBackground === bg.id ? '#fdfbf7' : '#fff',
-                        }}
-                      >
-                        <span style={s.bgIcon}>{bg.icon}</span>
-                        <p style={s.bgLabel}>{bg.label}</p>
-                        <p style={s.bgLabelEn}>{bg.label_en}</p>
-                        <p style={s.bgDesc}>{bg.desc}</p>
-                        {selectedBackground === bg.id && <div style={s.bgCheck}>✓</div>}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
                 {erreur && <div style={s.erreur}>⚠ {erreur}</div>}
                 <button onClick={handleGenerer} disabled={chargement} style={s.btnGenerer} className="btn-generate">
                   {chargement ? (
@@ -900,7 +901,8 @@ const s = {
   replacingBannerIcon: { fontSize:'14px', flexShrink:0 },
   replacingBannerCancel: { marginLeft:'auto', background:'transparent', border:'1px solid #E85D30', color:'#E85D30', padding:'0.3rem 0.75rem', fontSize:'10px', cursor:'pointer', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", letterSpacing:'0.08em' },
   bgSection: { marginBottom:'1.25rem', padding:'1.25rem', background:'#fafaf8', border:'1px solid #efefef', borderRadius:'2px' },
-  bgTitle: { fontSize:'11px', color:'#666', letterSpacing:'0.08em', marginBottom:'1rem', fontWeight:500 },
+  bgTitle: { fontSize:'11px', color:'#666', letterSpacing:'0.08em', marginBottom:'4px', fontWeight:500 },
+  bgSubtitle: { fontSize:'10px', color:'#C9A96E', letterSpacing:'0.06em', marginBottom:'1rem', fontStyle:'italic' },
   bgGrid: { display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'8px' },
   bgCard: { position:'relative', padding:'0.75rem 0.5rem', borderRadius:'2px', cursor:'pointer', textAlign:'center', transition:'all 0.2s', fontFamily:"'Montserrat',sans-serif" },
   bgIcon: { fontSize:'1.4rem', display:'block', marginBottom:'4px' },
