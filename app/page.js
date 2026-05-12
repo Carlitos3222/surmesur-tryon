@@ -1,134 +1,110 @@
 'use client'
-
 import { useState, useRef, useCallback } from 'react'
 
 const BASE_URL = 'https://surmesur-tryon.vercel.app'
 
 const CATALOGUE = {
   suits: {
-    label: 'Complets',
-    label_en: 'Suits',
-    icon: '🤵',
-    categorie: 'one-pieces',
+    label: 'Complets', label_en: 'Suits', icon: '🤵', categorie: 'one-pieces',
     items: [
-      { id: 's1', nom_fr: 'Complet Bleu Pétrole', nom: 'Oil Blue Wool Suit', image: `${BASE_URL}/suit1.png`, prix: '$1,200', desc: '3-Piece · Pure Wool' },
-      { id: 's2', nom_fr: 'Complet Charbon', nom: 'Charcoal Wool Suit', image: `${BASE_URL}/suit2.png`, prix: '$1,140', desc: '3-Piece · Plain Wool' },
-      { id: 's3', nom_fr: 'Flanelle Prince de Galles', nom: 'Prince of Wales Flannel', image: `${BASE_URL}/suit3.png`, prix: '$1,165', desc: '3-Piece · Flannel' },
-      { id: 's4', nom_fr: 'Complet Gris Chevron', nom: 'Grey Herringbone Suit', image: `${BASE_URL}/suit4.png`, prix: '$1,180', desc: '3-Piece · Herringbone' },
-      { id: 's5', nom_fr: 'Complet Lin Naturel', nom: 'Natural Linen Suit', image: `${BASE_URL}/suit5.png`, prix: '$1,100', desc: '3-Piece · Premium Linen' },
-      { id: 's6', nom_fr: 'Complet Brun Foncé', nom: 'Dark Brown Flannel Suit', image: `${BASE_URL}/suit6.png`, prix: '$1,220', desc: '3-Piece · Wool Flannel' },
+      { id: 's1', nom_fr: 'Complet Bleu Pétrole', nom_en: 'Oil Blue Wool Suit', image: `${BASE_URL}/suit1.png`, prix: '$1,100', desc: '3-Piece · Wool' },
+      { id: 's2', nom_fr: 'Complet Charbon', nom_en: 'Charcoal 3-Piece', image: `${BASE_URL}/suit2.png`, prix: '$1,150', desc: '3-Piece · Premium Wool' },
+      { id: 's3', nom_fr: 'Complet Prince de Galles', nom_en: 'Black Ice Flannel Suit', image: `${BASE_URL}/suit3.png`, prix: '$1,200', desc: '3-Piece · Flannel' },
+      { id: 's4', nom_fr: 'Complet Gris Chevron', nom_en: 'Grey Herringbone Suit', image: `${BASE_URL}/suit4.png`, prix: '$1,180', desc: '3-Piece · Herringbone' },
+      { id: 's5', nom_fr: 'Complet Lin Naturel', nom_en: 'Natural Linen Suit', image: `${BASE_URL}/suit5.png`, prix: '$980', desc: '3-Piece · Linen' },
+      { id: 's6', nom_fr: 'Complet Brun Foncé', nom_en: 'Dark Brown Flannel Suit', image: `${BASE_URL}/suit6.png`, prix: '$1,150', desc: '3-Piece · Wool Flannel' },
     ]
   },
   jackets: {
-    label: 'Vestons',
-    label_en: 'Jackets',
-    icon: '🧥',
-    categorie: 'tops',
+    label: 'Vestons', label_en: 'Jackets', icon: '🧥', categorie: 'tops',
     items: [
-      { id: 'j1', nom_fr: 'Sport Coat Écossais', nom: 'H&S Crystal Springs Plaid Sport Coat', image: `${BASE_URL}/jacket-1.png`, prix: '$2,164', desc: 'Wool-Silk Linen · Plaid' },
-      { id: 'j2', nom_fr: 'Blazer Lin Cobalt', nom: 'Cobalt Blue Single Breasted Linen Blazer', image: `${BASE_URL}/jacket-2.png`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
-      { id: 'j3', nom_fr: 'Sport Jacket Framboise', nom: 'Reda Raspberry Red Wool Linen Silk Sport Jacket', image: `${BASE_URL}/jacket-3.png`, prix: '$1,529', desc: 'Wool-Linen-Silk · Double Breasted' },
-      { id: 'j4', nom_fr: 'Blazer Rose Lavande', nom: 'Rose and Lavender Window Pane Blazer', image: `${BASE_URL}/jacket-4.png`, prix: '$1,294', desc: 'Single Breasted · Window Pane' },
+      { id: 'j1', nom_fr: 'Blazer Lin Cobalt', nom_en: 'Cobalt Linen Blazer', image: `${BASE_URL}/jacket-1.png`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
+      { id: 'j2', nom_fr: 'Veston Tweed Brun', nom_en: 'Brown Tweed Jacket', image: `${BASE_URL}/jacket-2.png`, prix: '$720', desc: 'British Tweed · Notch Lapel' },
+      { id: 'j3', nom_fr: 'Blazer Navy Structuré', nom_en: 'Structured Navy Blazer', image: `${BASE_URL}/jacket-3.png`, prix: '$695', desc: 'Wool Blend · Double Breasted' },
+      { id: 'j4', nom_fr: 'Veston Crème Été', nom_en: 'Cream Summer Blazer', image: `${BASE_URL}/jacket-4.png`, prix: '$610', desc: 'Cotton Linen · Relaxed Fit' },
     ]
   },
   coats: {
-    label: 'Manteaux',
-    label_en: 'Overcoats',
-    icon: '🧤',
-    categorie: 'tops',
+    label: 'Manteaux', label_en: 'Coats', icon: '🧣', categorie: 'tops',
     items: [
-      { id: 'c1', nom_fr: 'Manteau Laine Orange', nom: 'Orange Wool Overcoat', image: `${BASE_URL}/coat-1.png`, prix: '$1,600', desc: 'Pure Wool · Double Breasted' },
-      { id: 'c2', nom_fr: 'Manteau Camel Laine', nom: 'Camel Wool Overcoat', image: `${BASE_URL}/coat-2.png`, prix: '$870', desc: 'Wool · Classic Cut' },
-      { id: 'c3', nom_fr: 'Tan Wool Greatcoat', nom: 'Tan Wool Greatcoat', image: `${BASE_URL}/coat-3.png`, prix: '$1,340', desc: 'Pure Wool · Best Seller' },
-      { id: 'c4', nom_fr: 'Manteau Écossais Vert', nom: 'Black Watch Plaid Wool Greatcoat', image: `${BASE_URL}/coat-4.png`, prix: '$1,250', desc: 'Wool · Double Breasted' },
+      { id: 'c1', nom_fr: 'Manteau Camel Premium', nom_en: 'Premium Camel Overcoat', image: `${BASE_URL}/coat-1.png`, prix: '$1,200', desc: 'Cashmere Blend · Mid-Length' },
+      { id: 'c2', nom_fr: 'Manteau Laine Tan', nom_en: 'Tan Wool Greatcoat', image: `${BASE_URL}/coat-2.png`, prix: '$1,350', desc: 'Pure Wool · Full Length' },
+      { id: 'c3', nom_fr: 'Pardessus Noir Élégant', nom_en: 'Elegant Black Overcoat', image: `${BASE_URL}/coat-3.png`, prix: '$1,280', desc: 'Wool Cashmere · Slim Fit' },
+      { id: 'c4', nom_fr: 'Manteau Gris Anthracite', nom_en: 'Anthracite Grey Coat', image: `${BASE_URL}/coat-4.png`, prix: '$1,180', desc: 'Wool Blend · Classic Cut' },
     ]
   },
   shirts: {
-    label: 'Chemises',
-    label_en: 'Shirts',
-    icon: '👔',
-    categorie: 'tops',
+    label: 'Chemises', label_en: 'Shirts', icon: '👔', categorie: 'tops',
     items: [
-      { id: 'sh1', nom_fr: 'Chemise Lin Beige', nom: 'Beige Wool and Linen Shirt', image: `${BASE_URL}/shirt-1.png`, prix: '$225', desc: 'Wool-Linen · Sport Shirt' },
-      { id: 'sh2', nom_fr: 'Chemise Florale Lin', nom: 'Beige Linen Shirt with Blue Floral Pattern', image: `${BASE_URL}/shirt-2.png`, prix: '$225', desc: 'Linen · Sport Shirt' },
-      { id: 'sh3', nom_fr: 'Chemise Florale Bleue', nom: 'Blue Floral Linen Shirt', image: `${BASE_URL}/shirt-3.png`, prix: '$350', desc: 'Linen · Sport Shirt' },
-      { id: 'sh4', nom_fr: 'Chemise Rayée Lin', nom: 'Yellow and Blue Pencil Stripe Linen Shirt', image: `${BASE_URL}/shirt-4.png`, prix: '$350', desc: 'Linen · Dress Shirt' },
+      { id: 'sh1', nom_fr: 'Chemise Florale Bleue', nom_en: 'Blue Floral Shirt', image: `${BASE_URL}/shirt-1.png`, prix: '$350', desc: 'Linen · Sport Shirt' },
+      { id: 'sh2', nom_fr: 'Chemise Blanche Classique', nom_en: 'Classic White Dress Shirt', image: `${BASE_URL}/shirt-2.png`, prix: '$295', desc: 'Egyptian Cotton · French Cuff' },
+      { id: 'sh3', nom_fr: 'Chemise Lin Beige', nom_en: 'Beige Linen Shirt', image: `${BASE_URL}/shirt-3.png`, prix: '$320', desc: 'Premium Linen · Relaxed' },
+      { id: 'sh4', nom_fr: 'Chemise Carreaux Bleus', nom_en: 'Blue Plaid Shirt', image: `${BASE_URL}/shirt-4.png`, prix: '$310', desc: 'Cotton · Slim Fit' },
     ]
   },
   jeans: {
-    label: 'Jeans',
-    label_en: 'Jeans',
-    icon: '👖',
-    categorie: 'bottoms',
+    label: 'Pantalons', label_en: 'Pants', icon: '👖', categorie: 'bottoms',
     items: [
-      { id: 'jn1', nom_fr: 'Jean Blanc Terio', nom: 'White Terio Jeans', image: `${BASE_URL}/jean-1.png`, prix: '$250', desc: 'Custom Fit · White' },
-      { id: 'jn2', nom_fr: 'Jean Bleu Foncé Stretch', nom: 'Custom Fit Stretch Dark Blue Jeans', image: `${BASE_URL}/jean-2.png`, prix: '$215', desc: 'Stretch · Dark Blue' },
-      { id: 'jn3', nom_fr: 'Jean Jogger Bleu Clair', nom: 'Light Wash Relaxed Fit Denim Joggers', image: `${BASE_URL}/jean-3.png`, prix: '$165', desc: 'Relaxed Fit · Light Wash' },
-      { id: 'jn4', nom_fr: 'Jean Bleu Foncé Slim', nom: 'Custom Fit Dark Blue Jeans', image: `${BASE_URL}/jean-4.png`, prix: '$215', desc: 'Custom Fit · Dark Blue' },
+      { id: 'jn1', nom_fr: 'Jean Blanc Terio', nom_en: 'White Terio Jean', image: `${BASE_URL}/jean-1.png`, prix: '$250', desc: 'Custom Fit · White' },
+      { id: 'jn2', nom_fr: 'Pantalon Gris Flanelle', nom_en: 'Grey Flannel Trouser', image: `${BASE_URL}/jean-2.png`, prix: '$280', desc: 'Wool Flannel · Tailored' },
+      { id: 'jn3', nom_fr: 'Pantalon Navy Classique', nom_en: 'Classic Navy Trouser', image: `${BASE_URL}/jean-3.png`, prix: '$265', desc: 'Wool Blend · Slim' },
+      { id: 'jn4', nom_fr: 'Jean Indigo Premium', nom_en: 'Premium Indigo Jean', image: `${BASE_URL}/jean-4.png`, prix: '$235', desc: 'Selvedge Denim · Straight' },
     ]
   }
 }
 
-export default function Home() {
+const BACKGROUNDS = [
+  { id: 'studio', label: 'Studio', icon: '⬜', prompt: 'clean white studio background, professional photography' },
+  { id: 'office', label: 'Bureau', icon: '🏢', prompt: 'modern luxury office environment, professional setting, glass windows, city view' },
+  { id: 'wedding', label: 'Mariage', icon: '💍', prompt: 'elegant wedding venue, garden with flowers, soft bokeh, romantic lighting' },
+  { id: 'gala', label: 'Soirée', icon: '🥂', prompt: 'luxury restaurant interior, candlelight, upscale gala event, chandeliers' },
+  { id: 'city', label: 'Ville', icon: '🏙️', prompt: 'walking in a beautiful city street, urban lifestyle, golden hour lighting' },
+]
+
+const PRIORITY_ORDER = ['suits', 'jackets', 'coats', 'shirts', 'jeans']
+
+export default function SurmesurTryOn() {
+  const [step, setStep] = useState(1)
   const [photoClient, setPhotoClient] = useState(null)
-  const [photoClientPreview, setPhotoClientPreview] = useState(null)
-  const [etape, setEtape] = useState(1)
-  const [cameraActive, setCameraActive] = useState(false)
-  const [cameraStream, setCameraStream] = useState(null)
-  const [photoConfirmation, setPhotoConfirmation] = useState(null)
-  const [countdown, setCountdown] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
+  const [selectedItems, setSelectedItems] = useState({})
+  const [selectedBackground, setSelectedBackground] = useState('studio')
   const [activeTab, setActiveTab] = useState('suits')
-  const [outfitSelections, setOutfitSelections] = useState([])
-  const [currentSelection, setCurrentSelection] = useState(null)
-  const [chargement, setChargement] = useState(false)
-  const [erreur, setErreur] = useState(null)
-  const [currentResultUrl, setCurrentResultUrl] = useState(null)
-  const [generationCount, setGenerationCount] = useState(0)
-  const [gallery, setGallery] = useState([]) // toutes les générations sauvegardées
-  const [activeGalleryIndex, setActiveGalleryIndex] = useState(null) // photo active dans la galerie
-  const [replacingIndex, setReplacingIndex] = useState(null) // index de la pièce qu'on veut remplacer
-  const [selectedBackground, setSelectedBackground] = useState('neutral') // background sélectionné
+  const [generating, setGenerating] = useState(false)
+  const [resultImage, setResultImage] = useState(null)
+  const [error, setError] = useState(null)
+  const [cameraActive, setCameraActive] = useState(false)
+  const [countdown, setCountdown] = useState(null)
+  const [photoConfirmation, setPhotoConfirmation] = useState(null)
+  const [progress, setProgress] = useState(0)
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
-
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setPhotoClient(file)
-      setPhotoClientPreview(URL.createObjectURL(file))
-      setEtape(2)
-      setErreur(null)
-    }
-  }
+  const streamRef = useRef(null)
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
-      })
-      setCameraStream(stream)
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 1280, height: 720 } })
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        videoRef.current.play()
+      }
       setCameraActive(true)
-      setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          videoRef.current.play()
-        }
-      }, 100)
-    } catch (err) {
-      setErreur('Caméra non accessible. Utilisez le bouton galerie.')
+      setPhotoConfirmation(null)
+    } catch {
+      setError('Caméra non disponible — utilisez le bouton galerie')
     }
   }
 
   const stopCamera = useCallback(() => {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop())
-      setCameraStream(null)
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop())
+      streamRef.current = null
     }
     setCameraActive(false)
-    setPhotoConfirmation(null)
-  }, [cameraStream])
+  }, [])
 
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return
@@ -154,760 +130,498 @@ export default function Home() {
   }
 
   const confirmPhoto = () => {
-    if (!canvasRef.current || !photoConfirmation) return
-    canvasRef.current.toBlob((blob) => {
-      const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' })
-      setPhotoClient(file)
-      setPhotoClientPreview(photoConfirmation)
-      setEtape(2)
-      setErreur(null)
+    if (!photoConfirmation || !canvasRef.current) return
+    canvasRef.current.toBlob(blob => {
+      setPhotoClient(blob)
+      setPhotoPreview(photoConfirmation)
       stopCamera()
+      setPhotoConfirmation(null)
+      setStep(2)
     }, 'image/jpeg', 0.9)
   }
 
   const retakePhoto = () => {
     setPhotoConfirmation(null)
-    setTimeout(() => {
-      if (videoRef.current && cameraStream) {
-        videoRef.current.srcObject = cameraStream
-        videoRef.current.play()
-      }
-    }, 100)
+    startCamera()
   }
 
-  const handleGenerer = async () => {
-    if (!currentSelection) return
-    setChargement(true)
-    setErreur(null)
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPhotoClient(file)
+    setPhotoPreview(URL.createObjectURL(file))
+    stopCamera()
+    setStep(2)
+  }
+
+  const toggleItem = (category, item) => {
+    setSelectedItems(prev => {
+      if (prev[category]?.id === item.id) {
+        const next = { ...prev }
+        delete next[category]
+        return next
+      }
+      return { ...prev, [category]: item }
+    })
+  }
+
+  const removeItem = (category) => {
+    setSelectedItems(prev => {
+      const next = { ...prev }
+      delete next[category]
+      return next
+    })
+  }
+
+  const getMainGarment = () => {
+    for (const cat of PRIORITY_ORDER) {
+      if (selectedItems[cat]) return { item: selectedItems[cat], cat }
+    }
+    return null
+  }
+
+  const totalPrice = Object.values(selectedItems).reduce((sum, item) => {
+    const price = parseFloat(item.prix.replace('$', '').replace(',', ''))
+    return sum + price
+  }, 0)
+
+  const formatPrice = (n) => '$' + n.toLocaleString('en-CA')
+
+  const handleGenerate = async () => {
+    const main = getMainGarment()
+    if (!main) { setError('Sélectionnez au moins une pièce'); return }
+    if (!photoClient) { setError('Uploadez votre photo'); return }
+
+    setGenerating(true)
+    setError(null)
+    setProgress(0)
+
+    const progressInterval = setInterval(() => {
+      setProgress(prev => prev < 85 ? prev + Math.random() * 2.5 : prev)
+    }, 800)
 
     try {
+      const bg = BACKGROUNDS.find(b => b.id === selectedBackground)
       const formData = new FormData()
-      formData.append('garment_url', currentSelection.image)
-      formData.append('category', CATALOGUE[activeTab].categorie)
-      formData.append('background', selectedBackground)
+      formData.append('model_image', photoClient)
+      formData.append('garment_url', main.item.image)
+      formData.append('background_prompt', bg?.prompt || '')
+      formData.append('seed', Math.floor(Math.random() * 1000000).toString())
 
-      if (replacingIndex !== null) {
-        // REMPLACEMENT PRÉCIS — utiliser la photo AVANT la pièce remplacée comme base
-        // Les autres étapes restent intactes
-        const basePhoto = replacingIndex === 0 ? null : gallery[replacingIndex - 1]?.url
-        if (basePhoto) {
-          formData.append('model_image_url', basePhoto)
-        } else {
-          formData.append('model_image', photoClient)
-        }
-      } else if (currentResultUrl && generationCount > 0) {
-        // Génération séquentielle normale
-        formData.append('model_image_url', currentResultUrl)
-      } else {
-        // Première génération
-        formData.append('model_image', photoClient)
-      }
+      const res = await fetch('/api/tryon', { method: 'POST', body: formData })
+      const data = await res.json()
 
-      const response = await fetch('/api/tryon', {
-        method: 'POST',
-        body: formData,
-      })
+      if (!res.ok) throw new Error(data.error || 'Erreur API')
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        setErreur(data.error || 'Une erreur est survenue')
-      } else {
-        const newResult = data.output
-        const newPiece = { ...currentSelection, categorie: activeTab }
-
-        if (replacingIndex !== null) {
-          // Remplacer dans la galerie et les sélections
-          setGallery(prev => {
-            const newGallery = [...prev]
-            newGallery[replacingIndex] = { url: newResult, piece: newPiece, index: replacingIndex }
-            return newGallery
-          })
-          setOutfitSelections(prev => {
-            const newSel = [...prev]
-            newSel[replacingIndex] = newPiece
-            return newSel
-          })
-          setCurrentResultUrl(newResult)
-          setActiveGalleryIndex(replacingIndex)
-          setReplacingIndex(null)
-        } else {
-          // Ajout normal
-          setCurrentResultUrl(newResult)
-          setOutfitSelections(prev => [...prev, newPiece])
-          setGallery(prev => [...prev, { url: newResult, piece: newPiece, index: prev.length }])
-          setActiveGalleryIndex(generationCount)
-          setGenerationCount(prev => prev + 1)
-        }
-        setCurrentSelection(null)
-        setEtape(3)
-      }
+      clearInterval(progressInterval)
+      setProgress(100)
+      setResultImage(data.output)
+      setStep(3)
     } catch (err) {
-      setErreur('Erreur de connexion. Réessayez.')
+      setError(err.message)
     } finally {
-      setChargement(false)
+      clearInterval(progressInterval)
+      setGenerating(false)
     }
   }
 
-  const recommencer = () => {
+  const reset = () => {
+    setStep(1)
     setPhotoClient(null)
-    setPhotoClientPreview(null)
-    setEtape(1)
-    setCurrentSelection(null)
-    setOutfitSelections([])
-    setCurrentResultUrl(null)
-    setGenerationCount(0)
-    setGallery([])
-    setActiveGalleryIndex(null)
-    setReplacingIndex(null)
-    setErreur(null)
+    setPhotoPreview(null)
+    setSelectedItems({})
+    setSelectedBackground('studio')
+    setResultImage(null)
+    setError(null)
+    setProgress(0)
     stopCamera()
   }
 
-  const ajouterPiece = () => {
-    setEtape(2)
-    setCurrentSelection(null)
-    setReplacingIndex(null)
+  const selectedCount = Object.keys(selectedItems).length
+  const mainGarment = getMainGarment()
+
+  const s = {
+    page: { minHeight: '100vh', background: '#fafaf8', fontFamily: "'Cormorant Garamond', 'Georgia', serif", color: '#1a1a1a' },
+    header: { background: '#000', padding: '1.2rem 2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '0.3rem' },
+    logo: { color: '#fff', fontSize: '1.1rem', letterSpacing: '0.35em', fontWeight: 300, fontFamily: "'Cormorant Garamond', serif", textAlign: 'center' },
+    goldLine: { width: '60px', height: '1px', background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)' },
+    hero: { textAlign: 'center', padding: '3rem 2rem 2rem', background: '#fff', borderBottom: '1px solid #e8e4df' },
+    heroEyebrow: { fontSize: '0.7rem', letterSpacing: '0.25em', color: '#C9A96E', marginBottom: '1rem', fontFamily: 'sans-serif', fontWeight: 500 },
+    heroTitle: { fontSize: 'clamp(1.8rem, 4vw, 3rem)', fontWeight: 300, lineHeight: 1.2, marginBottom: '0.8rem', color: '#1a1a1a' },
+    heroGold: { color: '#C9A96E', fontStyle: 'italic' },
+    heroSub: { fontSize: '0.85rem', color: '#888', letterSpacing: '0.05em', fontFamily: 'sans-serif', marginBottom: '1.5rem' },
+    stats: { display: 'flex', justifyContent: 'center', gap: '3rem', flexWrap: 'wrap' },
+    stat: { textAlign: 'center' },
+    statNum: { fontSize: '1.4rem', fontWeight: 300, color: '#C9A96E' },
+    statLabel: { fontSize: '0.65rem', letterSpacing: '0.15em', color: '#888', fontFamily: 'sans-serif' },
+    stepWrap: { display: 'flex', gap: '0', maxWidth: '1400px', margin: '0 auto', minHeight: 'calc(100vh - 200px)' },
+    mainCol: { flex: 1, padding: '2rem', minWidth: 0 },
+    sideCol: { width: '300px', minWidth: '280px', background: '#fff', borderLeft: '1px solid #e8e4df', padding: '1.5rem', display: 'flex', flexDirection: 'column' },
+    sectionTitle: { fontSize: '0.65rem', letterSpacing: '0.2em', color: '#C9A96E', marginBottom: '0.75rem', fontFamily: 'sans-serif', fontWeight: 600 },
+    stepNum: { fontSize: '3rem', fontWeight: 300, color: '#e8e4df', lineHeight: 1, marginBottom: '0.25rem' },
+    stepTitle: { fontSize: '1.5rem', fontWeight: 300, marginBottom: '0.3rem' },
+    stepSub: { fontSize: '0.75rem', color: '#888', fontFamily: 'sans-serif', marginBottom: '1.5rem' },
+    uploadZone: { border: '1px dashed #d0cbc4', borderRadius: '4px', padding: '3rem 2rem', textAlign: 'center', cursor: 'pointer', background: '#fafaf8' },
+    uploadIcon: { fontSize: '2rem', marginBottom: '0.75rem', color: '#C9A96E' },
+    uploadText: { fontSize: '1rem', fontWeight: 300, color: '#333', marginBottom: '0.25rem' },
+    uploadSub: { fontSize: '0.7rem', color: '#aaa', fontFamily: 'sans-serif' },
+    btnRow: { display: 'flex', gap: '0.75rem', marginTop: '1rem' },
+    btnCamera: { flex: 1, padding: '0.9rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' },
+    btnGallery: { flex: 1, padding: '0.9rem', background: 'transparent', color: '#000', border: '1px solid #000', cursor: 'pointer', fontSize: '0.75rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' },
+    cameraWrap: { position: 'relative', background: '#000', borderRadius: '4px', overflow: 'hidden', aspectRatio: '4/3' },
+    video: { width: '100%', height: '100%', objectFit: 'cover' },
+    cameraHint: { textAlign: 'center', fontSize: '0.72rem', color: '#C9A96E', fontFamily: 'sans-serif', padding: '0.5rem', fontStyle: 'italic' },
+    btnCapture: { display: 'flex', margin: '1rem auto', width: '60px', height: '60px', borderRadius: '50%', border: '3px solid #C9A96E', background: 'transparent', cursor: 'pointer', alignItems: 'center', justifyContent: 'center' },
+    btnCaptureInner: { width: '44px', height: '44px', borderRadius: '50%', background: '#C9A96E' },
+    confirmImg: { width: '100%', borderRadius: '4px' },
+    confirmBtns: { display: 'flex', gap: '0.75rem', marginTop: '0.75rem' },
+    btnConfirm: { flex: 1, padding: '0.9rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.75rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' },
+    btnRetake: { flex: 1, padding: '0.9rem', background: 'transparent', color: '#000', border: '1px solid #ccc', cursor: 'pointer', fontSize: '0.75rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' },
+    photoThumb: { width: '70px', height: '90px', objectFit: 'cover', borderRadius: '2px', border: '2px solid #C9A96E', flexShrink: 0 },
+    photoThumbWrap: { display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem', padding: '0.75rem', background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px' },
+    changePhotoBtn: { fontSize: '0.7rem', color: '#C9A96E', fontFamily: 'sans-serif', cursor: 'pointer', letterSpacing: '0.1em', background: 'none', border: 'none', textDecoration: 'underline', padding: 0 },
+    tabs: { display: 'flex', borderBottom: '1px solid #e8e4df', marginBottom: '1.5rem', overflowX: 'auto' },
+    tab: (active) => ({ padding: '0.75rem 1rem', background: 'none', border: 'none', borderBottom: active ? '2px solid #C9A96E' : '2px solid transparent', cursor: 'pointer', fontSize: '0.72rem', letterSpacing: '0.08em', fontFamily: 'sans-serif', color: active ? '#C9A96E' : '#888', whiteSpace: 'nowrap', transition: 'all 0.2s' }),
+    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' },
+    itemCard: (selected) => ({ border: selected ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', background: selected ? '#fffef8' : '#fff', transition: 'all 0.2s', position: 'relative' }),
+    itemImg: { width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' },
+    itemInfo: { padding: '0.6rem' },
+    itemName: { fontSize: '0.78rem', fontWeight: 400, marginBottom: '0.2rem', lineHeight: 1.2 },
+    itemDesc: { fontSize: '0.62rem', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.3rem' },
+    itemPrice: { fontSize: '0.85rem', color: '#C9A96E' },
+    checkBadge: { position: 'absolute', top: '8px', right: '8px', width: '22px', height: '22px', borderRadius: '50%', background: '#C9A96E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.65rem', color: '#fff' },
+    mainBadge: { fontSize: '0.5rem', background: '#C9A96E', color: '#fff', padding: '0.1rem 0.3rem', letterSpacing: '0.08em', fontFamily: 'sans-serif', borderRadius: '2px', marginLeft: '0.3rem', verticalAlign: 'middle' },
+    bgSection: { marginTop: '2rem' },
+    bgGrid: { display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.4rem' },
+    bgCard: (active) => ({ border: active ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '4px', padding: '0.5rem 0.25rem', textAlign: 'center', cursor: 'pointer', background: active ? '#fffef8' : '#fff', transition: 'all 0.2s' }),
+    bgIcon: { fontSize: '1.1rem', display: 'block', marginBottom: '0.15rem' },
+    bgLabel: { fontSize: '0.58rem', fontFamily: 'sans-serif', color: '#333' },
+    sideTitle: { fontSize: '0.62rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', fontWeight: 600, borderBottom: '1px solid #e8e4df', paddingBottom: '0.75rem', marginBottom: '1rem' },
+    selectedList: { flex: 1, overflowY: 'auto', maxHeight: '380px' },
+    selectedItem: { display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.65rem 0', borderBottom: '1px solid #f0ece6' },
+    selectedImg: { width: '42px', height: '52px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 },
+    selectedInfo: { flex: 1, minWidth: 0 },
+    selectedName: { fontSize: '0.75rem', fontWeight: 400, marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },
+    selectedCat: { fontSize: '0.6rem', color: '#888', fontFamily: 'sans-serif' },
+    selectedPrice: { fontSize: '0.8rem', color: '#C9A96E' },
+    removeBtn: { background: 'none', border: '1px solid #e0dbd4', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.6rem', color: '#aaa', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' },
+    emptyState: { textAlign: 'center', padding: '2rem 1rem', color: '#ccc' },
+    emptyText: { fontSize: '0.72rem', fontFamily: 'sans-serif', lineHeight: 1.6 },
+    totalWrap: { borderTop: '1px solid #e8e4df', paddingTop: '1rem', marginTop: 'auto' },
+    totalRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '1rem' },
+    totalLabel: { fontSize: '0.62rem', letterSpacing: '0.15em', color: '#888', fontFamily: 'sans-serif' },
+    totalPrice: { fontSize: '1.3rem', fontWeight: 300, color: '#1a1a1a' },
+    btnGenerate: { width: '100%', padding: '1.1rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.72rem', letterSpacing: '0.18em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.8 },
+    btnGenerateDisabled: { width: '100%', padding: '1.1rem', background: '#e0dbd4', color: '#aaa', border: 'none', fontSize: '0.72rem', letterSpacing: '0.18em', fontFamily: 'sans-serif', textAlign: 'center' },
+    progressWrap: { width: '100%', height: '2px', background: '#e8e4df', marginTop: '0.75rem' },
+    progressBar: (pct) => ({ height: '100%', background: 'linear-gradient(90deg, #C9A96E, #e8c87a)', width: `${pct}%`, transition: 'width 0.6s ease' }),
+    progressLabel: { fontSize: '0.62rem', color: '#888', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.4rem' },
+    resultWrap: { maxWidth: '1100px', margin: '0 auto', padding: '2rem' },
+    resultGrid: { display: 'grid', gridTemplateColumns: '1fr 320px', gap: '2rem', alignItems: 'start', marginTop: '1.5rem' },
+    resultImg: { width: '100%', borderRadius: '4px', display: 'block' },
+    btnAppt: { display: 'block', width: '100%', padding: '1.1rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.72rem', letterSpacing: '0.18em', fontFamily: 'sans-serif', textAlign: 'center', textDecoration: 'none', lineHeight: 1.8, marginTop: '1rem', boxSizing: 'border-box' },
+    btnSecondary: { display: 'block', width: '100%', padding: '0.8rem', background: 'transparent', color: '#888', border: '1px solid #e8e4df', cursor: 'pointer', fontSize: '0.65rem', letterSpacing: '0.12em', fontFamily: 'sans-serif', marginTop: '0.5rem', textAlign: 'center' },
+    error: { background: '#fff5f5', border: '1px solid #ffd0d0', padding: '0.75rem 1rem', borderRadius: '4px', fontSize: '0.72rem', color: '#c00', fontFamily: 'sans-serif', marginTop: '1rem' },
   }
 
-  const allItems = Object.values(CATALOGUE).flatMap(c => c.items)
-
-  const BACKGROUNDS = [
-    { id: 'neutral', label: 'Studio', label_en: 'Studio', icon: '⬜', desc: 'Fond blanc neutre · White background' },
-    { id: 'office', label: 'Bureau', label_en: 'Office', icon: '🏢', desc: 'Environnement professionnel · Corporate setting' },
-    { id: 'wedding', label: 'Mariage', label_en: 'Wedding', icon: '💍', desc: 'Jardin élégant · Elegant garden' },
-    { id: 'party', label: 'Soirée', label_en: 'Evening', icon: '🥂', desc: 'Gala & restaurant luxueux · Luxury gala' },
-    { id: 'city', label: 'Ville', label_en: 'City', icon: '🏙️', desc: 'Marche dans la ville · City walk' },
-  ]
-
   return (
-    <main style={s.main}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Montserrat:wght@300;400;500&display=swap');
-        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
-        @keyframes loadingBar { 0%{width:0%} 50%{width:70%} 100%{width:95%} }
-        @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .fade-up { animation: fadeUp 0.7s ease both; }
-        .fade-up-1 { animation: fadeUp 0.7s 0.1s ease both; }
-        .fade-up-2 { animation: fadeUp 0.7s 0.2s ease both; }
-        .fade-up-3 { animation: fadeUp 0.7s 0.3s ease both; }
-        .gold-shimmer { background: linear-gradient(90deg,#C9A96E 0%,#E8D5B0 40%,#C9A96E 60%,#9A7A45 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:shimmer 4s linear infinite; }
-        .suit-card { transition: all 0.35s ease; cursor: pointer; }
-        .suit-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.1); }
-        .suit-card:hover img { transform: scale(1.04); }
-        .suit-card img { transition: transform 0.5s ease; }
-        .tab-btn { transition: all 0.2s ease; cursor: pointer; }
-        .btn-generate { transition: all 0.3s ease; }
-        @media (max-width: 768px) {
-          .header-inner { flex-direction: column !important; height: auto !important; padding: 1rem !important; text-align: center; }
-          .logo-wrap { text-align: center; width: 100%; }
-          .nav-wrap { justify-content: center !important; width: 100%; gap: 1rem !important; }
-        }
-        .btn-generate:hover:not(:disabled) { box-shadow: inset 0 0 0 1px #C9A96E; letter-spacing: 0.22em !important; }
-        ::-webkit-scrollbar { width: 3px; height: 3px; }
-        ::-webkit-scrollbar-thumb { background: #C9A96E; border-radius: 2px; }
-        @media (max-width: 768px) {
-          .header-inner-wrap { flex-direction: column !important; align-items: center !important; height: auto !important; padding: 1rem 0 !important; }
-          .logo-section { text-align: center !important; width: 100% !important; }
-          .nav-section { justify-content: center !important; width: 100% !important; gap: 1rem !important; flex-wrap: wrap !important; }
-        }
-      `}</style>
+    <div style={s.page}>
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
 
-      {/* TOP BAR */}
-      <div style={s.topBar}>
-        <span style={s.topBarText}>CUSTOM CLOTHING MADE TO BE LIVED IN</span>
-        <span style={s.topBarDot}>·</span>
-        <span style={s.topBarText}>B CORP CERTIFIED</span>
-        <span style={s.topBarDot}>·</span>
-        <span style={s.topBarText}>MTL · TOR · VAN · OTT · PIТ · MEX</span>
-      </div>
-
-      {/* HEADER */}
+      {/* Header */}
       <header style={s.header}>
-        <div style={s.headerInner} className="header-inner-wrap">
-          <div className="logo-section">
-            <div style={s.logo}>SURMESUR</div>
-            <div style={s.logoLine} />
-          </div>
-          <nav style={s.nav} className="nav-section">
-            <span style={s.navItem}>Collections</span>
-            <span style={s.navItem}>Nos Boutiques</span>
-            <span style={s.navItem}>Mariages</span>
-            <span style={{...s.navItem, ...s.navActive}}>Virtual Try-On ✦</span>
-          </nav>
-        </div>
+        <div style={s.logo}>SURMESUR</div>
+        <div style={s.goldLine} />
       </header>
 
-      {/* HERO */}
-      <section style={s.hero}>
-        <div style={s.heroBg} />
-        <div style={s.heroInner}>
-          <p style={s.eyebrow} className="fade-up">NOUVELLE EXPÉRIENCE EXCLUSIVE · NEW EXCLUSIVE EXPERIENCE</p>
-          <h1 style={s.heroTitle} className="fade-up-1">
-            Essayez nos <em className="gold-shimmer">collections</em><br />sans sortir de la maison.
+      {/* Hero — Step 1 only */}
+      {step === 1 && (
+        <div style={s.hero}>
+          <div style={s.heroEyebrow}>TECHNOLOGIE VIRTUELLE · VIRTUAL TRY-ON</div>
+          <h1 style={s.heroTitle}>
+            Essayez nos <span style={s.heroGold}>collections</span><br />
+            sans sortir de la maison
           </h1>
-          <p style={s.heroSub} className="fade-up-2">
-            Uploadez votre photo ou prenez-en une en direct.<br />
-            Notre IA vous habille en 30 secondes — chez vous, à votre rythme.
-          </p>
-          <p style={s.heroSubEn} className="fade-up-3">
-            Try our collections without leaving home. Build your complete outfit piece by piece.
-          </p>
-          <div style={s.heroStats} className="fade-up-3">
-            <div style={s.heroStat}><span style={s.heroStatN}>30s</span><span style={s.heroStatL}>Par génération</span></div>
-            <div style={s.heroStatDiv} />
-            <div style={s.heroStat}><span style={s.heroStatN}>5</span><span style={s.heroStatL}>Catégories</span></div>
-            <div style={s.heroStatDiv} />
-            <div style={s.heroStat}><span style={s.heroStatN}>∞</span><span style={s.heroStatL}>Combinaisons</span></div>
+          <p style={s.heroSub}>Try our collections without leaving home</p>
+          <div style={s.stats}>
+            <div style={s.stat}><div style={s.statNum}>1</div><div style={s.statLabel}>SEULE GÉNÉRATION</div></div>
+            <div style={s.stat}><div style={s.statNum}>22+</div><div style={s.statLabel}>PIÈCES DISPONIBLES</div></div>
+            <div style={s.stat}><div style={s.statNum}>100%</div><div style={s.statLabel}>SUR MESURE</div></div>
           </div>
         </div>
-        <div style={s.heroLine} />
-      </section>
+      )}
 
-      {/* PROGRESS */}
-      <div style={s.progress}>
-        {[{n:1,l:'Votre photo'},{n:2,l:'Choisir une pièce'},{n:3,l:'Résultat & Builder'}].map((e,i) => (
-          <div key={e.n} style={s.progressItem}>
-            <div style={{...s.progressDot, background: etape>=e.n?'#000':'transparent', borderColor: etape>=e.n?'#000':'#ddd', boxShadow: etape===e.n?'0 0 0 3px rgba(201,169,110,0.2)':'none'}}>
-              <span style={{color: etape>=e.n?'#fff':'#bbb', fontSize:'11px', fontWeight:500}}>{e.n}</span>
-            </div>
-            <span style={{...s.progressLabel, color: etape>=e.n?'#000':'#ccc', fontWeight: etape===e.n?500:300}}>{e.l}</span>
-            {i < 2 && <div style={{...s.progressLine, background: etape>e.n?'linear-gradient(90deg,#000,#C9A96E)':'#eee'}} />}
-          </div>
-        ))}
-      </div>
+      {/* STEP 1 — Photo */}
+      {step === 1 && (
+        <div style={{ maxWidth: '560px', margin: '0 auto', padding: '2rem' }}>
+          <div style={s.stepNum}>01</div>
+          <div style={s.stepTitle}>Votre photo</div>
+          <div style={s.stepSub}>Prenez une photo debout, corps entier · Stand tall, full body</div>
 
-      <div style={s.content}>
-
-        {/* STEP 1 — PHOTO */}
-        <section style={s.section}>
-          <div style={s.sectionHead}>
-            <span style={s.sectionNum}>01</span>
-            <div>
-              <h2 style={s.sectionTitle}>Votre photo <span style={s.sectionEn}>/ Your photo</span></h2>
-              <p style={s.sectionSub}>Prenez une photo en direct ou uploadez depuis votre galerie</p>
-            </div>
-          </div>
-
-          {cameraActive && (
-            <div style={s.cameraContainer}>
-              {!photoConfirmation ? (
-                <>
-                  <video ref={videoRef} autoPlay playsInline muted style={s.cameraVideo} />
-                  <div style={s.cameraGuide}><div /></div>
-                  <p style={s.cameraHint}>Placez-vous debout, corps entier visible · Stand upright, full body visible</p>
-                  <p style={s.cameraTimer}>⏱ Appuyez sur le bouton — vous aurez 3 secondes pour vous placer</p>
-                  <div style={s.cameraControls}>
-                    <button onClick={stopCamera} style={s.btnCancel}>✕ Annuler</button>
-                    <button onClick={capturePhoto} disabled={countdown !== null} style={s.btnCapture}>
-                      {countdown ? <span style={{color:'#fff',fontSize:'1.8rem',fontFamily:"'Cormorant Garamond',serif"}}>{countdown}</span> : <div style={s.btnCaptureInner} />}
-                    </button>
-                    <div style={{width:'80px'}} />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <img src={photoConfirmation} alt="Photo" style={s.cameraVideo} />
-                  <p style={s.cameraHint}>Cette photo vous convient ? · Happy with this photo?</p>
-                  <div style={s.cameraControls}>
-                    <button onClick={retakePhoto} style={s.btnCancel}>↩ Reprendre</button>
-                    <button onClick={confirmPhoto} style={s.btnConfirm}>✓ Utiliser cette photo</button>
-                  </div>
-                </>
-              )}
-              <canvas ref={canvasRef} style={{display:'none'}} />
-            </div>
+          {!cameraActive && !photoConfirmation && (
+            <>
+              <div style={s.uploadZone} onClick={() => fileInputRef.current?.click()}>
+                <div style={s.uploadIcon}>✦</div>
+                <div style={s.uploadText}>Cliquez pour uploader votre photo</div>
+                <div style={s.uploadSub}>JPG, PNG · Max 10MB · Corps entier de préférence</div>
+              </div>
+              <div style={s.btnRow}>
+                <button style={s.btnCamera} onClick={startCamera}>📷 PRENDRE UNE PHOTO</button>
+                <button style={s.btnGallery} onClick={() => fileInputRef.current?.click()}>🖼 MA GALERIE</button>
+              </div>
+            </>
           )}
 
-          {!cameraActive && photoClientPreview && (
-            <div style={s.previewWrap}>
-              <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
-              <div style={s.previewBadge}>✓ Photo sélectionnée</div>
-            </div>
-          )}
-
-          {!cameraActive && (
-            <div style={s.uploadOptions}>
-              <button onClick={() => fileInputRef.current?.click()} style={photoClientPreview ? s.btnGalleryActive : s.btnGallery}>
-                <span style={s.btnIcon}>🖼</span>
-                <div>
-                  <p style={s.btnLabel}>{photoClientPreview ? 'Changer la photo · Change photo' : 'Choisir dans ma galerie'}</p>
-                  <p style={s.btnLabelEn}>{photoClientPreview ? '' : 'Choose from gallery'}</p>
-                </div>
+          {cameraActive && !photoConfirmation && (
+            <>
+              <div style={s.cameraWrap}>
+                <video ref={videoRef} style={s.video} autoPlay playsInline muted />
+              </div>
+              <div style={s.cameraHint}>⏱ Appuyez — 3 secondes pour vous placer · 3 seconds to get in position</div>
+              <button onClick={capturePhoto} disabled={countdown !== null} style={s.btnCapture}>
+                {countdown
+                  ? <span style={{ color: '#C9A96E', fontSize: '1.8rem', fontWeight: 300 }}>{countdown}</span>
+                  : <div style={s.btnCaptureInner} />}
               </button>
-              <div style={s.divider}><div style={s.dividerLine}/><span style={s.dividerText}>ou · or</span><div style={s.dividerLine}/></div>
-              <button onClick={() => { setPhotoClient(null); setPhotoClientPreview(null); startCamera() }} style={s.btnCamera}>
-                <span style={s.btnIcon}>📷</span>
-                <div>
-                  <p style={s.btnLabel}>Prendre une photo en direct</p>
-                  <p style={s.btnLabelEn}>Take a live photo</p>
-                </div>
-              </button>
-              {!photoClientPreview && <p style={s.uploadTip}>💡 Photo debout, corps entier, fond simple</p>}
-            </div>
+              <div style={s.btnRow}>
+                <button style={s.btnGallery} onClick={() => fileInputRef.current?.click()}>🖼 GALERIE</button>
+                <button style={s.btnRetake} onClick={stopCamera}>ANNULER</button>
+              </div>
+            </>
           )}
 
-          <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{display:'none'}} />
-        </section>
+          {photoConfirmation && (
+            <>
+              <img src={photoConfirmation} alt="Preview" style={s.confirmImg} />
+              <div style={s.confirmBtns}>
+                <button style={s.btnConfirm} onClick={confirmPhoto}>✓ UTILISER CETTE PHOTO</button>
+                <button style={s.btnRetake} onClick={retakePhoto}>↺ REPRENDRE</button>
+              </div>
+            </>
+          )}
 
-        {/* STEP 2 — CATALOGUE PAR CATÉGORIES */}
-        {etape >= 2 && (
-          <section style={s.section}>
-            <div style={s.sectionHead}>
-              <span style={s.sectionNum}>02</span>
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: 'none' }} />
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
+        </div>
+      )}
+
+      {/* STEP 2 — Outfit Builder */}
+      {step === 2 && (
+        <div style={s.stepWrap}>
+          <div style={s.mainCol}>
+            {/* Photo thumb */}
+            <div style={s.photoThumbWrap}>
+              {photoPreview && <img src={photoPreview} alt="Votre photo" style={s.photoThumb} />}
               <div>
-                <h2 style={s.sectionTitle}>
-                  {replacingIndex !== null 
-                    ? `Modifier l'étape ${replacingIndex + 1}`
-                    : generationCount > 0 ? 'Ajouter une pièce' : 'Choisissez votre première pièce'}
-                  <span style={s.sectionEn}> / {replacingIndex !== null ? `Edit step ${replacingIndex + 1}` : generationCount > 0 ? 'Add another piece' : 'Choose your first piece'}</span>
-                </h2>
-                <p style={s.sectionSub}>
-                  {replacingIndex !== null
-                    ? `Choisissez une nouvelle pièce pour remplacer "${outfitSelections[replacingIndex]?.nom_fr}" · Les autres étapes restent intactes`
-                    : generationCount > 0
-                      ? `${generationCount} pièce${generationCount > 1 ? 's' : ''} ajoutée${generationCount > 1 ? 's' : ''} · Continuez à construire votre tenue`
-                      : 'Sélectionnez une catégorie puis une pièce'}
-                </p>
-                {replacingIndex !== null && (
-                  <div style={s.replacingBanner}>
-                    <span style={s.replacingBannerIcon}>✎</span>
-                    <span>Vous modifiez l'étape {replacingIndex + 1} — <strong>{outfitSelections[replacingIndex]?.nom_fr}</strong> · Les étapes suivantes restent intactes</span>
-                    <button onClick={() => { setReplacingIndex(null); setEtape(3); }} style={s.replacingBannerCancel}>Annuler</button>
-                  </div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 300, marginBottom: '0.4rem' }}>Photo chargée ✓</div>
+                <button style={s.changePhotoBtn} onClick={() => { stopCamera(); setStep(1); setPhotoClient(null); setPhotoPreview(null) }}>
+                  Changer la photo
+                </button>
+                {!cameraActive && (
+                  <button style={{ ...s.changePhotoBtn, marginLeft: '1rem' }} onClick={startCamera}>
+                    📷 Prendre une photo
+                  </button>
                 )}
               </div>
             </div>
 
-            {/* TABS */}
+            {/* Camera in step 2 */}
+            {cameraActive && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <div style={s.cameraWrap}>
+                  <video ref={videoRef} style={s.video} autoPlay playsInline muted />
+                </div>
+                <div style={s.cameraHint}>⏱ 3 secondes pour vous placer après le bouton</div>
+                <button onClick={capturePhoto} disabled={countdown !== null} style={s.btnCapture}>
+                  {countdown ? <span style={{ color: '#C9A96E', fontSize: '1.8rem' }}>{countdown}</span> : <div style={s.btnCaptureInner} />}
+                </button>
+                {photoConfirmation && (
+                  <>
+                    <img src={photoConfirmation} alt="Preview" style={s.confirmImg} />
+                    <div style={s.confirmBtns}>
+                      <button style={s.btnConfirm} onClick={confirmPhoto}>✓ UTILISER</button>
+                      <button style={s.btnRetake} onClick={retakePhoto}>↺ REPRENDRE</button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            <div style={s.stepNum}>02</div>
+            <div style={s.stepTitle}>Construisez votre look</div>
+            <div style={s.stepSub}>Sélectionnez une pièce par catégorie — rien ne sera généré avant la fin · Select pieces, then generate once</div>
+
+            {/* Tabs */}
             <div style={s.tabs}>
               {Object.entries(CATALOGUE).map(([key, cat]) => (
-                <button
-                  key={key}
-                  className="tab-btn"
-                  onClick={() => { setActiveTab(key); setCurrentSelection(null) }}
-                  style={{
-                    ...s.tab,
-                    background: activeTab === key ? '#000' : '#fff',
-                    color: activeTab === key ? '#fff' : '#666',
-                    borderColor: activeTab === key ? '#000' : '#e5e5e5',
-                  }}
-                >
-                  <span>{cat.icon}</span>
-                  <span style={s.tabLabel}>{cat.label}</span>
-                  <span style={s.tabLabelEn}>{cat.label_en}</span>
+                <button key={key} style={s.tab(activeTab === key)} onClick={() => setActiveTab(key)}>
+                  {cat.icon} {cat.label}
+                  {selectedItems[key] && <span style={{ color: '#C9A96E', marginLeft: '3px' }}>✓</span>}
                 </button>
               ))}
             </div>
 
-            {/* ITEMS GRID */}
+            {/* Items grid */}
             <div style={s.grid}>
-              {CATALOGUE[activeTab].items.map((item) => (
-                <div
-                  key={item.id}
-                  className="suit-card"
-                  style={{
-                    ...s.card,
-                    border: currentSelection?.id === item.id ? '2px solid #C9A96E' : '1px solid #e8e8e8',
-                    background: currentSelection?.id === item.id ? '#fdfbf7' : '#fff',
-                  }}
-                  onClick={() => setCurrentSelection(item)}
-                >
-                  <div style={s.cardImgWrap}>
-                    <img src={item.image} alt={item.nom} style={s.cardImg} />
-                    {currentSelection?.id === item.id && <div style={s.cardCheck}>✓</div>}
-                  </div>
-                  <div style={s.cardInfo}>
-                    <p style={s.cardNom}>{item.nom_fr}</p>
-                    <p style={s.cardNomEn}>{item.nom}</p>
-                    <div style={s.cardFooter}>
-                      <span style={s.cardDesc}>{item.desc}</span>
-                      <span style={currentSelection?.id === item.id ? s.cardPrixActive : s.cardPrix}>{item.prix}</span>
+              {CATALOGUE[activeTab].items.map(item => {
+                const isSelected = selectedItems[activeTab]?.id === item.id
+                const isMain = mainGarment?.item?.id === item.id
+                return (
+                  <div key={item.id} style={s.itemCard(isSelected)} onClick={() => toggleItem(activeTab, item)}>
+                    <img src={item.image} alt={item.nom_fr} style={s.itemImg} />
+                    {isSelected && <div style={s.checkBadge}>✓</div>}
+                    <div style={s.itemInfo}>
+                      <div style={s.itemName}>{item.nom_fr}</div>
+                      <div style={s.itemDesc}>{item.desc}</div>
+                      <div style={s.itemPrice}>
+                        {item.prix}
+                        {isMain && <span style={s.mainBadge}>PRINCIPAL</span>}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
-            {/* SÉLECTION DU BACKGROUND — toujours visible, optionnel */}
+            {/* Background */}
             <div style={s.bgSection}>
-              <p style={s.bgTitle}>🎨 Arrière-plan (optionnel) · Background (optional)</p>
-              <p style={s.bgSubtitle}>Par défaut : Studio blanc · Default: White studio</p>
+              <div style={s.sectionTitle}>ARRIÈRE-PLAN · BACKGROUND <span style={{ color: '#bbb', fontWeight: 400 }}>(OPTIONNEL)</span></div>
+              <div style={{ fontSize: '0.62rem', color: '#C9A96E', fontFamily: 'sans-serif', fontStyle: 'italic', marginBottom: '0.75rem' }}>
+                Par défaut : Studio blanc · Default: White studio
+              </div>
               <div style={s.bgGrid}>
                 {BACKGROUNDS.map(bg => (
-                  <button
-                    key={bg.id}
-                    onClick={() => setSelectedBackground(bg.id)}
-                    style={{
-                      ...s.bgCard,
-                      border: selectedBackground === bg.id ? '2px solid #C9A96E' : '1px solid #e5e5e5',
-                      background: selectedBackground === bg.id ? '#fdfbf7' : '#fff',
-                    }}
-                  >
+                  <div key={bg.id} style={s.bgCard(selectedBackground === bg.id)} onClick={() => setSelectedBackground(bg.id)}>
                     <span style={s.bgIcon}>{bg.icon}</span>
-                    <p style={s.bgLabel}>{bg.label}</p>
-                    <p style={s.bgLabelEn}>{bg.label_en}</p>
-                    <p style={s.bgDesc}>{bg.desc}</p>
-                    {selectedBackground === bg.id && <div style={s.bgCheck}>✓</div>}
-                  </button>
+                    <div style={s.bgLabel}>{bg.label}</div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* RÉSUMÉ DE SÉLECTION + BOUTON GÉNÉRER */}
-            {currentSelection && (
-              <div style={s.selectionBar}>
-                <div style={s.selectionInfo}>
-                  <img src={currentSelection.image} alt={currentSelection.nom_fr} style={s.selectionImg} />
-                  <div>
-                    <p style={s.selectionNom}>{currentSelection.nom_fr}</p>
-                    <p style={s.selectionDesc}>{currentSelection.desc} · {currentSelection.prix}</p>
-                  </div>
+            {error && <div style={s.error}>⚠ {error}</div>}
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
+          </div>
+
+          {/* Sidebar */}
+          <div style={s.sideCol}>
+            <div style={s.sideTitle}>VOTRE SÉLECTION · YOUR OUTFIT</div>
+
+            <div style={s.selectedList}>
+              {selectedCount === 0 ? (
+                <div style={s.emptyState}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#e8e4df' }}>✦</div>
+                  <div style={s.emptyText}>Sélectionnez vos pièces<br />dans le catalogue à gauche.<br /><br />Une seule génération<br />pour votre look complet.</div>
                 </div>
-                {erreur && <div style={s.erreur}>⚠ {erreur}</div>}
-                <button onClick={handleGenerer} disabled={chargement} style={s.btnGenerer} className="btn-generate">
-                  {chargement ? (
-                    <span style={{display:'flex',alignItems:'center',gap:'0.75rem',justifyContent:'center'}}>
-                      <span style={s.spinner} />
-                      Génération en cours... · Generating...
-                    </span>
-                  ) : generationCount > 0 ? (
-                    replacingIndex !== null ? 'REMPLACER CETTE PIÈCE → REPLACE PIECE' : 'AJOUTER CETTE PIÈCE → ADD THIS PIECE'
-                  ) : (
-                    'ESSAYER CETTE PIÈCE → TRY THIS PIECE'
-                  )}
-                </button>
-                {chargement && (
-                  <div style={s.loadingWrap}>
-                    <div style={s.loadingBar}><div style={s.loadingBarInner} /></div>
-                    <p style={s.loadingText}>Notre IA adapte la pièce à votre silhouette · Our AI is fitting this piece to your body. 30–60 seconds.</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* STEP 3 — RÉSULTAT + OUTFIT BUILDER */}
-        {etape >= 3 && currentResultUrl && (
-          <section style={s.section}>
-            <div style={s.sectionHead}>
-              <span style={s.sectionNum}>03</span>
-              <div>
-                <h2 style={s.sectionTitle}>Votre tenue <span style={s.sectionEn}>/ Your outfit</span></h2>
-                <p style={s.sectionSub}>{generationCount} pièce{generationCount > 1 ? 's' : ''} · Continuez à construire ou prenez rendez-vous</p>
-              </div>
-            </div>
-
-            <div style={s.resultatLayout}>
-              {/* RÉSULTAT PRINCIPAL */}
-              <div style={s.resultatMain}>
-                <p style={s.resultatLabel}>VOTRE LOOK ACTUEL · YOUR CURRENT LOOK</p>
-                
-                {/* GALERIE DE NAVIGATION */}
-                {gallery.length > 1 && (
-                  <div style={s.galleryNav}>
-                    <p style={s.galleryNavLabel}>HISTORIQUE · HISTORY</p>
-                    <div style={s.galleryNavItems}>
-                      {gallery.map((item, i) => (
-                        <div
-                          key={i}
-                          style={{
-                            ...s.galleryThumb,
-                            border: replacingIndex === i 
-                              ? '2px solid #E85D30' 
-                              : activeGalleryIndex === i 
-                                ? '2px solid #C9A96E' 
-                                : '1px solid #e8e8e8',
-                            opacity: activeGalleryIndex === i || replacingIndex === i ? 1 : 0.55,
-                            transform: activeGalleryIndex === i ? 'scale(1.03)' : 'scale(1)',
-                            transition: 'all 0.2s ease',
-                          }}
-                        >
-                          {/* Badge étape */}
-                          <div style={{
-                            position:'absolute', top:'4px', left:'4px', 
-                            background: replacingIndex === i ? '#E85D30' : activeGalleryIndex === i ? '#C9A96E' : 'rgba(0,0,0,0.5)',
-                            color: replacingIndex === i || activeGalleryIndex === i ? '#000' : '#fff',
-                            fontSize:'8px', fontWeight:600, padding:'2px 5px', borderRadius:'2px',
-                            letterSpacing:'0.05em'
-                          }}>
-                            {replacingIndex === i ? '✎' : i + 1}
-                          </div>
-
-                          {/* Image cliquable pour voir */}
-                          <div onClick={() => setActiveGalleryIndex(i)} style={{cursor:'pointer', position:'relative'}}>
-                            <img src={item.url} alt={item.piece.nom_fr} style={s.galleryThumbImg} />
-                          </div>
-
-                          {/* Info pièce */}
-                          <div style={s.galleryThumbLabel}>
-                            <span style={s.galleryThumbNom}>{item.piece.nom_fr}</span>
-                          </div>
-
-                          {/* Bouton changer cette étape précisément */}
-                          <button
-                            onClick={() => { 
-                              setReplacingIndex(i)
-                              setActiveGalleryIndex(i)
-                              setEtape(2)
-                              setCurrentSelection(null)
-                            }}
-                            style={{
-                              ...s.galleryThumbReplace,
-                              background: replacingIndex === i ? '#E85D30' : '#f5f5f5',
-                              color: replacingIndex === i ? '#fff' : '#666',
-                            }}
-                          >
-                            {replacingIndex === i ? '✎ En modification...' : '✎ Modifier cette étape'}
-                          </button>
+              ) : (
+                Object.entries(selectedItems).map(([cat, item]) => {
+                  const isMain = mainGarment?.item?.id === item.id
+                  return (
+                    <div key={cat} style={s.selectedItem}>
+                      <img src={item.image} alt={item.nom_fr} style={s.selectedImg} />
+                      <div style={s.selectedInfo}>
+                        <div style={s.selectedName}>{item.nom_fr}</div>
+                        <div style={s.selectedCat}>
+                          {CATALOGUE[cat].label}
+                          {isMain && <span style={{ color: '#C9A96E', marginLeft: '4px', fontSize: '0.55rem' }}>· PIÈCE GÉNÉRÉE</span>}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <div style={s.resultatWrap}>
-                  <img 
-                    src={activeGalleryIndex !== null && gallery[activeGalleryIndex] ? gallery[activeGalleryIndex].url : currentResultUrl} 
-                    alt="Votre look" 
-                    style={s.resultatImg} 
-                  />
-                  {activeGalleryIndex !== null && gallery[activeGalleryIndex] && activeGalleryIndex < gallery.length - 1 && (
-                    <div style={s.galleryOldBadge}>
-                      Étape {activeGalleryIndex + 1} · {gallery[activeGalleryIndex].piece.nom_fr}
-                    </div>
-                  )}
-                  <div style={s.resultatBadge}>AI GENERATED · IA GÉNÉRÉE</div>
-                </div>
-              </div>
-
-              {/* OUTFIT SO FAR */}
-              <div style={s.outfitSidebar}>
-                <p style={s.outfitTitle}>VOTRE SÉLECTION · YOUR OUTFIT</p>
-                <div style={s.outfitItems}>
-                  {outfitSelections.map((item, i) => (
-                    <div key={i} style={{
-                      ...s.outfitItem,
-                      border: replacingIndex === i ? '1px solid #E85D30' : '1px solid #efefef',
-                      background: replacingIndex === i ? '#fff8f6' : '#fff',
-                    }}>
-                      <img src={item.image} alt={item.nom_fr} style={s.outfitItemImg} />
-                      <div style={{flex:1}}>
-                        <p style={s.outfitItemNom}>{item.nom_fr}</p>
-                        <p style={s.outfitItemDesc}>{item.desc}</p>
-                        <p style={s.outfitItemPrix}>{item.prix}</p>
+                        <div style={s.selectedPrice}>{item.prix}</div>
                       </div>
-                      <div style={s.outfitItemActions}>
-                        <button
-                          onClick={() => { setReplacingIndex(i); setActiveGalleryIndex(i); setEtape(2); setCurrentSelection(null) }}
-                          style={s.btnItemReplace}
-                          title="Changer cette pièce"
-                        >✎</button>
-                        <button
-                          onClick={() => {
-                            setOutfitSelections(prev => prev.filter((_, idx) => idx !== i))
-                            setGallery(prev => prev.filter((_, idx) => idx !== i))
-                            if (gallery.length > 1) {
-                              const newActive = Math.max(0, i - 1)
-                              setActiveGalleryIndex(newActive)
-                              setCurrentResultUrl(gallery[newActive]?.url || null)
-                            } else {
-                              setCurrentResultUrl(null)
-                              setActiveGalleryIndex(null)
-                              setEtape(2)
-                            }
-                            setGenerationCount(prev => prev - 1)
-                          }}
-                          style={s.btnItemDelete}
-                          title="Supprimer cette pièce"
-                        >✕</button>
-                      </div>
+                      <button style={s.removeBtn} onClick={() => removeItem(cat)} title="Retirer">✕</button>
                     </div>
-                  ))}
-                </div>
-
-                {/* TOTAL */}
-                <div style={s.outfitTotal}>
-                  <span style={s.outfitTotalLabel}>TOTAL ESTIMÉ</span>
-                  <span style={s.outfitTotalValue}>
-                    ${outfitSelections.reduce((acc, item) => acc + parseInt(item.prix.replace('$','').replace(',','')), 0).toLocaleString()}
-                  </span>
-                </div>
-
-                {/* ACTIONS */}
-                <button onClick={ajouterPiece} style={s.btnAjouter}>
-                  + Ajouter une pièce · Add a piece
-                </button>
-
-                <div style={s.ctaGoldLine} />
-
-                <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer" style={s.btnRDV}>
-                  PRENDRE MON RENDEZ-VOUS<br />
-                  <span style={s.btnRDVSub}>BOOK MY FREE APPOINTMENT</span>
-                </a>
-
-                <button onClick={recommencer} style={s.btnReset}>
-                  ↩ Recommencer · Start over
-                </button>
-              </div>
+                  )
+                })
+              )}
             </div>
-          </section>
-        )}
-      </div>
 
-      {/* FOOTER */}
-      <footer style={s.footer}>
-        <div style={s.footerGoldLine} />
-        <p style={s.footerLogo}>SURMESUR</p>
-        <p style={s.footerCities}>MTL · TOR · VAN · OTT · PIТ · MEX</p>
-        <p style={s.footerSub}>Custom Clothing Made To Be Lived In · B Corp Certified</p>
-      </footer>
-    </main>
+            <div style={s.totalWrap}>
+              {selectedCount > 0 && (
+                <div style={s.totalRow}>
+                  <span style={s.totalLabel}>TOTAL ESTIMÉ</span>
+                  <span style={s.totalPrice}>{formatPrice(totalPrice)}</span>
+                </div>
+              )}
+
+              {generating ? (
+                <>
+                  <div style={{ ...s.btnGenerateDisabled, textAlign: 'center' }}>GÉNÉRATION EN COURS...</div>
+                  <div style={s.progressWrap}>
+                    <div style={s.progressBar(progress)} />
+                  </div>
+                  <div style={s.progressLabel}>L'IA habille votre photo · {Math.round(progress)}%</div>
+                </>
+              ) : (
+                <button
+                  style={selectedCount > 0 ? s.btnGenerate : s.btnGenerateDisabled}
+                  onClick={selectedCount > 0 ? handleGenerate : undefined}
+                  disabled={selectedCount === 0 || generating}
+                >
+                  GÉNÉRER MON LOOK COMPLET<br />
+                  <span style={{ fontSize: '0.6rem', opacity: 0.65 }}>GENERATE MY COMPLETE LOOK</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* STEP 3 — Result */}
+      {step === 3 && (
+        <div style={s.resultWrap}>
+          <div style={s.stepNum}>03</div>
+          <div style={s.stepTitle}>Votre look · Your look</div>
+          <div style={s.stepSub}>{selectedCount} pièce{selectedCount > 1 ? 's' : ''} sélectionnée{selectedCount > 1 ? 's' : ''} · Prenez rendez-vous ou modifiez votre look</div>
+
+          <div style={s.resultGrid}>
+            <div>
+              <div style={s.sectionTitle}>VOTRE LOOK GÉNÉRÉ · YOUR GENERATED LOOK</div>
+              {resultImage && <img src={resultImage} alt="Votre look Surmesur" style={s.resultImg} />}
+            </div>
+
+            <div>
+              <div style={s.sideTitle}>VOTRE SÉLECTION COMPLÈTE</div>
+              <div style={{ maxHeight: '380px', overflowY: 'auto' }}>
+                {Object.entries(selectedItems).map(([cat, item]) => {
+                  const isMain = mainGarment?.item?.id === item.id
+                  return (
+                    <div key={cat} style={s.selectedItem}>
+                      <img src={item.image} alt={item.nom_fr} style={s.selectedImg} />
+                      <div style={s.selectedInfo}>
+                        <div style={s.selectedName}>{item.nom_fr}</div>
+                        <div style={s.selectedCat}>
+                          {CATALOGUE[cat].label}
+                          {isMain && <span style={{ color: '#C9A96E', marginLeft: '4px', fontSize: '0.55rem' }}>· PIÈCE GÉNÉRÉE</span>}
+                        </div>
+                        <div style={s.selectedPrice}>{item.prix}</div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div style={{ borderTop: '1px solid #e8e4df', paddingTop: '1rem', marginTop: '0.5rem' }}>
+                <div style={s.totalRow}>
+                  <span style={s.totalLabel}>TOTAL ESTIMÉ</span>
+                  <span style={s.totalPrice}>{formatPrice(totalPrice)}</span>
+                </div>
+              </div>
+
+              <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer" style={s.btnAppt}>
+                PRENDRE MON RENDEZ-VOUS<br />
+                <span style={{ fontSize: '0.6rem', opacity: 0.65 }}>BOOK MY FREE APPOINTMENT</span>
+              </a>
+
+              <button style={s.btnSecondary} onClick={() => { setStep(2); setResultImage(null) }}>
+                ← MODIFIER MON LOOK · EDIT MY OUTFIT
+              </button>
+
+              <button style={s.btnSecondary} onClick={reset}>
+                ↺ RECOMMENCER · START OVER
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   )
-}
-
-const s = {
-  main: { minHeight:'100vh', background:'#FAFAF8', color:'#000', fontFamily:"'Montserrat',sans-serif", fontWeight:300 },
-  topBar: { background:'#0A0A0A', color:'#888', textAlign:'center', padding:'7px 1rem', display:'flex', alignItems:'center', justifyContent:'center', gap:'0.85rem', flexWrap:'wrap' },
-  topBarText: { fontSize:'9px', letterSpacing:'0.22em', fontWeight:400 },
-  topBarDot: { color:'#444', fontSize:'9px' },
-  header: { background:'#fff', borderBottom:'1px solid #efefef', padding:'0 2.5rem' },
-  headerInner: { maxWidth:'1200px', margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', height:'80px', flexWrap:'wrap', gap:'1rem', padding:'0 0.5rem' },
-  logo: { fontFamily:"'Cormorant Garamond',serif", fontSize:'1.75rem', fontWeight:400, letterSpacing:'0.38em' },
-  logoLine: { height:'1.5px', background:'linear-gradient(90deg,#C9A96E,#E8D5B0,#C9A96E)', marginTop:'3px' },
-  nav: { display:'flex', gap:'1.5rem', alignItems:'center', flexWrap:'wrap', justifyContent:'center' },
-  navItem: { fontSize:'10px', letterSpacing:'0.14em', color:'#888', textTransform:'uppercase', cursor:'pointer' },
-  navActive: { color:'#000', fontWeight:500, borderBottom:'1px solid #C9A96E', paddingBottom:'2px' },
-  hero: { position:'relative', background:'#fff', overflow:'hidden' },
-  heroBg: { position:'absolute', top:0, left:0, right:0, bottom:0, background:'radial-gradient(ellipse at 80% 50%,rgba(201,169,110,0.04) 0%,transparent 70%)', pointerEvents:'none' },
-  heroInner: { maxWidth:'1200px', margin:'0 auto', padding:'clamp(3rem,8vw,6rem) 2.5rem clamp(2rem,4vw,3rem)', textAlign:'center', display:'flex', flexDirection:'column', alignItems:'center', position:'relative' },
-  eyebrow: { fontSize:'9px', letterSpacing:'0.28em', color:'#C9A96E', textTransform:'uppercase', marginBottom:'1.5rem', fontWeight:400 },
-  heroTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(3rem,7vw,5.5rem)', fontWeight:300, lineHeight:1.08, marginBottom:'2rem', maxWidth:'750px', textAlign:'center' },
-  heroSub: { fontSize:'clamp(13px,1.5vw,15px)', color:'#555', lineHeight:1.8, marginBottom:'0.5rem', maxWidth:'520px', textAlign:'center' },
-  heroSubEn: { fontSize:'12px', color:'#aaa', fontStyle:'italic', lineHeight:1.7, marginBottom:'2.5rem', maxWidth:'520px', textAlign:'center' },
-  heroStats: { display:'flex', alignItems:'center', gap:'2rem', flexWrap:'wrap', justifyContent:'center' },
-  heroStat: { display:'flex', flexDirection:'column', gap:'4px', alignItems:'center' },
-  heroStatN: { fontFamily:"'Cormorant Garamond',serif", fontSize:'2rem', fontWeight:300, lineHeight:1 },
-  heroStatL: { fontSize:'9px', letterSpacing:'0.15em', color:'#999', textTransform:'uppercase' },
-  heroStatDiv: { width:'1px', height:'40px', background:'#e5e5e5' },
-  heroLine: { height:'1px', background:'linear-gradient(90deg,transparent,#e5e5e5 20%,#C9A96E 50%,#e5e5e5 80%,transparent)' },
-  progress: { maxWidth:'1200px', margin:'0 auto', padding:'1.75rem 2.5rem', display:'flex', alignItems:'center', background:'#fff', borderBottom:'1px solid #f0f0f0', flexWrap:'wrap', gap:'0.5rem' },
-  progressItem: { display:'flex', alignItems:'center', gap:'0.6rem' },
-  progressDot: { width:'26px', height:'26px', borderRadius:'50%', border:'1.5px solid', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, transition:'all 0.4s' },
-  progressLabel: { fontSize:'10px', letterSpacing:'0.1em', textTransform:'uppercase', whiteSpace:'nowrap', transition:'color 0.3s' },
-  progressLine: { width:'clamp(1rem,4vw,4rem)', height:'1px', margin:'0 0.5rem', transition:'background 0.4s' },
-  content: { maxWidth:'1200px', margin:'0 auto', padding:'0 2.5rem 5rem' },
-  section: { marginBottom:'4rem', paddingTop:'3rem', borderTop:'1px solid #f0f0f0' },
-  sectionHead: { display:'flex', gap:'1.5rem', alignItems:'flex-start', marginBottom:'2rem' },
-  sectionNum: { fontFamily:"'Cormorant Garamond',serif", fontSize:'5rem', fontWeight:300, color:'#f0ede8', lineHeight:1, flexShrink:0 },
-  sectionTitle: { fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(1.5rem,3vw,2.2rem)', fontWeight:400, marginBottom:'0.4rem' },
-  sectionEn: { fontStyle:'italic', color:'#bbb', fontSize:'0.7em' },
-  sectionSub: { fontSize:'11px', color:'#aaa', letterSpacing:'0.06em', lineHeight:1.6 },
-  cameraContainer: { position:'relative', background:'#000', borderRadius:'2px', overflow:'hidden', marginBottom:'1rem' },
-  cameraVideo: { width:'100%', maxHeight:'500px', objectFit:'cover', display:'block' },
-  cameraGuide: { position:'absolute', top:'50%', left:'50%', transform:'translate(-50%,-50%)', width:'200px', height:'400px', border:'1.5px dashed rgba(201,169,110,0.6)', borderRadius:'100px', pointerEvents:'none' },
-  cameraHint: { textAlign:'center', color:'#fff', fontSize:'11px', padding:'0.75rem', background:'rgba(0,0,0,0.7)', letterSpacing:'0.05em' },
-  cameraTimer: { textAlign:'center', color:'#C9A96E', fontSize:'10px', padding:'0.5rem', background:'rgba(0,0,0,0.85)', fontStyle:'italic', letterSpacing:'0.08em' },
-  cameraControls: { display:'flex', alignItems:'center', justifyContent:'space-between', padding:'1.5rem 2rem', background:'#0A0A0A' },
-  btnCancel: { background:'transparent', border:'1px solid rgba(255,255,255,0.2)', color:'#fff', padding:'0.6rem 1.2rem', fontSize:'11px', cursor:'pointer', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", letterSpacing:'0.1em' },
-  btnCapture: { width:'68px', height:'68px', borderRadius:'50%', background:'transparent', border:'3px solid #C9A96E', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer', padding:0 },
-  btnCaptureInner: { width:'54px', height:'54px', borderRadius:'50%', background:'#C9A96E' },
-  btnConfirm: { background:'#C9A96E', border:'none', color:'#000', padding:'0.75rem 1.5rem', fontSize:'11px', cursor:'pointer', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", fontWeight:500, letterSpacing:'0.1em' },
-  previewWrap: { position:'relative', borderRadius:'2px', overflow:'hidden', marginBottom:'1rem', border:'1px solid #e8e8e8' },
-  previewImg: { width:'100%', maxHeight:'400px', objectFit:'cover', display:'block' },
-  previewBadge: { position:'absolute', top:'1rem', left:'1rem', background:'rgba(201,169,110,0.9)', color:'#000', padding:'0.4rem 0.85rem', fontSize:'10px', letterSpacing:'0.15em', fontWeight:500 },
-  uploadOptions: { border:'1px solid #efefef', borderRadius:'2px', padding:'1.75rem', display:'flex', flexDirection:'column', gap:'1rem', background:'#fff' },
-  btnCamera: { display:'flex', alignItems:'center', gap:'1rem', padding:'1.25rem 1.5rem', background:'#0A0A0A', color:'#fff', border:'none', cursor:'pointer', borderRadius:'2px', textAlign:'left', fontFamily:"'Montserrat',sans-serif" },
-  btnGallery: { display:'flex', alignItems:'center', gap:'1rem', padding:'1.25rem 1.5rem', background:'#fff', color:'#000', border:'1px solid #ddd', cursor:'pointer', borderRadius:'2px', textAlign:'left', fontFamily:"'Montserrat',sans-serif" },
-  btnGalleryActive: { display:'flex', alignItems:'center', gap:'1rem', padding:'1.25rem 1.5rem', background:'#fff', color:'#000', border:'1px solid #C9A96E', cursor:'pointer', borderRadius:'2px', textAlign:'left', fontFamily:"'Montserrat',sans-serif" },
-  btnIcon: { fontSize:'1.4rem', flexShrink:0 },
-  btnLabel: { fontSize:'12px', fontWeight:500, marginBottom:'2px', letterSpacing:'0.06em' },
-  btnLabelEn: { fontSize:'10px', color:'#999', fontStyle:'italic' },
-  divider: { display:'flex', alignItems:'center', gap:'1rem' },
-  dividerLine: { flex:1, height:'1px', background:'#efefef' },
-  dividerText: { fontSize:'10px', color:'#ccc', letterSpacing:'0.12em' },
-  uploadTip: { fontSize:'11px', color:'#bbb', textAlign:'center', fontStyle:'italic' },
-  tabs: { display:'flex', gap:'8px', marginBottom:'1.5rem', flexWrap:'wrap' },
-  tab: { display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', padding:'0.75rem 1.25rem', border:'1px solid', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", fontSize:'11px', minWidth:'80px' },
-  tabLabel: { fontSize:'11px', fontWeight:500, letterSpacing:'0.06em' },
-  tabLabelEn: { fontSize:'9px', opacity:0.6, letterSpacing:'0.08em' },
-  grid: { display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))', gap:'1.5px', background:'#e8e8e8', border:'1px solid #e8e8e8', marginBottom:'1.5rem' },
-  card: { background:'#fff', position:'relative', overflow:'hidden' },
-  cardImgWrap: { height:'300px', overflow:'hidden', position:'relative', background:'#f7f7f5' },
-  cardImg: { width:'100%', height:'100%', objectFit:'cover', objectPosition:'top' },
-  cardCheck: { position:'absolute', top:'0.75rem', right:'0.75rem', width:'28px', height:'28px', background:'#C9A96E', color:'#000', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'12px', fontWeight:600 },
-  cardInfo: { padding:'0.85rem 1rem' },
-  cardNom: { fontSize:'12px', fontWeight:500, marginBottom:'2px' },
-  cardNomEn: { fontSize:'9px', color:'#bbb', fontStyle:'italic', marginBottom:'0.4rem' },
-  cardFooter: { display:'flex', justifyContent:'space-between', alignItems:'center' },
-  cardDesc: { fontSize:'9px', color:'#bbb', letterSpacing:'0.08em', textTransform:'uppercase' },
-  cardPrix: { fontSize:'12px', color:'#666' },
-  cardPrixActive: { fontSize:'12px', color:'#C9A96E', fontWeight:500 },
-  selectionBar: { background:'#fff', border:'1px solid #C9A96E', borderRadius:'2px', padding:'1.5rem', marginTop:'0.5rem' },
-  selectionInfo: { display:'flex', alignItems:'center', gap:'1rem', marginBottom:'1.25rem' },
-  selectionImg: { width:'60px', height:'75px', objectFit:'cover', objectPosition:'top', border:'1px solid #efefef', flexShrink:0 },
-  selectionNom: { fontSize:'13px', fontWeight:500, marginBottom:'3px' },
-  selectionDesc: { fontSize:'11px', color:'#999' },
-  erreur: { background:'#fff8f8', border:'1px solid #f5cccc', padding:'0.85rem 1rem', marginBottom:'1rem', fontSize:'12px', color:'#cc3333', borderRadius:'2px' },
-  btnGenerer: { width:'100%', padding:'1.25rem', background:'#0A0A0A', color:'#fff', border:'1px solid transparent', fontSize:'11px', letterSpacing:'0.18em', cursor:'pointer', fontFamily:"'Montserrat',sans-serif", fontWeight:400, display:'block' },
-  spinner: { width:'14px', height:'14px', border:'1.5px solid rgba(255,255,255,0.3)', borderTop:'1.5px solid #fff', borderRadius:'50%', display:'inline-block', animation:'spin 0.8s linear infinite', flexShrink:0 },
-  loadingWrap: { marginTop:'1rem', textAlign:'center' },
-  loadingBar: { height:'1.5px', background:'#efefef', overflow:'hidden', marginBottom:'0.75rem' },
-  loadingBarInner: { height:'100%', background:'linear-gradient(90deg,#C9A96E,#E8D5B0)', animation:'loadingBar 60s ease forwards' },
-  loadingText: { fontSize:'11px', color:'#aaa', lineHeight:1.7 },
-  resultatLayout: { display:'grid', gridTemplateColumns:'2fr 1fr', gap:'2rem', alignItems:'start' },
-  resultatMain: {},
-  resultatLabel: { fontSize:'9px', letterSpacing:'0.28em', color:'#C9A96E', marginBottom:'0.75rem', fontWeight:400 },
-  resultatWrap: { position:'relative' },
-  resultatImg: { width:'100%', maxHeight:'700px', objectFit:'contain', background:'#f7f7f5', display:'block', border:'1px solid #efefef' },
-  resultatBadge: { position:'absolute', bottom:'1rem', right:'1rem', background:'rgba(10,10,10,0.85)', color:'#C9A96E', padding:'0.4rem 0.9rem', fontSize:'8px', letterSpacing:'0.22em' },
-  outfitSidebar: { display:'flex', flexDirection:'column', gap:'0.75rem', position:'sticky', top:'1rem', maxHeight:'90vh', overflow:'hidden' },
-  outfitTitle: { fontSize:'9px', letterSpacing:'0.25em', color:'#C9A96E', fontWeight:400 },
-  outfitItems: { display:'flex', flexDirection:'column', gap:'0.5rem', overflowY:'auto', maxHeight:'calc(90vh - 280px)', paddingRight:'4px' },
-  outfitItem: { display:'flex', gap:'0.75rem', alignItems:'center', padding:'0.75rem', background:'#fff', border:'1px solid #efefef', borderRadius:'2px' },
-  outfitItemImg: { width:'45px', height:'55px', objectFit:'cover', objectPosition:'top', flexShrink:0, border:'1px solid #f0f0f0' },
-  outfitItemNom: { fontSize:'11px', fontWeight:500, marginBottom:'2px' },
-  outfitItemDesc: { fontSize:'9px', color:'#bbb', letterSpacing:'0.06em' },
-  outfitItemPrix: { fontSize:'11px', color:'#C9A96E', fontWeight:500, marginTop:'2px' },
-  outfitTotal: { display:'flex', justifyContent:'space-between', alignItems:'center', padding:'1rem', background:'#0A0A0A', borderRadius:'2px' },
-  outfitTotalLabel: { fontSize:'9px', letterSpacing:'0.2em', color:'#888' },
-  outfitTotalValue: { fontSize:'1.1rem', fontFamily:"'Cormorant Garamond',serif", color:'#C9A96E', fontWeight:400 },
-  btnAjouter: { width:'100%', padding:'1rem', background:'transparent', border:'1px solid #000', color:'#000', fontSize:'11px', letterSpacing:'0.14em', cursor:'pointer', fontFamily:"'Montserrat',sans-serif", transition:'all 0.2s' },
-  ctaGoldLine: { height:'1px', background:'linear-gradient(90deg,transparent,#C9A96E,transparent)' },
-  btnRDV: { display:'block', textAlign:'center', padding:'1.1rem 1.5rem', background:'#0A0A0A', color:'#fff', textDecoration:'none', fontSize:'10px', letterSpacing:'0.18em', lineHeight:2 },
-  btnRDVSub: { fontSize:'9px', opacity:0.5, letterSpacing:'0.1em', display:'block' },
-  btnReset: { width:'100%', padding:'0.75rem', background:'transparent', border:'1px solid #efefef', color:'#bbb', fontSize:'10px', letterSpacing:'0.12em', cursor:'pointer', fontFamily:"'Montserrat',sans-serif" },
-  footer: { borderTop:'1px solid #efefef', textAlign:'center', padding:'3.5rem 1rem', background:'#fff' },
-  footerGoldLine: { height:'1px', background:'linear-gradient(90deg,transparent,#C9A96E,transparent)', maxWidth:'200px', margin:'0 auto 2rem' },
-  footerLogo: { fontFamily:"'Cormorant Garamond',serif", fontSize:'1.6rem', letterSpacing:'0.38em', marginBottom:'0.75rem', fontWeight:300 },
-  footerCities: { fontSize:'9px', letterSpacing:'0.24em', color:'#bbb', marginBottom:'0.5rem' },
-  footerSub: { fontSize:'9px', color:'#ccc', letterSpacing:'0.12em' },
-  galleryNav: { marginBottom: '1rem' },
-  galleryNavLabel: { fontSize:'9px', letterSpacing:'0.25em', color:'#C9A96E', marginBottom:'0.75rem', fontWeight:400 },
-  galleryNavItems: { display:'flex', gap:'0.75rem', overflowX:'auto', paddingBottom:'0.5rem' },
-  galleryThumb: { flexShrink:0, width:'100px', borderRadius:'2px', overflow:'hidden', transition:'all 0.2s', background:'#f7f7f5', position:'relative' },
-  galleryThumbImg: { width:'100%', height:'120px', objectFit:'cover', objectPosition:'top', display:'block' },
-  galleryThumbLabel: { padding:'0.4rem 0.5rem', background:'#fff' },
-  galleryThumbNum: { fontSize:'8px', color:'#C9A96E', letterSpacing:'0.15em', display:'block', marginBottom:'1px' },
-  galleryThumbNom: { fontSize:'9px', color:'#333', letterSpacing:'0.04em', display:'block', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' },
-  galleryOldBadge: { position:'absolute', top:'1rem', left:'1rem', background:'rgba(201,169,110,0.9)', color:'#000', padding:'0.4rem 0.85rem', fontSize:'9px', letterSpacing:'0.15em', fontWeight:500 },
-  galleryThumbReplace: { width:'100%', padding:'5px 4px', border:'none', fontSize:'9px', cursor:'pointer', letterSpacing:'0.06em', fontFamily:"'Montserrat',sans-serif", borderTop:'1px solid #efefef', transition:'all 0.2s' },
-  outfitItemActions: { display:'flex', flexDirection:'column', gap:'4px', flexShrink:0 },
-  btnItemReplace: { width:'28px', height:'28px', background:'#f5f5f5', border:'1px solid #e5e5e5', borderRadius:'2px', fontSize:'12px', cursor:'pointer', color:'#666', display:'flex', alignItems:'center', justifyContent:'center' },
-  btnItemDelete: { width:'28px', height:'28px', background:'#fff5f5', border:'1px solid #ffcccc', borderRadius:'2px', fontSize:'11px', cursor:'pointer', color:'#cc3333', display:'flex', alignItems:'center', justifyContent:'center' },
-  replacingBanner: { display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.85rem 1rem', background:'#fff8f5', border:'1px solid #E85D30', borderRadius:'2px', fontSize:'11px', color:'#E85D30', marginTop:'0.5rem', flexWrap:'wrap' },
-  replacingBannerIcon: { fontSize:'14px', flexShrink:0 },
-  replacingBannerCancel: { marginLeft:'auto', background:'transparent', border:'1px solid #E85D30', color:'#E85D30', padding:'0.3rem 0.75rem', fontSize:'10px', cursor:'pointer', borderRadius:'2px', fontFamily:"'Montserrat',sans-serif", letterSpacing:'0.08em' },
-  bgSection: { marginBottom:'1.25rem', padding:'1.25rem', background:'#fafaf8', border:'1px solid #efefef', borderRadius:'2px' },
-  bgTitle: { fontSize:'11px', color:'#666', letterSpacing:'0.08em', marginBottom:'4px', fontWeight:500 },
-  bgSubtitle: { fontSize:'10px', color:'#C9A96E', letterSpacing:'0.06em', marginBottom:'1rem', fontStyle:'italic' },
-  bgGrid: { display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:'8px' },
-  bgCard: { position:'relative', padding:'0.75rem 0.5rem', borderRadius:'2px', cursor:'pointer', textAlign:'center', transition:'all 0.2s', fontFamily:"'Montserrat',sans-serif" },
-  bgIcon: { fontSize:'1.4rem', display:'block', marginBottom:'4px' },
-  bgLabel: { fontSize:'10px', fontWeight:500, color:'#000', marginBottom:'1px', letterSpacing:'0.04em' },
-  bgLabelEn: { fontSize:'8px', color:'#aaa', marginBottom:'3px', fontStyle:'italic' },
-  bgDesc: { fontSize:'8px', color:'#bbb', lineHeight:1.3, letterSpacing:'0.03em' },
-  bgCheck: { position:'absolute', top:'4px', right:'4px', width:'14px', height:'14px', background:'#C9A96E', color:'#000', borderRadius:'50%', fontSize:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 },
 }
