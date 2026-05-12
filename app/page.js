@@ -72,6 +72,7 @@ export default function Home() {
   const [cameraActive, setCameraActive] = useState(false)
   const [cameraStream, setCameraStream] = useState(null)
   const [photoConfirmation, setPhotoConfirmation] = useState(null)
+  const [countdown, setCountdown] = useState(null)
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
@@ -117,14 +118,25 @@ export default function Home() {
 
   const capturePhoto = () => {
     if (!videoRef.current || !canvasRef.current) return
-    const video = videoRef.current
-    const canvas = canvasRef.current
-    canvas.width = video.videoWidth
-    canvas.height = video.videoHeight
-    const ctx = canvas.getContext('2d')
-    ctx.drawImage(video, 0, 0)
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
-    setPhotoConfirmation(dataUrl)
+    setCountdown(3)
+    const interval = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          const video = videoRef.current
+          const canvas = canvasRef.current
+          if (!video || !canvas) return null
+          canvas.width = video.videoWidth
+          canvas.height = video.videoHeight
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(video, 0, 0)
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+          setPhotoConfirmation(dataUrl)
+          return null
+        }
+        return prev - 1
+      })
+    }, 1000)
   }
 
   const confirmPhoto = () => {
@@ -287,8 +299,12 @@ export default function Home() {
                   <p style={s.cameraHint}>Placez-vous debout, corps entier visible · Stand upright, full body visible</p>
                   <div style={s.cameraControls}>
                     <button onClick={stopCamera} style={s.btnCameraCancel}>✕ Annuler</button>
-                    <button onClick={capturePhoto} style={s.btnCapture}>
-                      <div style={s.btnCaptureInner} />
+                    <button onClick={capturePhoto} disabled={countdown !== null} style={s.btnCapture}>
+                      {countdown ? (
+                        <span style={{ color: '#fff', fontSize: '1.8rem', fontWeight: 300, fontFamily: "'Cormorant Garamond', serif" }}>{countdown}</span>
+                      ) : (
+                        <div style={s.btnCaptureInner} />
+                      )}
                     </button>
                     <div style={{ width: '80px' }} />
                   </div>
