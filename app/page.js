@@ -332,10 +332,17 @@ export default function Home() {
 
           {/* PHOTO UPLOADED */}
           {!cameraActive && photoClientPreview && (
-            <div style={s.previewWrap} onClick={() => fileInputRef.current?.click()}>
-              <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
-              <div style={s.previewOverlay}>
-                <span style={s.previewOverlayText}>CHANGER · CHANGE</span>
+            <div>
+              <div style={s.previewWrap}>
+                <img src={photoClientPreview} alt="Votre photo" style={s.previewImg} />
+              </div>
+              <div style={s.previewActions}>
+                <button onClick={() => fileInputRef.current?.click()} style={s.btnPreviewChange}>
+                  🖼 Changer la photo · Change photo
+                </button>
+                <button onClick={() => { setPhotoClient(null); setPhotoClientPreview(null); setEtape(1); }} style={s.btnPreviewCamera}>
+                  📷 Prendre une photo · Take a photo
+                </button>
               </div>
             </div>
           )}
@@ -641,4 +648,7 @@ const s = {
   footerLogo: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.5rem', letterSpacing: '0.35em', marginBottom: '0.75rem' },
   footerCities: { fontSize: '10px', letterSpacing: '0.2em', color: '#999', marginBottom: '0.5rem' },
   footerSub: { fontSize: '10px', color: '#bbb', letterSpacing: '0.1em' },
+  previewActions: { display: 'flex', gap: '1rem', marginTop: '0.75rem', flexWrap: 'wrap' },
+  btnPreviewChange: { flex: 1, padding: '0.85rem 1rem', background: '#fff', border: '1px solid #000', color: '#000', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", borderRadius: '2px' },
+  btnPreviewCamera: { flex: 1, padding: '0.85rem 1rem', background: '#000', border: 'none', color: '#fff', fontSize: '11px', letterSpacing: '0.1em', cursor: 'pointer', fontFamily: "'Montserrat', sans-serif", borderRadius: '2px' },
 }
