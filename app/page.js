@@ -142,14 +142,18 @@ export default function SurmesurTryOn() {
     canvasRef.current.toBlob(blob => {
       setPhotoClient(blob)
       setPhotoPreview(photoConfirmation)
-      stopCamera(); setPhotoConfirmation(null); setPhase('build')
+      stopCamera() // Arrêter la caméra immédiatement
+      setPhotoConfirmation(null)
+      setPhase('build')
     }, 'image/jpeg', 0.9)
   }
 
   const handleUpload = (e) => {
     const f = e.target.files?.[0]; if (!f) return
+    stopCamera() // S'assurer que la caméra est éteinte
     setPhotoClient(f); setPhotoPreview(URL.createObjectURL(f))
-    stopCamera(); setPhase('build')
+    setPhotoConfirmation(null)
+    setPhase('build')
   }
 
   // Select item in catalog
@@ -381,8 +385,8 @@ export default function SurmesurTryOn() {
         <>
           <div style={s.hero}>
             <div style={s.eyebrow}>TECHNOLOGIE VIRTUELLE · VIRTUAL TRY-ON</div>
-            <h1 style={s.title}>Essayez nos <span style={s.gold}>collections</span><br />sans sortir de la maison</h1>
-            <p style={s.sub}>Try our collections without leaving home</p>
+            <h1 style={s.title}>Essayez nos <span style={s.gold}>collections</span><br />dans le confort de votre foyer</h1>
+            <p style={s.sub}>Try our collections from the comfort of your home</p>
             <div style={s.stats}>
               <div><div style={s.statN}>3</div><div style={s.statL}>LOOKS MAX</div></div>
               <div><div style={s.statN}>22+</div><div style={s.statL}>PIÈCES</div></div>
