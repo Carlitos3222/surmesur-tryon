@@ -253,11 +253,11 @@ export default function Home() {
         <div style={s.heroInner}>
           <p style={s.heroEyebrow} className="fade-up">NOUVELLE EXPÉRIENCE EXCLUSIVE · NEW EXCLUSIVE EXPERIENCE</p>
           <h1 style={s.heroTitre} className="fade-up-1">
-            Essayez nos <em className="gold-shimmer">collections</em><br />sans quitter votre maison.
+            Essayez nos <em className="gold-shimmer">collections</em><br />sans sortir de la maison.
           </h1>
           <p style={s.heroSub} className="fade-up-2">
             Uploadez votre photo ou prenez-en une en direct.<br />
-            Notre IA vous habille en 30 secondes — avant même votre rendez-vous.
+            Notre IA vous habille en 30 secondes — chez vous, à votre rythme.
           </p>
           <p style={s.heroSubEn} className="fade-up-3">
             Try our collections without leaving home. Upload your photo or take one live. Our AI dresses you in 30 seconds.
