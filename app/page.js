@@ -113,9 +113,20 @@ export default function SurmesurTryOn() {
   }
 
   const stopCamera = useCallback(() => {
-    streamRef.current?.getTracks().forEach(t => t.stop())
-    streamRef.current = null
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => {
+        t.stop()
+        t.enabled = false
+      })
+      streamRef.current = null
+    }
+    // Vider le srcObject de la vidéo pour que le navigateur éteigne l'indicateur caméra
+    if (videoRef.current) {
+      videoRef.current.srcObject = null
+      videoRef.current.load()
+    }
     setCameraActive(false)
+    setCountdown(null)
   }, [])
 
   const capturePhoto = () => {
