@@ -253,9 +253,7 @@ export default function Home() {
         <div style={s.heroInner}>
           <p style={s.heroEyebrow} className="fade-up">NOUVELLE EXPÉRIENCE EXCLUSIVE · NEW EXCLUSIVE EXPERIENCE</p>
           <h1 style={s.heroTitre} className="fade-up-1">
-            Essayez nos{' '}
-            <em className="gold-shimmer">collections</em>
-            <br />sans sortir de chez vous.
+            Essayez nos <em className="gold-shimmer">collections</em><br />sans quitter votre maison.
           </h1>
           <p style={s.heroSub} className="fade-up-2">
             Uploadez votre photo ou prenez-en une en direct.<br />
@@ -565,12 +563,12 @@ const s = {
 
   hero: { position: 'relative', maxWidth: '100%', overflow: 'hidden', background: '#fff' },
   heroBg: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'radial-gradient(ellipse at 80% 50%, rgba(201,169,110,0.04) 0%, transparent 70%)', pointerEvents: 'none' },
-  heroInner: { maxWidth: '1200px', margin: '0 auto', padding: 'clamp(3rem, 8vw, 6rem) 2.5rem clamp(2rem, 4vw, 3rem)', position: 'relative' },
-  heroEyebrow: { fontSize: '9px', letterSpacing: '0.28em', color: '#C9A96E', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 400 },
-  heroTitre: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.8rem, 7vw, 5.5rem)', fontWeight: 300, lineHeight: 1.05, marginBottom: '2rem', color: '#000', maxWidth: '700px' },
-  heroSub: { fontSize: 'clamp(13px, 1.5vw, 15px)', color: '#555', lineHeight: 1.8, marginBottom: '0.5rem', maxWidth: '520px' },
-  heroSubEn: { fontSize: '12px', color: '#aaa', fontStyle: 'italic', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px' },
-  heroStats: { display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' },
+  heroInner: { maxWidth: '1200px', margin: '0 auto', padding: 'clamp(3rem, 8vw, 6rem) 2.5rem clamp(2rem, 4vw, 3rem)', position: 'relative', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' },
+  heroEyebrow: { fontSize: '9px', letterSpacing: '0.28em', color: '#C9A96E', textTransform: 'uppercase', marginBottom: '1.5rem', fontWeight: 400, textAlign: 'center' },
+  heroTitre: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(3rem, 7vw, 5.5rem)', fontWeight: 300, lineHeight: 1.08, marginBottom: '2rem', color: '#000', maxWidth: '750px', textAlign: 'center' },
+  heroSub: { fontSize: 'clamp(13px, 1.5vw, 15px)', color: '#555', lineHeight: 1.8, marginBottom: '0.5rem', maxWidth: '520px', textAlign: 'center' },
+  heroSubEn: { fontSize: '12px', color: '#aaa', fontStyle: 'italic', lineHeight: 1.7, marginBottom: '2.5rem', maxWidth: '520px', textAlign: 'center' },
+  heroStats: { display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap', justifyContent: 'center' },
   heroStat: { display: 'flex', flexDirection: 'column', gap: '4px' },
   heroStatNum: { fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 300, color: '#000', lineHeight: 1 },
   heroStatLabel: { fontSize: '9px', letterSpacing: '0.15em', color: '#999', textTransform: 'uppercase' },
