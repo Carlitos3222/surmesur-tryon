@@ -630,6 +630,27 @@ export default function SurmesurTryOn() {
                 PRENDRE MON RENDEZ-VOUS<br />
                 <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>BOOK MY FREE APPOINTMENT</span>
               </a>
+
+              {sidebarItems.length > 0 && (
+                <button
+                  style={{ ...s.btnAppt, background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', marginTop: '0.5rem', textDecoration: 'none' }}
+                  onClick={() => {
+                    const VENDOR_EMAIL = 'vendeur@surmesur.com' // ← changer cet email
+                    const itemsList = sidebarItems.map(it =>
+                      `• ${it.nom_fr} — ${it.prix}`
+                    ).join('\n')
+                    const total = formatPrice(totalPrice)
+                    const subject = encodeURIComponent('Sélection client Surmesur Try-On')
+                    const body = encodeURIComponent(
+                      `Bonjour,\n\nUn client a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n${itemsList}\n\nTOTAL ESTIMÉ : ${total}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`
+                    )
+                    window.location.href = `mailto:${VENDOR_EMAIL}?subject=${subject}&body=${body}`
+                  }}
+                >
+                  ENVOYER AU VENDEUR<br />
+                  <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>SEND TO STYLIST</span>
+                </button>
+              )}
               <button style={s.btnRestart} onClick={reset}>↺ RECOMMENCER · START OVER</button>
             </div>
           </div>
