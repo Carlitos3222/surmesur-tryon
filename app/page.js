@@ -67,17 +67,27 @@ export default function SurmesurTryOn() {
   const [photoPreview, setPhotoPreview] = useState(null)
   const [activeTab, setActiveTab] = useState('suits')
   const [selectedBackground, setSelectedBackground] = useState('studio')
-  const [generations, setGenerations] = useState([]) // [{item, resultUrl, baseUrl}]
-  const [sidebarItems, setSidebarItems] = useState([]) // all selected items for sidebar
+  const [generations, setGenerations] = useState([])
+  const [sidebarItems, setSidebarItems] = useState([])
   const [generating, setGenerating] = useState(false)
   const [progress, setProgress] = useState(0)
+  const [loadingMsg, setLoadingMsg] = useState(0)
   const [error, setError] = useState(null)
   const [activeResultIdx, setActiveResultIdx] = useState(0)
-  const [replaceMode, setReplaceMode] = useState(null) // null | stepIndex to replace
-  const [pendingItem, setPendingItem] = useState(null) // item selected in catalog
+  const [replaceMode, setReplaceMode] = useState(null)
+  const [pendingItem, setPendingItem] = useState(null)
   const [cameraActive, setCameraActive] = useState(false)
   const [countdown, setCountdown] = useState(null)
   const [photoConfirmation, setPhotoConfirmation] = useState(null)
+
+  const LOADING_MESSAGES = [
+    { fr: 'Analyse de votre silhouette...', en: 'Analyzing your silhouette...' },
+    { fr: 'Application du tissu sur mesure...', en: 'Applying the custom fabric...' },
+    { fr: 'Ajustement des proportions...', en: 'Adjusting proportions...' },
+    { fr: 'Calibration des couleurs...', en: 'Calibrating colors...' },
+    { fr: 'Finalisation de votre look...', en: 'Finalizing your look...' },
+    { fr: 'Dernières retouches en cours...', en: 'Last finishing touches...' },
+  ]
 
   const fileInputRef = useRef(null)
   const videoRef = useRef(null)
@@ -165,8 +175,9 @@ export default function SurmesurTryOn() {
     if (!pendingItem) { setError('Sélectionnez une pièce dans le catalogue'); return }
     if (!photoClient) return
 
-    setGenerating(true); setError(null); setProgress(0)
+    setGenerating(true); setError(null); setProgress(0); setLoadingMsg(0)
     const piv = setInterval(() => setProgress(p => p < 85 ? p + Math.random() * 2.5 : p), 800)
+    const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
 
     try {
       const bg = BACKGROUNDS.find(b => b.id === selectedBackground)
@@ -226,7 +237,7 @@ export default function SurmesurTryOn() {
     } catch (err) {
       setError(err.message)
     } finally {
-      clearInterval(piv); setGenerating(false)
+      clearInterval(piv); clearInterval(msgiv); setGenerating(false)
     }
   }
 
@@ -565,11 +576,33 @@ export default function SurmesurTryOn() {
 
               {(canAddMore || replaceMode !== null) ? (
                 generating ? (
-                  <>
-                    <div style={s.btnTryDisabled}>GÉNÉRATION EN COURS...</div>
+                  <div style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', marginTop: '1rem', textAlign: 'center' }}>
+                    {/* Vêtement en cours */}
+                    {pendingItem && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem', padding: '0.75rem', background: '#fafaf8', borderRadius: '3px', textAlign: 'left' }}>
+                        <img src={pendingItem.image} alt={pendingItem.nom_fr} style={{ width: '52px', height: '65px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
+                        <div>
+                          <div style={{ fontSize: '0.75rem', fontWeight: 400, marginBottom: '0.15rem' }}>{pendingItem.nom_fr}</div>
+                          <div style={{ fontSize: '0.65rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{pendingItem.prix}</div>
+                        </div>
+                      </div>
+                    )}
+                    {/* Animation shimmer */}
+                    <div style={{ width: '48px', height: '48px', margin: '0 auto 1rem', borderRadius: '50%', border: '2px solid #e8e4df', borderTop: '2px solid #C9A96E', animation: 'spin 1s linear infinite' }} />
+                    <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+                    {/* Message changeant */}
+                    <div style={{ fontSize: '0.85rem', fontWeight: 300, color: '#1a1a1a', marginBottom: '0.25rem' }}>
+                      {LOADING_MESSAGES[loadingMsg].fr}
+                    </div>
+                    <div style={{ fontSize: '0.65rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '1rem' }}>
+                      {LOADING_MESSAGES[loadingMsg].en}
+                    </div>
+                    {/* Barre de progression */}
                     <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
-                    <div style={s.progLabel}>L'IA habille votre photo · {Math.round(progress)}%</div>
-                  </>
+                    <div style={{ fontSize: '0.6rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.4rem' }}>
+                      {Math.round(progress)}% · L'IA Surmesur travaille pour vous
+                    </div>
+                  </div>
                 ) : (
                   <button style={pendingItem ? s.btnTry : s.btnTryDisabled} onClick={pendingItem ? handleGenerate : undefined} disabled={!pendingItem}>
                     {replaceMode !== null ? 'REMPLACER CETTE PIÈCE' : 'ESSAYER CETTE PIÈCE'}<br />
