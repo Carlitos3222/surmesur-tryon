@@ -667,9 +667,11 @@ export default function SurmesurTryOn() {
                   style={{ width: '100%', padding: '0.9rem', background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, marginTop: '0.5rem', boxSizing: 'border-box' }}
                   onClick={() => {
                     const VENDOR_EMAIL = 'vendeur@surmesur.com' // ← changer cet email
-                    const itemsList = sidebarItems.map(it =>
-                      `• ${it.nom_fr} — ${it.prix}\n  Photo: ${it.image}`
-                    ).join('\n\n')
+                    const itemsList = sidebarItems.map((it, idx) => {
+                      const gen = generations[it._stepIdx]
+                      const resultLine = gen?.resultUrl ? `\n  Look généré : ${gen.resultUrl}` : ''
+                      return `• ${it.nom_fr} — ${it.prix}\n  Photo article : ${it.image}${resultLine}`
+                    }).join('\n\n')
                     const total = formatPrice(totalPrice)
                     const subject = encodeURIComponent('Sélection client Surmesur Try-On')
                     const body = encodeURIComponent(
