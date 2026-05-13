@@ -7,12 +7,10 @@ const CATALOGUE = {
   suits: {
     label: 'Complets', label_en: 'Suits', icon: '🤵', categorie: 'one-pieces',
     items: [
-      { id: 's1', nom_fr: 'Complet Bleu Pétrole', image: `${BASE_URL}/suit1.png`, prix: '$1,100', desc: '3-Piece · Wool' },
-      { id: 's2', nom_fr: 'Complet Charbon', image: `${BASE_URL}/suit2.png`, prix: '$1,150', desc: '3-Piece · Premium Wool' },
-      { id: 's3', nom_fr: 'Complet Prince de Galles', image: `${BASE_URL}/suit3.png`, prix: '$1,200', desc: '3-Piece · Flannel' },
-      { id: 's4', nom_fr: 'Complet Gris Chevron', image: `${BASE_URL}/suit4.png`, prix: '$1,180', desc: '3-Piece · Herringbone' },
-      { id: 's5', nom_fr: 'Complet Lin Naturel', image: `${BASE_URL}/suit5.png`, prix: '$980', desc: '3-Piece · Linen' },
-      { id: 's6', nom_fr: 'Complet Brun Foncé', image: `${BASE_URL}/suit6.png`, prix: '$1,150', desc: '3-Piece · Wool Flannel' },
+      { id: 's1', nom_fr: 'Complet Bleu Pétrole', image: `${BASE_URL}/suit-1.jpeg`, prix: '$1,100', desc: '3-Piece · Wool' },
+      { id: 's2', nom_fr: 'Complet Charbon', image: `${BASE_URL}/suit-2.jpeg`, prix: '$1,150', desc: '3-Piece · Premium Wool' },
+      { id: 's3', nom_fr: 'Complet Prince de Galles', image: `${BASE_URL}/suit-3.jpeg`, prix: '$1,200', desc: '3-Piece · Flannel' },
+      { id: 's4', nom_fr: 'Complet Gris Chevron', image: `${BASE_URL}/suit-4.jpeg`, prix: '$1,180', desc: '3-Piece · Herringbone' },
     ]
   },
   jackets: {
@@ -633,21 +631,21 @@ export default function SurmesurTryOn() {
 
               {sidebarItems.length > 0 && (
                 <button
-                  style={{ ...s.btnAppt, background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', marginTop: '0.5rem', textDecoration: 'none' }}
+                  style={{ width: '100%', padding: '0.9rem', background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, marginTop: '0.5rem', boxSizing: 'border-box' }}
                   onClick={() => {
                     const VENDOR_EMAIL = 'vendeur@surmesur.com' // ← changer cet email
                     const itemsList = sidebarItems.map(it =>
-                      `• ${it.nom_fr} — ${it.prix}`
-                    ).join('\n')
+                      `• ${it.nom_fr} — ${it.prix}\n  Photo: ${it.image}`
+                    ).join('\n\n')
                     const total = formatPrice(totalPrice)
                     const subject = encodeURIComponent('Sélection client Surmesur Try-On')
                     const body = encodeURIComponent(
-                      `Bonjour,\n\nUn client a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n${itemsList}\n\nTOTAL ESTIMÉ : ${total}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`
+                      `Bonjour,\n\nUn client a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${itemsList}\n\nTOTAL ESTIMÉ : ${total}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`
                     )
                     window.location.href = `mailto:${VENDOR_EMAIL}?subject=${subject}&body=${body}`
                   }}
                 >
-                  ENVOYER AU VENDEUR<br />
+                  ✉ ENVOYER AU VENDEUR<br />
                   <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>SEND TO STYLIST</span>
                 </button>
               )}
