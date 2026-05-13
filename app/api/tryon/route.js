@@ -33,10 +33,8 @@ export async function POST(request) {
       return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
     }
 
-    // Prompt intelligent : fidélité vêtement + background adapté au style
-    const prompt = backgroundPrompt
-      ? `Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment — no color shift, no pattern alteration. The garment must look identical to the product reference image. Always tuck the shirt neatly inside the pants. Critically important: preserve the exact face, facial features, hair, skin tone, body shape and original pose of the person — do not alter the person's appearance, identity or pose in any way. Background: ${backgroundPrompt}. Match the lighting direction, color temperature, and shadows of the background perfectly to the person's original photo. The overall image must look like one cohesive professional photograph.`
-      : `Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment. No color shift, no pattern alteration. Always tuck the shirt neatly inside the pants. Critically important: preserve the exact face, facial features, hair, skin tone, body shape and original pose of the person — do not alter the person's appearance, identity or pose in any way. Clean neutral background matching the lighting of the original photo. Photorealistic result.`
+    // Prompt : fond studio blanc professionnel
+    const prompt = `Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment — no color shift, no pattern alteration. The garment must look identical to the product reference image. Always tuck the shirt neatly inside the pants. Critically important: preserve the exact face, facial features, hair, skin tone, body shape and original pose of the person — do not alter the person's appearance, identity or pose in any way. Background: clean professional white studio background with soft natural lighting. The studio lighting must be warm, flattering and perfectly matched to the person's skin tone and the garment's colors — use soft shadows and warm white tones to create a cohesive, high-end fashion photography look. Photorealistic result.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
