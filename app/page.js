@@ -457,9 +457,15 @@ export default function SurmesurTryOn() {
                 <button style={s.changeBtn} onClick={() => { stopCamera(); setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
                   Changer la photo
                 </button>
-                <button style={{ ...s.changeBtn, marginLeft: '0.75rem' }} onClick={startCamera}>
-                  📷 Reprendre
-                </button>
+                {photoPreview && (
+                  <a
+                    href={photoPreview}
+                    download="ma-photo-surmesur.jpg"
+                    style={{ ...s.changeBtn, marginLeft: '0.75rem', color: '#C9A96E' }}
+                  >
+                    ⬇ Sauvegarder ma photo
+                  </a>
+                )}
               </div>
             </div>
 
@@ -467,7 +473,20 @@ export default function SurmesurTryOn() {
             {generations.length > 0 && (
               <div style={s.resultSection} ref={resultRef}>
                 <div style={s.resultLabel}>VOTRE LOOK ACTUEL · YOUR CURRENT LOOK</div>
-                {currentResult && <img src={currentResult} alt="Look généré" style={s.resultImg} />}
+                {currentResult && (
+                  <>
+                    <img src={currentResult} alt="Look généré" style={s.resultImg} />
+                    <a
+                      href={currentResult}
+                      download={`look-surmesur-etape-${activeResultIdx + 1}.png`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: 'inline-block', marginTop: '0.6rem', fontSize: '0.68rem', color: '#C9A96E', fontFamily: 'sans-serif', letterSpacing: '0.1em', textDecoration: 'none', border: '1px solid #C9A96E', padding: '0.4rem 0.85rem', borderRadius: '2px' }}
+                    >
+                      ⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD
+                    </a>
+                  </>
+                )}
                 {/* Thumbnail history */}
                 <div style={s.thumbRow}>
                   {generations.map((gen, i) => (
