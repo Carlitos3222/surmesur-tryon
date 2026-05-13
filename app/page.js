@@ -80,7 +80,15 @@ export default function SurmesurTryOn() {
   const [countdown, setCountdown] = useState(null)
   const [photoConfirmation, setPhotoConfirmation] = useState(null)
 
-  const LOADING_MESSAGES = [
+  const [isMobile, setIsMobile] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
     { fr: 'Analyse de votre silhouette...', en: 'Analyzing your silhouette...' },
     { fr: 'Application du tissu sur mesure...', en: 'Applying the custom fabric...' },
     { fr: 'Ajustement des proportions...', en: 'Adjusting proportions...' },
@@ -301,9 +309,11 @@ export default function SurmesurTryOn() {
     confirmBtns: { display: 'flex', gap: '0.6rem', marginTop: '0.6rem' },
 
     // Build phase layout
-    buildWrap: { display: 'flex', minHeight: 'calc(100vh - 56px)' },
-    mainCol: { flex: 1, minWidth: 0, padding: '1.5rem' },
-    sideCol: { width: '290px', flexShrink: 0, background: '#fff', borderLeft: '1px solid #e8e4df', padding: '1.25rem', display: 'flex', flexDirection: 'column' },
+    buildWrap: { display: 'flex', minHeight: 'calc(100vh - 56px)', flexDirection: isMobile ? 'column' : 'row' },
+    mainCol: { flex: 1, minWidth: 0, padding: isMobile ? '1rem' : '1.5rem' },
+    sideCol: isMobile
+      ? { display: showSidebar ? 'flex' : 'none', flexDirection: 'column', background: '#fff', borderTop: '1px solid #e8e4df', padding: '1.25rem' }
+      : { width: '290px', flexShrink: 0, background: '#fff', borderLeft: '1px solid #e8e4df', padding: '1.25rem', display: 'flex', flexDirection: 'column' },
 
     // Result section
     resultSection: { marginBottom: '2rem' },
@@ -322,7 +332,7 @@ export default function SurmesurTryOn() {
     catalogLabel: { fontSize: '0.62rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.75rem' },
     tabs: { display: 'flex', borderBottom: '1px solid #e8e4df', marginBottom: '1.25rem', overflowX: 'auto' },
     tab: (a) => ({ padding: '0.6rem 0.9rem', background: 'none', border: 'none', borderBottom: a ? '2px solid #C9A96E' : '2px solid transparent', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.07em', fontFamily: 'sans-serif', color: a ? '#C9A96E' : '#888', whiteSpace: 'nowrap' }),
-    grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(140px,1fr))', gap: '0.85rem', marginBottom: '1.5rem' },
+    grid: { display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill,minmax(140px,1fr))', gap: '0.85rem', marginBottom: '1.5rem' },
     card: (sel) => ({ border: sel ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', background: sel ? '#fffef8' : '#fff', position: 'relative', transition: 'border-color 0.15s' }),
     cardImg: { width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' },
     cardInfo: { padding: '0.5rem' },
@@ -456,7 +466,7 @@ export default function SurmesurTryOn() {
       {phase === 'build' && (
         <div style={s.buildWrap}>
           {/* Main column */}
-          <div style={s.mainCol}>
+          <div style={{ flex: 1, minWidth: 0, padding: isMobile ? '1rem' : '1.5rem', paddingBottom: isMobile ? '80px' : undefined }}>
 
             {/* Photo thumb */}
             <div style={s.photoThumbRow}>
@@ -516,6 +526,17 @@ export default function SurmesurTryOn() {
                     </div>
                   ))}
                 </div>
+
+                {/* Spinner mobile pendant génération */}
+                {isMobile && generating && (
+                  <div style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.25rem', marginTop: '1rem', textAlign: 'center' }}>
+                    <div style={{ width: '40px', height: '40px', margin: '0 auto 0.75rem', borderRadius: '50%', border: '2px solid #e8e4df', borderTop: '2px solid #C9A96E', animation: 'spin 1s linear infinite' }} />
+                    <div style={{ fontSize: '0.82rem', fontWeight: 300, marginBottom: '0.2rem' }}>{LOADING_MESSAGES[loadingMsg].fr}</div>
+                    <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{LOADING_MESSAGES[loadingMsg].en}</div>
+                    <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
+                    <div style={{ fontSize: '0.58rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.3rem' }}>{Math.round(progress)}%</div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -562,7 +583,8 @@ export default function SurmesurTryOn() {
               })}
             </div>
 
-            {/* Try button */}
+            {/* Try button — desktop only */}
+            {!isMobile && (
             <div style={s.trySection}>
               {pendingItem && (
                 <div style={s.tryPreview}>
@@ -618,9 +640,30 @@ export default function SurmesurTryOn() {
 
               {error && <div style={s.error}>⚠ {error}</div>}
             </div>
+            )}
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
           </div>
+
+          {/* Barre flottante mobile */}
+          {isMobile && (
+            <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#000', padding: '0.75rem 1rem', display: 'flex', gap: '0.5rem', zIndex: 100, boxShadow: '0 -2px 12px rgba(0,0,0,0.15)' }}>
+              <button
+                style={{ flex: 1, padding: '0.85rem', background: showSidebar ? '#C9A96E' : 'transparent', color: '#fff', border: '1px solid #C9A96E', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
+                onClick={() => setShowSidebar(!showSidebar)}
+              >
+                {showSidebar ? '✕ FERMER' : `✦ MA SÉLECTION${sidebarItems.length > 0 ? ` (${sidebarItems.length})` : ''}`}
+              </button>
+              {!showSidebar && pendingItem && !generating && (canAddMore || replaceMode !== null) && (
+                <button
+                  style={{ flex: 2, padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
+                  onClick={handleGenerate}
+                >
+                  ESSAYER CETTE PIÈCE →
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Sidebar */}
           <div style={s.sideCol}>
