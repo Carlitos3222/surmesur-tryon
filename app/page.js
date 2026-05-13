@@ -717,7 +717,7 @@ export default function SurmesurTryOn() {
                   </div>
 
                   {/* Boutons toujours visibles en bas */}
-                  <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid #e8e4df', flexShrink: 0, background: '#fff' }}>
+                  <div style={{ padding: '1rem 1.25rem 5rem 1.25rem', borderTop: '1px solid #e8e4df', flexShrink: 0, background: '#fff' }}>
                     {sidebarItems.length > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.85rem' }}>
                         <span style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif' }}>TOTAL ESTIMÉ</span>
