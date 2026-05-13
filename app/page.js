@@ -93,77 +93,20 @@ export default function SurmesurTryOn() {
   const formatPrice = (n) => '$' + n.toLocaleString('en-CA')
 
   // Camera
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }
-      })
-      streamRef.current = stream
-      setCameraActive(true)
-      setPhotoConfirmation(null)
-      setTimeout(() => {
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream
-          videoRef.current.play().catch(() => {})
-        }
-      }, 150)
-    } catch {
-      setError('Caméra non disponible — vérifiez les permissions du navigateur')
-    }
-  }
-
-  const stopCamera = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(t => {
-        t.stop()
-        t.enabled = false
-      })
-      streamRef.current = null
-    }
-    // Vider le srcObject de la vidéo pour que le navigateur éteigne l'indicateur caméra
-    if (videoRef.current) {
-      videoRef.current.srcObject = null
-      videoRef.current.load()
-    }
-    setCameraActive(false)
-    setCountdown(null)
-  }, [])
-
-  const capturePhoto = () => {
-    if (!videoRef.current || !canvasRef.current) return
-    setCountdown(3)
-    const iv = setInterval(() => {
-      setCountdown(prev => {
-        if (prev <= 1) {
-          clearInterval(iv)
-          const v = videoRef.current, c = canvasRef.current
-          if (!v || !c) return null
-          c.width = v.videoWidth; c.height = v.videoHeight
-          c.getContext('2d').drawImage(v, 0, 0)
-          setPhotoConfirmation(c.toDataURL('image/jpeg', 0.9))
-          return null
-        }
-        return prev - 1
-      })
-    }, 1000)
-  }
-
-  const confirmPhoto = () => {
-    if (!canvasRef.current) return
-    canvasRef.current.toBlob(blob => {
-      setPhotoClient(blob)
-      setPhotoPreview(photoConfirmation)
-      stopCamera() // Arrêter la caméra immédiatement
-      setPhotoConfirmation(null)
-      setPhase('build')
-    }, 'image/jpeg', 0.9)
-  }
+  // Pas de caméra navigateur — on utilise l'input natif avec capture
+  const cameraInputRef = useRef(null)
 
   const handleUpload = (e) => {
     const f = e.target.files?.[0]; if (!f) return
-    stopCamera() // S'assurer que la caméra est éteinte
-    setPhotoClient(f); setPhotoPreview(URL.createObjectURL(f))
-    setPhotoConfirmation(null)
+    setPhotoClient(f)
+    setPhotoPreview(URL.createObjectURL(f))
+    setPhase('build')
+  }
+
+  const handleCameraCapture = (e) => {
+    const f = e.target.files?.[0]; if (!f) return
+    setPhotoClient(f)
+    setPhotoPreview(URL.createObjectURL(f))
     setPhase('build')
   }
 
@@ -417,31 +360,16 @@ export default function SurmesurTryOn() {
                   <div style={s.uploadTxt}>Cliquez pour uploader votre photo</div>
                   <div style={s.uploadSub}>JPG, PNG · Max 10MB</div>
                 </div>
-                <button style={{...s.btnBlack, marginTop: '0.75rem', width: '100%', padding: '1.2rem'}} onClick={startCamera}>
+                <button
+                  style={{...s.btnBlack, marginTop: '0.75rem', width: '100%', padding: '1.2rem'}}
+                  onClick={() => cameraInputRef.current?.click()}
+                >
                   📷 PRENDRE UNE PHOTO · TAKE A PHOTO
                 </button>
+                {/* Input galerie */}
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={handleUpload} style={{ display: 'none' }} />
-              </>
-            )}
-
-            {cameraActive && !photoConfirmation && (
-              <>
-                <div style={s.camWrap}><video ref={videoRef} style={s.camVideo} autoPlay playsInline muted /></div>
-                <div style={s.camHint}>⏱ 3 secondes pour vous placer après le bouton</div>
-                <button onClick={capturePhoto} disabled={countdown !== null} style={s.capBtn}>
-                  {countdown ? <span style={{ color: '#C9A96E', fontSize: '1.6rem', fontWeight: 300 }}>{countdown}</span> : <div style={s.capInner} />}
-                </button>
-                <button style={{...s.btnGhost, width: '100%', marginTop: '0.5rem'}} onClick={stopCamera}>ANNULER</button>
-              </>
-            )}
-
-            {photoConfirmation && (
-              <>
-                <img src={photoConfirmation} alt="Preview" style={s.confirmImg} />
-                <div style={s.confirmBtns}>
-                  <button style={s.btnBlack} onClick={confirmPhoto}>✓ UTILISER CETTE PHOTO</button>
-                  <button style={s.btnGhost} onClick={() => { setPhotoConfirmation(null); startCamera() }}>↺ REPRENDRE</button>
-                </div>
+                {/* Input caméra native — s'éteint proprement après la photo */}
+                <input ref={cameraInputRef} type="file" accept="image/*" capture="user" onChange={handleCameraCapture} style={{ display: 'none' }} />
               </>
             )}
 
@@ -461,33 +389,15 @@ export default function SurmesurTryOn() {
               {photoPreview && <img src={photoPreview} alt="Votre photo" style={s.photoThumb} />}
               <div>
                 <div style={{ fontSize: '0.78rem', fontWeight: 300, marginBottom: '0.3rem' }}>Photo chargée ✓</div>
-                <button style={s.changeBtn} onClick={() => { stopCamera(); setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
+                <button style={s.changeBtn} onClick={() => { setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
                   Changer la photo
                 </button>
-                {!cameraActive && (
-                  <button style={{ ...s.changeBtn, marginLeft: '0.75rem' }} onClick={startCamera}>📷 Prendre une photo</button>
-                )}              </div>
-            </div>
-
-            {/* Camera in build phase */}
-            {cameraActive && (
-              <div style={{ marginBottom: '1.25rem' }}>
-                <div style={s.camWrap}><video ref={videoRef} style={s.camVideo} autoPlay playsInline muted /></div>
-                <div style={s.camHint}>⏱ 3 secondes après le bouton</div>
-                <button onClick={capturePhoto} disabled={countdown !== null} style={s.capBtn}>
-                  {countdown ? <span style={{ color: '#C9A96E', fontSize: '1.6rem' }}>{countdown}</span> : <div style={s.capInner} />}
+                <button style={{ ...s.changeBtn, marginLeft: '0.75rem' }} onClick={() => cameraInputRef.current?.click()}>
+                  📷 Reprendre une photo
                 </button>
-                {photoConfirmation && (
-                  <>
-                    <img src={photoConfirmation} alt="Preview" style={s.confirmImg} />
-                    <div style={s.confirmBtns}>
-                      <button style={s.btnBlack} onClick={confirmPhoto}>✓ UTILISER</button>
-                      <button style={s.btnGhost} onClick={() => { setPhotoConfirmation(null); startCamera() }}>↺ REPRENDRE</button>
-                    </div>
-                  </>
-                )}
+                <input ref={cameraInputRef} type="file" accept="image/*" capture="user" onChange={handleCameraCapture} style={{ display: 'none' }} />
               </div>
-            )}
+            </div>
 
             {/* Results section */}
             {generations.length > 0 && (
