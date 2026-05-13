@@ -93,9 +93,6 @@ export default function SurmesurTryOn() {
   const formatPrice = (n) => '$' + n.toLocaleString('en-CA')
 
   // Camera
-  const [cameraActive, setCameraActive] = useState(false)
-  const [countdown, setCountdown] = useState(null)
-  const [photoConfirmation, setPhotoConfirmation] = useState(null)
 
   const startCamera = async () => {
     try {
