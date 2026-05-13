@@ -33,8 +33,8 @@ export async function POST(request) {
       return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
     }
 
-    // Prompt : fond studio blanc professionnel
-    const prompt = `Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment — no color shift, no pattern alteration. The garment must look identical to the product reference image. Always tuck the shirt neatly inside the pants. Critically important: preserve the exact face, facial features, hair, skin tone, body shape and original pose of the person — do not alter the person's appearance, identity or pose in any way. Background: clean professional white studio background with soft natural lighting. The studio lighting must be warm, flattering and perfectly matched to the person's skin tone and the garment's colors — use soft shadows and warm white tones to create a cohesive, high-end fashion photography look. Photorealistic result.`
+    // Prompt court et direct — meilleurs résultats avec Fashn.ai
+    const prompt = `Preserve exact garment colors, patterns and design. Keep original person's face, pose and body unchanged. Clean white studio background with soft warm lighting.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
