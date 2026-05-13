@@ -16,37 +16,37 @@ const CATALOGUE = {
   jackets: {
     label: 'Vestons', label_en: 'Jackets', icon: '🧥', categorie: 'tops',
     items: [
-      { id: 'j1', nom_fr: 'Blazer Lin Cobalt', image: `${BASE_URL}/jacket-1.png`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
-      { id: 'j2', nom_fr: 'Veston Tweed Brun', image: `${BASE_URL}/jacket-2.png`, prix: '$720', desc: 'British Tweed · Notch Lapel' },
-      { id: 'j3', nom_fr: 'Blazer Navy Structuré', image: `${BASE_URL}/jacket-3.png`, prix: '$695', desc: 'Wool Blend · Double Breasted' },
-      { id: 'j4', nom_fr: 'Veston Crème Été', image: `${BASE_URL}/jacket-4.png`, prix: '$610', desc: 'Cotton Linen · Relaxed Fit' },
+      { id: 'j1', nom_fr: 'Blazer Lin Cobalt', image: `${BASE_URL}/jacket-1.jpeg`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
+      { id: 'j2', nom_fr: 'Veston Tweed Brun', image: `${BASE_URL}/jacket-2.jpeg`, prix: '$720', desc: 'British Tweed · Notch Lapel' },
+      { id: 'j3', nom_fr: 'Blazer Navy Structuré', image: `${BASE_URL}/jacket-3.jpeg`, prix: '$695', desc: 'Wool Blend · Double Breasted' },
+      { id: 'j4', nom_fr: 'Veston Crème Été', image: `${BASE_URL}/jacket-4.jpeg`, prix: '$610', desc: 'Cotton Linen · Relaxed Fit' },
     ]
   },
   coats: {
     label: 'Manteaux', label_en: 'Coats', icon: '🧣', categorie: 'tops',
     items: [
-      { id: 'c1', nom_fr: 'Manteau Camel Premium', image: `${BASE_URL}/coat-1.png`, prix: '$1,200', desc: 'Cashmere Blend · Mid-Length' },
-      { id: 'c2', nom_fr: 'Manteau Laine Tan', image: `${BASE_URL}/coat-2.png`, prix: '$1,350', desc: 'Pure Wool · Full Length' },
-      { id: 'c3', nom_fr: 'Pardessus Noir Élégant', image: `${BASE_URL}/coat-3.png`, prix: '$1,280', desc: 'Wool Cashmere · Slim Fit' },
-      { id: 'c4', nom_fr: 'Manteau Gris Anthracite', image: `${BASE_URL}/coat-4.png`, prix: '$1,180', desc: 'Wool Blend · Classic Cut' },
+      { id: 'c1', nom_fr: 'Manteau Camel Premium', image: `${BASE_URL}/coat-1.jpeg`, prix: '$1,200', desc: 'Cashmere Blend · Mid-Length' },
+      { id: 'c2', nom_fr: 'Manteau Laine Tan', image: `${BASE_URL}/coat-2.jpeg`, prix: '$1,350', desc: 'Pure Wool · Full Length' },
+      { id: 'c3', nom_fr: 'Pardessus Noir Élégant', image: `${BASE_URL}/coat-3.jpeg`, prix: '$1,280', desc: 'Wool Cashmere · Slim Fit' },
+      { id: 'c4', nom_fr: 'Manteau Gris Anthracite', image: `${BASE_URL}/coat-4.jpeg`, prix: '$1,180', desc: 'Wool Blend · Classic Cut' },
     ]
   },
   shirts: {
     label: 'Chemises', label_en: 'Shirts', icon: '👔', categorie: 'tops',
     items: [
-      { id: 'sh1', nom_fr: 'Chemise Florale Bleue', image: `${BASE_URL}/shirt-1.png`, prix: '$350', desc: 'Linen · Sport Shirt' },
-      { id: 'sh2', nom_fr: 'Chemise Blanche Classique', image: `${BASE_URL}/shirt-2.png`, prix: '$295', desc: 'Egyptian Cotton · French Cuff' },
-      { id: 'sh3', nom_fr: 'Chemise Lin Beige', image: `${BASE_URL}/shirt-3.png`, prix: '$320', desc: 'Premium Linen · Relaxed' },
-      { id: 'sh4', nom_fr: 'Chemise Carreaux Bleus', image: `${BASE_URL}/shirt-4.png`, prix: '$310', desc: 'Cotton · Slim Fit' },
+      { id: 'sh1', nom_fr: 'Chemise Florale Bleue', image: `${BASE_URL}/shirt-1.jpeg`, prix: '$350', desc: 'Linen · Sport Shirt' },
+      { id: 'sh2', nom_fr: 'Chemise Blanche Classique', image: `${BASE_URL}/shirt-2.jpeg`, prix: '$295', desc: 'Egyptian Cotton · French Cuff' },
+      { id: 'sh3', nom_fr: 'Chemise Lin Beige', image: `${BASE_URL}/shirt-3.jpeg`, prix: '$320', desc: 'Premium Linen · Relaxed' },
+      { id: 'sh4', nom_fr: 'Chemise Carreaux Bleus', image: `${BASE_URL}/shirt-4.jpeg`, prix: '$310', desc: 'Cotton · Slim Fit' },
     ]
   },
   pants: {
     label: 'Pantalons', label_en: 'Pants', icon: '👖', categorie: 'bottoms',
     items: [
-      { id: 'p1', nom_fr: 'Jean Blanc Terio', image: `${BASE_URL}/jean-1.png`, prix: '$250', desc: 'Custom Fit · White' },
-      { id: 'p2', nom_fr: 'Pantalon Gris Flanelle', image: `${BASE_URL}/jean-2.png`, prix: '$280', desc: 'Wool Flannel · Tailored' },
-      { id: 'p3', nom_fr: 'Pantalon Navy Classique', image: `${BASE_URL}/jean-3.png`, prix: '$265', desc: 'Wool Blend · Slim' },
-      { id: 'p4', nom_fr: 'Jean Indigo Premium', image: `${BASE_URL}/jean-4.png`, prix: '$235', desc: 'Selvedge Denim · Straight' },
+      { id: 'p1', nom_fr: 'Jean Blanc Terio', image: `${BASE_URL}/jean-1.jpeg`, prix: '$250', desc: 'Custom Fit · White' },
+      { id: 'p2', nom_fr: 'Pantalon Gris Flanelle', image: `${BASE_URL}/jean-2.jpeg`, prix: '$280', desc: 'Wool Flannel · Tailored' },
+      { id: 'p3', nom_fr: 'Pantalon Navy Classique', image: `${BASE_URL}/jean-3.jpeg`, prix: '$265', desc: 'Wool Blend · Slim' },
+      { id: 'p4', nom_fr: 'Jean Indigo Premium', image: `${BASE_URL}/jean-4.jpeg`, prix: '$235', desc: 'Selvedge Denim · Straight' },
     ]
   }
 }
