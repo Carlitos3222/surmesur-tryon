@@ -804,14 +804,6 @@ export default function SurmesurTryOn() {
                     : `${generations.length}/${MAX_GENERATIONS} · Sélectionnez puis cliquez "Essayer" — ou laissez notre styliste IA choisir pour vous`}
                 </div>
 
-                {/* BOUTON SURPRENEZ-MOI */}
-                {generations.length === 0 && !replaceMode && (
-                  <button style={s.btnSurprise} onClick={() => { setSelectedOccasion(null); setShowSurpriseModal(true) }}>
-                    ✦ SURPRENEZ-MOI · LET OUR AI STYLIST CHOOSE<br />
-                    <span style={{ fontSize: '0.6rem', opacity: 0.85 }}>Notre IA compose votre look parfait selon l'occasion — en 90 secondes</span>
-                  </button>
-                )}
-
                 <div style={s.catalogLabel}>CATALOGUE · {CATALOGUE[activeTab].label.toUpperCase()}</div>
                 <div style={s.tabs}>
                   {Object.entries(CATALOGUE).map(([key, cat]) => (
