@@ -35,8 +35,8 @@ export async function POST(request) {
 
     // Prompt intelligent : fidélité vêtement + background adapté au style
     const prompt = backgroundPrompt
-      ? `Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment — no color shift, no pattern alteration. The garment must look identical to the product reference image. Background: ${backgroundPrompt}. The background lighting, color palette and ambiance must harmonize naturally with the garment's style and colors.`
-      : 'Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment. No color shift, no pattern alteration. Clean neutral studio background. Photorealistic result.'
+      ? `Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment — no color shift, no pattern alteration. The garment must look identical to the product reference image. Always tuck the shirt neatly inside the pants. Background: ${backgroundPrompt}. Critically important: match the lighting direction, color temperature, and shadows of the background perfectly to the person's original photo lighting. The overall image must look like one cohesive professional photograph — no lighting mismatch between the person and the background. The background color palette must complement and harmonize with both the garment colors and the person's skin tone.`
+      : 'Preserve with absolute fidelity the exact colors, fabric texture, pattern, cut and every design detail of the garment. No color shift, no pattern alteration. Always tuck the shirt neatly inside the pants. Use a clean neutral background that matches the lighting and color temperature of the person\'s original photo. The final image must look like one cohesive professional photograph. Photorealistic result.'
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
