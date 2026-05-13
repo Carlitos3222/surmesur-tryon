@@ -34,7 +34,7 @@ export async function POST(request) {
     }
 
     // Prompt court et direct — meilleurs résultats avec Fashn.ai
-    const prompt = `Preserve exact garment colors, patterns and design. Ensure the complete garment is fully visible including both sleeves and all details. Keep original person's face, pose and body unchanged. Clean white studio background with soft warm lighting.`
+    const prompt = `Preserve exact garment colors, patterns and design. Ensure the complete garment is fully visible including both sleeves and all details. Keep original person's face, pose and body unchanged. IMPORTANT: always tuck the shirt completely inside the pants. When wearing a jacket or blazer, always show the shirt collar and shirt cuffs visibly underneath the jacket. Clean white studio background with soft warm lighting.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
