@@ -649,22 +649,99 @@ export default function SurmesurTryOn() {
 
           {/* Barre flottante mobile */}
           {isMobile && (
-            <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#000', padding: '0.75rem 1rem', display: 'flex', gap: '0.5rem', zIndex: 100, boxShadow: '0 -2px 12px rgba(0,0,0,0.15)' }}>
-              <button
-                style={{ flex: 1, padding: '0.85rem', background: showSidebar ? '#C9A96E' : 'transparent', color: '#fff', border: '1px solid #C9A96E', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
-                onClick={() => setShowSidebar(!showSidebar)}
-              >
-                {showSidebar ? '✕ FERMER' : `✦ MA SÉLECTION${sidebarItems.length > 0 ? ` (${sidebarItems.length})` : ''}`}
-              </button>
-              {!showSidebar && pendingItem && !generating && (canAddMore || replaceMode !== null) && (
-                <button
-                  style={{ flex: 2, padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
-                  onClick={handleGenerate}
-                >
-                  ESSAYER CETTE PIÈCE →
-                </button>
+            <>
+              {/* Overlay sombre quand sidebar ouverte */}
+              {showSidebar && (
+                <div
+                  style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 98 }}
+                  onClick={() => setShowSidebar(false)}
+                />
               )}
-            </div>
+
+              {/* Drawer sidebar mobile */}
+              {showSidebar && (
+                <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#fff', zIndex: 99, borderRadius: '16px 16px 0 0', padding: '1.25rem', maxHeight: '80vh', overflowY: 'auto', boxShadow: '0 -4px 24px rgba(0,0,0,0.15)' }}>
+                  {/* Handle */}
+                  <div style={{ width: '40px', height: '4px', background: '#e0dbd4', borderRadius: '2px', margin: '0 auto 1rem' }} />
+                  <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', borderBottom: '1px solid #e8e4df', paddingBottom: '0.75rem', marginBottom: '1rem' }}>
+                    VOTRE SÉLECTION · YOUR OUTFIT
+                  </div>
+
+                  {sidebarItems.length === 0 ? (
+                    <div style={{ textAlign: 'center', padding: '2rem 0', color: '#ccc', fontSize: '0.75rem', fontFamily: 'sans-serif' }}>
+                      Aucune pièce sélectionnée
+                    </div>
+                  ) : (
+                    sidebarItems.map((item) => (
+                      <div key={item._stepIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0', borderBottom: '1px solid #f0ece6' }}>
+                        <img src={item.image} alt={item.nom_fr} style={{ width: '48px', height: '60px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: '0.82rem', fontWeight: 400, marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.nom_fr}</div>
+                          <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif' }}>Étape {item._stepIdx + 1}</div>
+                          <div style={{ fontSize: '0.82rem', color: '#C9A96E' }}>{item.prix}</div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.4rem' }}>
+                          <button style={{ background: 'none', border: '1px solid #C9A96E', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.7rem', color: '#C9A96E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            onClick={() => { startReplace(item._stepIdx); setShowSidebar(false) }}>✎</button>
+                          <button style={{ background: 'none', border: '1px solid #ddd', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.7rem', color: '#aaa', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            onClick={() => removeFromSidebar(item._stepIdx)}>✕</button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+
+                  {sidebarItems.length > 0 && (
+                    <div style={{ borderTop: '1px solid #e8e4df', paddingTop: '1rem', marginTop: '0.5rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                        <span style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif' }}>TOTAL ESTIMÉ</span>
+                        <span style={{ fontSize: '1.2rem', fontWeight: 300 }}>{formatPrice(totalPrice)}</span>
+                      </div>
+                      <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer"
+                        style={{ display: 'block', width: '100%', padding: '1rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.72rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', textDecoration: 'none', marginBottom: '0.5rem', boxSizing: 'border-box' }}>
+                        PRENDRE MON RENDEZ-VOUS<br />
+                        <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>BOOK MY FREE APPOINTMENT</span>
+                      </a>
+                      <button
+                        style={{ width: '100%', padding: '0.9rem', background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.12em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, boxSizing: 'border-box' }}
+                        onClick={() => {
+                          const VENDOR_EMAIL = 'vendeur@surmesur.com'
+                          const itemsList = sidebarItems.map((it) => {
+                            const gen = generations[it._stepIdx]
+                            const resultLine = gen?.resultUrl ? `\n  Look généré : ${gen.resultUrl}` : ''
+                            return `• ${it.nom_fr} — ${it.prix}\n  Photo article : ${it.image}${resultLine}`
+                          }).join('\n\n')
+                          const subject = encodeURIComponent('Sélection client Surmesur Try-On')
+                          const body = encodeURIComponent(`Bonjour,\n\nUn client a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${itemsList}\n\nTOTAL ESTIMÉ : ${formatPrice(totalPrice)}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`)
+                          window.location.href = `mailto:${VENDOR_EMAIL}?subject=${subject}&body=${body}`
+                        }}
+                      >
+                        ✉ ENVOYER AU VENDEUR<br />
+                        <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>SEND TO STYLIST</span>
+                      </button>
+                    </div>
+                  )}
+                  <div style={{ height: '1rem' }} />
+                </div>
+              )}
+
+              {/* Barre noire fixe en bas */}
+              <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#000', padding: '0.75rem 1rem', display: 'flex', gap: '0.5rem', zIndex: 100, boxShadow: '0 -2px 12px rgba(0,0,0,0.15)' }}>
+                <button
+                  style={{ flex: 1, padding: '0.85rem', background: showSidebar ? '#C9A96E' : 'transparent', color: '#fff', border: '1px solid #C9A96E', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
+                  onClick={() => setShowSidebar(!showSidebar)}
+                >
+                  {showSidebar ? '✕ FERMER' : `✦ MA SÉLECTION${sidebarItems.length > 0 ? ` (${sidebarItems.length})` : ''}`}
+                </button>
+                {!showSidebar && pendingItem && !generating && (canAddMore || replaceMode !== null) && (
+                  <button
+                    style={{ flex: 2, padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
+                    onClick={handleGenerate}
+                  >
+                    ESSAYER CETTE PIÈCE →
+                  </button>
+                )}
+              </div>
+            </>
           )}
 
           {/* Sidebar */}
