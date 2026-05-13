@@ -89,6 +89,8 @@ export default function SurmesurTryOn() {
     window.addEventListener('resize', check)
     return () => window.removeEventListener('resize', check)
   }, [])
+
+  const LOADING_MESSAGES = [
     { fr: 'Analyse de votre silhouette...', en: 'Analyzing your silhouette...' },
     { fr: 'Application du tissu sur mesure...', en: 'Applying the custom fabric...' },
     { fr: 'Ajustement des proportions...', en: 'Adjusting proportions...' },
