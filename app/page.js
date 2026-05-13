@@ -543,20 +543,6 @@ export default function SurmesurTryOn() {
               })}
             </div>
 
-            {/* Background */}
-            <div style={s.bgSection}>
-              <div style={s.bgLabel}>ARRIÈRE-PLAN · BACKGROUND <span style={{ color: '#ccc', fontWeight: 400 }}>(OPTIONNEL)</span></div>
-              <div style={s.bgSub}>Par défaut : Studio blanc · Default: White studio</div>
-              <div style={s.bgGrid}>
-                {BACKGROUNDS.map(bg => (
-                  <div key={bg.id} style={s.bgCard(selectedBackground === bg.id)} onClick={() => setSelectedBackground(bg.id)}>
-                    <span style={s.bgIcon}>{bg.icon}</span>
-                    <div style={s.bgName}>{bg.label}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Try button */}
             <div style={s.trySection}>
               {pendingItem && (
