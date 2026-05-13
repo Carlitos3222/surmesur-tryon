@@ -92,7 +92,7 @@ export default function SurmesurTryOn() {
   }, 0)
   const formatPrice = (n) => '$' + n.toLocaleString('en-CA')
 
-  // Camera
+  // Camera functions
 
   const startCamera = async () => {
     try {
