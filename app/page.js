@@ -476,15 +476,25 @@ export default function SurmesurTryOn() {
                 {currentResult && (
                   <>
                     <img src={currentResult} alt="Look généré" style={s.resultImg} />
-                    <a
-                      href={currentResult}
-                      download={`look-surmesur-etape-${activeResultIdx + 1}.png`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ display: 'inline-block', marginTop: '0.6rem', fontSize: '0.68rem', color: '#C9A96E', fontFamily: 'sans-serif', letterSpacing: '0.1em', textDecoration: 'none', border: '1px solid #C9A96E', padding: '0.4rem 0.85rem', borderRadius: '2px' }}
+                    <button
+                      onClick={async () => {
+                        try {
+                          const res = await fetch(currentResult)
+                          const blob = await res.blob()
+                          const url = URL.createObjectURL(blob)
+                          const a = document.createElement('a')
+                          a.href = url
+                          a.download = `look-surmesur-etape-${activeResultIdx + 1}.png`
+                          a.click()
+                          URL.revokeObjectURL(url)
+                        } catch {
+                          window.open(currentResult, '_blank')
+                        }
+                      }}
+                      style={{ display: 'inline-block', marginTop: '0.6rem', fontSize: '0.68rem', color: '#C9A96E', fontFamily: 'sans-serif', letterSpacing: '0.1em', background: 'none', border: '1px solid #C9A96E', padding: '0.4rem 0.85rem', borderRadius: '2px', cursor: 'pointer' }}
                     >
                       ⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD
-                    </a>
+                    </button>
                   </>
                 )}
                 {/* Thumbnail history */}
