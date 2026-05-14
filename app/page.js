@@ -630,7 +630,7 @@ export default function SurmesurTryOn() {
 
                 {/* Carte gauche — LA PHOTO PARFAITE — fond or */}
                 <div style={{ background: '#C9A96E', padding: '2rem 1.75rem' }}>
-                  <div style={{ fontSize: '0.9rem', letterSpacing: '0.15em', color: '#000', fontFamily: 'sans-serif', fontWeight: 800, marginBottom: '0.3rem' }}>✦ LA PHOTO PARFAITE</div>
+                <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#000', fontFamily: 'sans-serif', fontWeight: 800, marginBottom: '0.3rem' }}>✦ LA PHOTO PARFAITE</div>
                   <div style={{ width: '30px', height: '1px', background: 'rgba(0,0,0,0.2)', marginBottom: '1.25rem' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                     {[
@@ -651,7 +651,7 @@ export default function SurmesurTryOn() {
 
                 {/* Carte droite — À ÉVITER — fond noir */}
                 <div style={{ background: '#111', padding: '2rem 1.75rem' }}>
-                  <div style={{ fontSize: '0.9rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— À ÉVITER</div>
+                  <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— À ÉVITER</div>
                   <div style={{ width: '30px', height: '1px', background: 'rgba(201,169,110,0.3)', marginBottom: '1.25rem' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                     {[
@@ -672,13 +672,13 @@ export default function SurmesurTryOn() {
               </div>
 
               {/* Note du styliste — fond blanc en bas */}
-              <div style={{ background: '#fff', padding: '1.1rem 1.75rem', display: 'flex', alignItems: 'center', gap: '0.85rem', borderTop: '1px solid #e8e4df' }}>
-                <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0 }}>✦</span>
+              <div style={{ background: '#fff', padding: '1.1rem 1.75rem', borderTop: '1px solid #e8e4df', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0, marginTop: '0.05rem' }}>✦</span>
                 <div>
-                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginRight: '0.75rem' }}>NOTE DU STYLISTE</span>
-                  <span style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>
+                  <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginBottom: '0.35rem' }}>NOTE DU STYLISTE</div>
+                  <div style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>
                     "La qualité de votre photo détermine la précision du résultat. Une silhouette bien définie = un look remarquablement réaliste."
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
