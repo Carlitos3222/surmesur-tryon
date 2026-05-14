@@ -3,6 +3,224 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 
 const BASE_URL = 'https://surmesur-tryon.vercel.app'
 
+// ─── VILLES & DEVISES ─────────────────────────────────────────────────────
+const CITIES = [
+  { id: 'montreal', label: 'Montréal', currency: 'CAD', symbol: '$', email: 'montreal@surmesur.com' },
+  { id: 'toronto', label: 'Toronto', currency: 'CAD', symbol: '$', email: 'toronto@surmesur.com' },
+  { id: 'vancouver', label: 'Vancouver', currency: 'CAD', symbol: '$', email: 'vancouver@surmesur.com' },
+  { id: 'ottawa', label: 'Ottawa', currency: 'CAD', symbol: '$', email: 'ottawa@surmesur.com' },
+  { id: 'pittsburgh', label: 'Pittsburgh', currency: 'USD', symbol: '$', email: 'pittsburgh@surmesur.com' },
+  { id: 'mexico', label: 'Mexico City', currency: 'MXN', symbol: '$', email: 'mexico@surmesur.com' },
+]
+
+// ─── TRADUCTIONS ──────────────────────────────────────────────────────────
+const T = {
+  fr: {
+    tagline: 'TECHNOLOGIE VIRTUELLE · VIRTUAL TRY-ON',
+    heroTitle1: 'Essayez nos',
+    heroTitle2: 'collections',
+    heroTitle3: 'dans le confort de votre foyer',
+    heroSub: 'Try our collections from the comfort of your home',
+    stat1: 'LOOKS MAX',
+    stat2: 'PIÈCES',
+    stat3: 'SUR MESURE',
+    step1Title: 'Votre photo',
+    step1Sub: 'Pour un résultat fidèle à votre silhouette · For a result true to your silhouette',
+    guideTitle: 'LA PHOTO PARFAITE',
+    guideAvoid: 'À ÉVITER',
+    guideGood: ['Corps entier visible, posture droite et naturelle', 'Lumière douce de face — fenêtre ou lumière naturelle', 'Fond blanc, gris clair ou mur uni', 'T-shirt ajusté blanc ou gris — révèle votre silhouette', 'Bras légèrement écartés du corps', 'Regard direct vers l\'appareil photo'],
+    guideBad: ['Photo sombre, floue ou contre-jour', 'Pieds ou tête hors cadre', 'Vêtements amples ou superposés', 'Photo de profil, en biais ou en mouvement', 'Position assise ou décontractée', 'Fond chargé, coloré ou encombré'],
+    noteTitle: 'NOTE DU STYLISTE',
+    noteText: '"La qualité de votre photo détermine la précision du résultat. Une silhouette bien définie = un look remarquablement réaliste."',
+    uploadTxt: 'Cliquez pour uploader votre photo',
+    uploadSub: 'JPG, PNG · Max 10MB',
+    btnCamera: '📷 PRENDRE UNE PHOTO',
+    btnGallery: '🖼 MA GALERIE',
+    camHint: '⏱ 3 secondes pour vous placer après le bouton',
+    btnCancel: 'ANNULER',
+    btnUse: '✓ UTILISER CETTE PHOTO',
+    btnRetake: '↺ REPRENDRE',
+    photoLoaded: 'Photo chargée ✓',
+    changePhoto: 'Changer la photo',
+    savePhoto: '⬇ Sauvegarder ma photo',
+    step2Title0: 'Choisissez votre première pièce',
+    step2TitleN: 'Ajouter une pièce',
+    step2TitleR: 'Choisissez la pièce de remplacement',
+    step2Sub: 'générations · Sélectionnez une pièce puis cliquez "Essayer"',
+    catalogLabel: 'CATALOGUE',
+    currentLook: 'VOTRE LOOK ACTUEL · YOUR CURRENT LOOK',
+    download: '⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD',
+    replaceMode: 'Mode remplacement — Étape',
+    cancelReplace: 'Annuler',
+    btnTry: 'ESSAYER CETTE PIÈCE',
+    btnTrySub: 'TRY THIS PIECE',
+    btnReplace: 'REMPLACER CETTE PIÈCE',
+    btnReplaceSub: 'REPLACE THIS PIECE',
+    maxReached: 'Maximum 3 looks atteint',
+    maxSub: 'Modifiez un look existant ou prenez rendez-vous',
+    generating: 'GÉNÉRATION EN COURS...',
+    aiWorking: 'L\'IA Surmesur travaille pour vous',
+    selectionTitle: 'VOTRE SÉLECTION · YOUR OUTFIT',
+    emptyState: 'Sélectionnez et essayez\nvos pièces dans le catalogue\nou laissez notre IA choisir',
+    totalLabel: 'TOTAL ESTIMÉ',
+    btnAppt: 'PRENDRE MON RENDEZ-VOUS',
+    btnApptSub: 'BOOK MY FREE APPOINTMENT',
+    btnVendor: '✉ ENVOYER AU VENDEUR',
+    btnVendorSub: 'SEND TO STYLIST',
+    btnRestart: '↺ RECOMMENCER · START OVER',
+    selectCity: 'Choisir votre ville',
+    cityLabel: 'VOTRE BOUTIQUE',
+    surprise: '✦ SURPRENEZ-MOI',
+    surpriseSub: 'SURPRISE ME · OUTFIT COMPLET',
+    surpriseTitle: 'Quelle est l\'occasion ?',
+    surpriseStylist: 'Notre styliste IA va créer un outfit complet et cohérent, spécialement pour vous.',
+    surpriseLooks: 'Choisissez votre look',
+    surpriseChange: '← Changer l\'occasion',
+    surpriseTry: '✦ ESSAYER CE LOOK →',
+    etape: 'Étape',
+    step: 'Step',
+    loadingMsgs: ['Analyse de votre silhouette...', 'Application du tissu sur mesure...', 'Ajustement des proportions...', 'Calibration des couleurs...', 'Finalisation de votre look...', 'Dernières retouches en cours...'],
+    emailSubject: 'Sélection client Surmesur Try-On',
+    emailBody: (items, total, city) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
+  },
+  en: {
+    tagline: 'VIRTUAL TECHNOLOGY · VIRTUAL TRY-ON',
+    heroTitle1: 'Try our',
+    heroTitle2: 'collections',
+    heroTitle3: 'from the comfort of your home',
+    heroSub: 'Essayez nos collections dans le confort de votre foyer',
+    stat1: 'LOOKS MAX',
+    stat2: 'PIECES',
+    stat3: 'MADE TO MEASURE',
+    step1Title: 'Your photo',
+    step1Sub: 'For a result true to your silhouette · Pour un résultat fidèle à votre silhouette',
+    guideTitle: 'THE PERFECT PHOTO',
+    guideAvoid: 'TO AVOID',
+    guideGood: ['Full body visible, straight natural posture', 'Soft front lighting — window or natural light', 'White, light grey or plain wall background', 'Fitted white or grey t-shirt — reveals your silhouette', 'Arms slightly away from your body', 'Looking directly at the camera'],
+    guideBad: ['Dark, blurry or backlit photo', 'Feet or head out of frame', 'Loose or layered clothing', 'Profile photo, angled or in motion', 'Sitting or relaxed position', 'Busy, colorful or cluttered background'],
+    noteTitle: 'STYLIST\'S NOTE',
+    noteText: '"Photo quality determines result accuracy. A well-defined silhouette = a remarkably realistic generated look."',
+    uploadTxt: 'Click to upload your photo',
+    uploadSub: 'JPG, PNG · Max 10MB',
+    btnCamera: '📷 TAKE A PHOTO',
+    btnGallery: '🖼 MY GALLERY',
+    camHint: '⏱ 3 seconds to get in position after the button',
+    btnCancel: 'CANCEL',
+    btnUse: '✓ USE THIS PHOTO',
+    btnRetake: '↺ RETAKE',
+    photoLoaded: 'Photo loaded ✓',
+    changePhoto: 'Change photo',
+    savePhoto: '⬇ Save my photo',
+    step2Title0: 'Choose your first piece',
+    step2TitleN: 'Add a piece',
+    step2TitleR: 'Choose the replacement piece',
+    step2Sub: 'generations · Select a piece then click "Try"',
+    catalogLabel: 'CATALOGUE',
+    currentLook: 'YOUR CURRENT LOOK · VOTRE LOOK ACTUEL',
+    download: '⬇ DOWNLOAD THIS LOOK · TÉLÉCHARGER',
+    replaceMode: 'Replace mode — Step',
+    cancelReplace: 'Cancel',
+    btnTry: 'TRY THIS PIECE',
+    btnTrySub: 'ESSAYER CETTE PIÈCE',
+    btnReplace: 'REPLACE THIS PIECE',
+    btnReplaceSub: 'REMPLACER CETTE PIÈCE',
+    maxReached: 'Maximum 3 looks reached',
+    maxSub: 'Edit an existing look or book an appointment',
+    generating: 'GENERATING...',
+    aiWorking: 'Surmesur AI is working for you',
+    selectionTitle: 'YOUR OUTFIT · VOTRE SÉLECTION',
+    emptyState: 'Select and try\npieces from the catalogue\nor let our AI choose',
+    totalLabel: 'ESTIMATED TOTAL',
+    btnAppt: 'BOOK MY APPOINTMENT',
+    btnApptSub: 'PRENDRE MON RENDEZ-VOUS',
+    btnVendor: '✉ SEND TO STYLIST',
+    btnVendorSub: 'ENVOYER AU VENDEUR',
+    btnRestart: '↺ START OVER · RECOMMENCER',
+    selectCity: 'Choose your city',
+    cityLabel: 'YOUR BOUTIQUE',
+    surprise: '✦ SURPRISE ME',
+    surpriseSub: 'LET OUR AI STYLIST CHOOSE',
+    surpriseTitle: 'What\'s the occasion?',
+    surpriseStylist: 'Our AI stylist will create a complete, cohesive outfit especially for you.',
+    surpriseLooks: 'Choose your look',
+    surpriseChange: '← Change occasion',
+    surpriseTry: '✦ TRY THIS LOOK →',
+    etape: 'Step',
+    step: 'Step',
+    loadingMsgs: ['Analyzing your silhouette...', 'Applying the custom fabric...', 'Adjusting proportions...', 'Calibrating colors...', 'Finalizing your look...', 'Last finishing touches...'],
+    emailSubject: 'Surmesur Try-On Client Selection',
+    emailBody: (items, total, city) => `Hello,\n\nA client from the ${city} boutique made a selection via the Surmesur Try-On app.\n\nCLIENT SELECTION:\n\n${items}\n\nESTIMATED TOTAL: ${total}\n\nPlease prepare this file for the appointment.\n\nBest regards,\nSurmesur Try-On`,
+  },
+  es: {
+    tagline: 'TECNOLOGÍA VIRTUAL · VIRTUAL TRY-ON',
+    heroTitle1: 'Prueba nuestras',
+    heroTitle2: 'colecciones',
+    heroTitle3: 'desde la comodidad de tu hogar',
+    heroSub: 'Try our collections from the comfort of your home',
+    stat1: 'LOOKS MÁX',
+    stat2: 'PIEZAS',
+    stat3: 'A MEDIDA',
+    step1Title: 'Tu foto',
+    step1Sub: 'Para un resultado fiel a tu silueta · For a result true to your silhouette',
+    guideTitle: 'LA FOTO PERFECTA',
+    guideAvoid: 'A EVITAR',
+    guideGood: ['Cuerpo entero visible, postura recta y natural', 'Luz suave de frente — ventana o luz natural', 'Fondo blanco, gris claro o pared lisa', 'Camiseta ajustada blanca o gris — revela tu silueta', 'Brazos ligeramente separados del cuerpo', 'Mirada directa a la cámara'],
+    guideBad: ['Foto oscura, borrosa o a contraluz', 'Pies o cabeza fuera del encuadre', 'Ropa holgada o superpuesta', 'Foto de perfil, en ángulo o en movimiento', 'Posición sentada o relajada', 'Fondo cargado, colorido o desordenado'],
+    noteTitle: 'NOTA DEL ESTILISTA',
+    noteText: '"La calidad de tu foto determina la precisión del resultado. Una silueta bien definida = un look notablemente realista."',
+    uploadTxt: 'Haz clic para subir tu foto',
+    uploadSub: 'JPG, PNG · Máx 10MB',
+    btnCamera: '📷 TOMAR UNA FOTO',
+    btnGallery: '🖼 MI GALERÍA',
+    camHint: '⏱ 3 segundos para posicionarte después del botón',
+    btnCancel: 'CANCELAR',
+    btnUse: '✓ USAR ESTA FOTO',
+    btnRetake: '↺ REPETIR',
+    photoLoaded: 'Foto cargada ✓',
+    changePhoto: 'Cambiar foto',
+    savePhoto: '⬇ Guardar mi foto',
+    step2Title0: 'Elige tu primera prenda',
+    step2TitleN: 'Agregar una prenda',
+    step2TitleR: 'Elige la prenda de reemplazo',
+    step2Sub: 'generaciones · Selecciona una prenda y haz clic en "Probar"',
+    catalogLabel: 'CATÁLOGO',
+    currentLook: 'TU LOOK ACTUAL · YOUR CURRENT LOOK',
+    download: '⬇ DESCARGAR ESTE LOOK · DOWNLOAD',
+    replaceMode: 'Modo reemplazo — Paso',
+    cancelReplace: 'Cancelar',
+    btnTry: 'PROBAR ESTA PRENDA',
+    btnTrySub: 'TRY THIS PIECE',
+    btnReplace: 'REEMPLAZAR ESTA PRENDA',
+    btnReplaceSub: 'REPLACE THIS PIECE',
+    maxReached: 'Máximo 3 looks alcanzado',
+    maxSub: 'Edita un look existente o reserva una cita',
+    generating: 'GENERANDO...',
+    aiWorking: 'La IA de Surmesur trabaja para ti',
+    selectionTitle: 'TU SELECCIÓN · YOUR OUTFIT',
+    emptyState: 'Selecciona y prueba\nprendas del catálogo\no deja que nuestra IA elija',
+    totalLabel: 'TOTAL ESTIMADO',
+    btnAppt: 'RESERVAR MI CITA',
+    btnApptSub: 'BOOK MY FREE APPOINTMENT',
+    btnVendor: '✉ ENVIAR AL ESTILISTA',
+    btnVendorSub: 'SEND TO STYLIST',
+    btnRestart: '↺ COMENZAR DE NUEVO',
+    selectCity: 'Elige tu ciudad',
+    cityLabel: 'TU BOUTIQUE',
+    surprise: '✦ SORPRÉNDEME',
+    surpriseSub: 'DEJA QUE NUESTRA IA ELIJA',
+    surpriseTitle: '¿Cuál es la ocasión?',
+    surpriseStylist: 'Nuestro estilista IA creará un outfit completo y coherente, especialmente para ti.',
+    surpriseLooks: 'Elige tu look',
+    surpriseChange: '← Cambiar ocasión',
+    surpriseTry: '✦ PROBAR ESTE LOOK →',
+    etape: 'Paso',
+    step: 'Step',
+    loadingMsgs: ['Analizando tu silueta...', 'Aplicando la tela a medida...', 'Ajustando proporciones...', 'Calibrando colores...', 'Finalizando tu look...', 'Últimos retoques...'],
+    emailSubject: 'Selección cliente Surmesur Try-On',
+    emailBody: (items, total, city) => `Hola,\n\nUn cliente de la boutique ${city} ha realizado una selección en la app Surmesur Try-On.\n\nSELECCIÓN DEL CLIENTE:\n\n${items}\n\nTOTAL ESTIMADO: ${total}\n\nPor favor prepare este expediente para la cita.\n\nAtentamente,\nSurmesur Try-On`,
+  }
+}
+
 const CATALOGUE = {
   suits: {
     label: 'Complets', label_en: 'Suits', icon: '🤵', categorie: 'one-pieces',
@@ -215,6 +433,10 @@ export default function SurmesurTryOn() {
   const [photoConfirmation, setPhotoConfirmation] = useState(null)
   const [isMobile, setIsMobile] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
+  const [lang, setLang] = useState('fr')
+  const [selectedCity, setSelectedCity] = useState(null)
+  const [showCityModal, setShowCityModal] = useState(false)
+  const t = T[lang]
   const [showSurpriseModal, setShowSurpriseModal] = useState(false)
   const [selectedOccasion, setSelectedOccasion] = useState(null)
 
@@ -234,7 +456,13 @@ export default function SurmesurTryOn() {
   const totalPrice = sidebarItems.reduce((sum, it) => {
     return sum + parseFloat(it.prix.replace('$', '').replace(',', ''))
   }, 0)
-  const formatPrice = (n) => '$' + n.toLocaleString('en-CA')
+  const formatPrice = (n) => {
+    const city = selectedCity
+    if (!city) return '$' + n.toLocaleString('en-CA') + ' CAD'
+    if (city.currency === 'MXN') return '$' + Math.round(n * 13.5).toLocaleString('es-MX') + ' MXN'
+    if (city.currency === 'USD') return '$' + Math.round(n * 0.73).toLocaleString('en-US') + ' USD'
+    return '$' + n.toLocaleString('en-CA') + ' CAD'
+  }
 
   // Camera
   const startCamera = async () => {
@@ -436,15 +664,16 @@ export default function SurmesurTryOn() {
   }
 
   const sendEmail = () => {
-    const VENDOR_EMAIL = 'vendeur@surmesur.com'
+    const vendorEmail = selectedCity?.email || 'vendeur@surmesur.com'
+    const cityName = selectedCity?.label || 'Surmesur'
     const itemsList = sidebarItems.map((it) => {
       const gen = generations[it._stepIdx]
-      const resultLine = gen?.resultUrl ? `\n  Look généré : ${gen.resultUrl}` : ''
-      return `• ${it.nom_fr} — ${it.prix}\n  Photo article : ${it.image}${resultLine}`
+      const resultLine = gen?.resultUrl ? `\n  Look : ${gen.resultUrl}` : ''
+      return `• ${it.nom_fr} — ${it.prix}\n  Photo : ${it.image}${resultLine}`
     }).join('\n\n')
-    const subject = encodeURIComponent('Sélection client Surmesur Try-On')
-    const body = encodeURIComponent(`Bonjour,\n\nUn client a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${itemsList}\n\nTOTAL ESTIMÉ : ${formatPrice(totalPrice)}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`)
-    window.location.href = `mailto:${VENDOR_EMAIL}?subject=${subject}&body=${body}`
+    const subject = encodeURIComponent(t.emailSubject)
+    const body = encodeURIComponent(t.emailBody(itemsList, formatPrice(totalPrice), cityName))
+    window.location.href = `mailto:${vendorEmail}?subject=${subject}&body=${body}`
   }
 
   const canAddMore = generations.length < MAX_GENERATIONS && !autoGenerating
@@ -564,7 +793,44 @@ export default function SurmesurTryOn() {
       <header style={s.header}>
         <div style={s.logo}>SURMESUR</div>
         <div style={s.goldLine} />
+        {/* Sélecteurs langue + ville */}
+        <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', alignItems: 'center' }}>
+          {/* Langue */}
+          {['fr', 'en', 'es'].map(l => (
+            <button key={l} onClick={() => setLang(l)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.6rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', color: lang === l ? '#C9A96E' : 'rgba(255,255,255,0.35)', fontWeight: lang === l ? 700 : 400, padding: '0.2rem 0.4rem', borderBottom: lang === l ? '1px solid #C9A96E' : '1px solid transparent' }}>
+              {l.toUpperCase()}
+            </button>
+          ))}
+          <div style={{ width: '1px', height: '12px', background: 'rgba(255,255,255,0.15)' }} />
+          {/* Ville */}
+          <button onClick={() => setShowCityModal(true)}
+            style={{ background: 'none', border: '1px solid rgba(201,169,110,0.4)', cursor: 'pointer', fontSize: '0.58rem', letterSpacing: '0.12em', fontFamily: 'sans-serif', color: selectedCity ? '#C9A96E' : 'rgba(255,255,255,0.4)', padding: '0.2rem 0.6rem', borderRadius: '2px' }}>
+            {selectedCity ? selectedCity.label : t.selectCity} {selectedCity ? `· ${selectedCity.currency}` : ''}
+          </button>
+        </div>
       </header>
+
+      {/* Modal sélection ville */}
+      {showCityModal && (
+        <>
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 300 }} onClick={() => setShowCityModal(false)} />
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#fff', zIndex: 301, borderRadius: '4px', padding: '2rem', maxWidth: '400px', width: '90vw' }}>
+            <div style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '0.5rem' }}>{t.cityLabel}</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: 300, marginBottom: '1.5rem' }}>{t.selectCity}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {CITIES.map(city => (
+                <button key={city.id}
+                  onClick={() => { setSelectedCity(city); setShowCityModal(false) }}
+                  style={{ padding: '0.85rem 1rem', border: selectedCity?.id === city.id ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '3px', background: selectedCity?.id === city.id ? '#fffef8' : '#fff', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'sans-serif' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 300 }}>{city.label}</span>
+                  <span style={{ fontSize: '0.7rem', color: '#C9A96E', letterSpacing: '0.1em' }}>{city.currency}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* ── MODAL SURPRENEZ-MOI ── */}
       {showSurpriseModal && (
@@ -609,20 +875,20 @@ export default function SurmesurTryOn() {
       {phase === 'photo' && (
         <>
           <div style={s.hero}>
-            <div style={s.eyebrow}>TECHNOLOGIE VIRTUELLE · VIRTUAL TRY-ON</div>
-            <h1 style={s.title}>Essayez nos <span style={s.gold}>collections</span><br />dans le confort de votre foyer</h1>
-            <p style={s.sub}>Try our collections from the comfort of your home</p>
+            <div style={s.eyebrow}>{t.tagline}</div>
+            <h1 style={s.title}>{t.heroTitle1} <span style={s.gold}>{t.heroTitle2}</span><br />{t.heroTitle3}</h1>
+            <p style={s.sub}>{t.heroSub}</p>
             <div style={s.stats}>
-              <div><div style={s.statN}>3</div><div style={s.statL}>LOOKS MAX</div></div>
-              <div><div style={s.statN}>22+</div><div style={s.statL}>PIÈCES</div></div>
-              <div><div style={s.statN}>100%</div><div style={s.statL}>SUR MESURE</div></div>
+              <div><div style={s.statN}>3</div><div style={s.statL}>{t.stat1}</div></div>
+              <div><div style={s.statN}>22+</div><div style={s.statL}>{t.stat2}</div></div>
+              <div><div style={s.statN}>100%</div><div style={s.statL}>{t.stat3}</div></div>
             </div>
           </div>
 
           <div style={s.photoWrap}>
             <div style={s.stepNum}>01</div>
-            <div style={s.stepTitle}>Votre photo</div>
-            <div style={s.stepSub}>Pour un résultat fidèle à votre silhouette · For a result true to your silhouette</div>
+            <div style={s.stepTitle}>{t.step1Title}</div>
+            <div style={s.stepSub}>{t.step1Sub}</div>
 
             {/* Guide photo — deux cartes */}
             <div style={{ marginBottom: '1.75rem', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
@@ -630,17 +896,10 @@ export default function SurmesurTryOn() {
 
                 {/* Carte gauche — LA PHOTO PARFAITE — fond or */}
                 <div style={{ background: '#C9A96E', padding: '2rem 1.75rem' }}>
-                <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#000', fontFamily: 'sans-serif', fontWeight: 800, marginBottom: '0.3rem' }}>✦ LA PHOTO PARFAITE</div>
+                <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#000', fontFamily: 'sans-serif', fontWeight: 800, marginBottom: '0.3rem' }}>✦ {t.guideTitle}</div>
                   <div style={{ width: '30px', height: '1px', background: 'rgba(0,0,0,0.2)', marginBottom: '1.25rem' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                    {[
-                      'Corps entier visible, posture droite et naturelle',
-                      'Lumière douce de face — fenêtre ou lumière naturelle',
-                      'Fond blanc, gris clair ou mur uni',
-                      'T-shirt ajusté blanc ou gris — révèle votre silhouette',
-                      'Bras légèrement écartés du corps',
-                      'Regard direct vers l\'appareil photo',
-                    ].map((text, i) => (
+                    {t.guideGood.map((text, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                         <span style={{ color: '#fff', fontSize: '0.55rem', flexShrink: 0, marginTop: '0.25rem', opacity: 0.8 }}>✦</span>
                         <span style={{ fontSize: '0.75rem', fontFamily: 'sans-serif', color: '#fff', lineHeight: 1.5 }}>{text}</span>
@@ -651,17 +910,10 @@ export default function SurmesurTryOn() {
 
                 {/* Carte droite — À ÉVITER — fond noir */}
                 <div style={{ background: '#111', padding: '2rem 1.75rem' }}>
-                  <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— À ÉVITER</div>
+                  <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— {t.guideAvoid}</div>
                   <div style={{ width: '30px', height: '1px', background: 'rgba(201,169,110,0.3)', marginBottom: '1.25rem' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                    {[
-                      'Photo sombre, floue ou contre-jour',
-                      'Pieds ou tête hors cadre',
-                      'Vêtements amples ou superposés',
-                      'Photo de profil, en biais ou en mouvement',
-                      'Position assise ou décontractée',
-                      'Fond chargé, coloré ou encombré',
-                    ].map((text, i) => (
+                    {t.guideBad.map((text, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
                         <span style={{ color: '#C9A96E', fontSize: '0.65rem', flexShrink: 0, marginTop: '0.1rem' }}>—</span>
                         <span style={{ fontSize: '0.75rem', fontFamily: 'sans-serif', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, textDecoration: 'line-through', textDecorationColor: 'rgba(201,169,110,0.25)' }}>{text}</span>
@@ -671,14 +923,12 @@ export default function SurmesurTryOn() {
                 </div>
               </div>
 
-              {/* Note du styliste — fond blanc en bas */}
+              {/* Note du styliste */}
               <div style={{ background: '#fff', padding: '1.1rem 1.75rem', borderTop: '1px solid #e8e4df', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
                 <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0, marginTop: '0.05rem' }}>✦</span>
                 <div>
-                  <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginBottom: '0.35rem' }}>NOTE DU STYLISTE</div>
-                  <div style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>
-                    "La qualité de votre photo détermine la précision du résultat. Une silhouette bien définie = un look remarquablement réaliste."
-                  </div>
+                  <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginBottom: '0.35rem' }}>{t.noteTitle}</div>
+                  <div style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>{t.noteText}</div>
                 </div>
               </div>
             </div>
@@ -687,12 +937,12 @@ export default function SurmesurTryOn() {
               <>
                 <div style={s.uploadZone} onClick={() => fileInputRef.current?.click()}>
                   <div style={s.uploadIcon}>✦</div>
-                  <div style={s.uploadTxt}>Cliquez pour uploader votre photo</div>
-                  <div style={s.uploadSub}>JPG, PNG · Max 10MB</div>
+                  <div style={s.uploadTxt}>{t.uploadTxt}</div>
+                  <div style={s.uploadSub}>{t.uploadSub}</div>
                 </div>
                 <div style={s.btnRow}>
-                  <button style={s.btnBlack} onClick={startCamera}>📷 PRENDRE UNE PHOTO</button>
-                  <button style={s.btnOutline} onClick={() => fileInputRef.current?.click()}>🖼 MA GALERIE</button>
+                  <button style={s.btnBlack} onClick={startCamera}>{t.btnCamera}</button>
+                  <button style={s.btnOutline} onClick={() => fileInputRef.current?.click()}>{t.btnGallery}</button>
                 </div>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => {
                   const f = e.target.files?.[0]; if (!f) return
@@ -775,11 +1025,11 @@ export default function SurmesurTryOn() {
                     </div>
                   ))}
                 </div>
-                <div style={{ fontSize: '0.82rem', fontWeight: 300, marginBottom: '0.2rem' }}>{LOADING_MESSAGES[loadingMsg].fr}</div>
-                <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{LOADING_MESSAGES[loadingMsg].en}</div>
+                <div style={{ fontSize: '0.82rem', fontWeight: 300, marginBottom: '0.2rem' }}>{t.loadingMsgs[loadingMsg]}</div>
+                <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{t.aiWorking}</div>
                 <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
                 <div style={{ fontSize: '0.58rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.4rem' }}>
-                  Étape {autoStep}/{autoTotal} · {Math.round(progress)}%
+                  {t.etape} {autoStep}/{autoTotal} · {Math.round(progress)}%
                 </div>
               </div>
             )}
@@ -797,8 +1047,8 @@ export default function SurmesurTryOn() {
                   </div>
                 )}
                 <div style={{ width: '44px', height: '44px', margin: '0 auto 0.75rem', borderRadius: '50%', border: '2px solid #e8e4df', borderTop: '2px solid #C9A96E', animation: 'spin 1s linear infinite' }} />
-                <div style={{ fontSize: '0.85rem', fontWeight: 300, marginBottom: '0.2rem' }}>{LOADING_MESSAGES[loadingMsg].fr}</div>
-                <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{LOADING_MESSAGES[loadingMsg].en}</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 300, marginBottom: '0.2rem' }}>{t.loadingMsgs[loadingMsg]}</div>
+                <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{t.aiWorking}</div>
                 <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
                 <div style={{ fontSize: '0.58rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.3rem' }}>{Math.round(progress)}%</div>
               </div>
@@ -807,7 +1057,7 @@ export default function SurmesurTryOn() {
             {/* Results section */}
             {generations.length > 0 && (
               <div style={s.resultSection} ref={resultRef}>
-                <div style={s.resultLabel}>VOTRE LOOK ACTUEL · YOUR CURRENT LOOK</div>
+                <div style={s.resultLabel}>{t.currentLook}</div>
                 {currentResult && (
                   <>
                     <img src={currentResult} alt="Look généré" style={s.resultImg} />
@@ -826,7 +1076,7 @@ export default function SurmesurTryOn() {
                       }}
                       style={{ display: 'inline-block', marginTop: '0.6rem', fontSize: '0.68rem', color: '#C9A96E', fontFamily: 'sans-serif', letterSpacing: '0.1em', background: 'none', border: '1px solid #C9A96E', padding: '0.4rem 0.85rem', borderRadius: '2px', cursor: 'pointer' }}
                     >
-                      ⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD
+                      {t.download}
                     </button>
                   </>
                 )}
@@ -847,27 +1097,27 @@ export default function SurmesurTryOn() {
             {/* Replace mode banner */}
             {replaceMode !== null && (
               <div style={s.replaceBanner}>
-                <span>✎ Mode remplacement — Étape {replaceMode + 1} : <strong>{generations[replaceMode]?.item.nom_fr}</strong></span>
-                <button onClick={cancelReplace} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7a5c1e', fontFamily: 'sans-serif', fontSize: '0.68rem', textDecoration: 'underline' }}>Annuler</button>
+                <span>✎ {t.replaceMode} {replaceMode + 1} : <strong>{generations[replaceMode]?.item.nom_fr}</strong></span>
+                <button onClick={cancelReplace} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#7a5c1e', fontFamily: 'sans-serif', fontSize: '0.68rem', textDecoration: 'underline' }}>{t.cancelReplace}</button>
               </div>
             )}
 
-            {/* Catalog — masqué pendant auto-génération */}
+            {/* Catalog */}
             {!autoGenerating && (
               <>
                 <div style={s.stepNum}>0{generations.length === 0 ? '2' : generations.length + 1}</div>
-                <div style={s.stepTitle}>{replaceMode !== null ? 'Choisissez la pièce de remplacement' : generations.length === 0 ? 'Choisissez votre première pièce' : 'Ajouter une pièce'}</div>
+                <div style={s.stepTitle}>{replaceMode !== null ? t.step2TitleR : generations.length === 0 ? t.step2Title0 : t.step2TitleN}</div>
                 <div style={s.stepSub}>
                   {replaceMode !== null
-                    ? `Remplacer : ${generations[replaceMode]?.item.nom_fr}`
-                    : `${generations.length}/${MAX_GENERATIONS} · Sélectionnez puis cliquez "Essayer" — ou laissez notre styliste IA choisir pour vous`}
+                    ? `${t.replaceMode} : ${generations[replaceMode]?.item.nom_fr}`
+                    : `${generations.length}/${MAX_GENERATIONS} ${t.step2Sub}`}
                 </div>
 
-                <div style={s.catalogLabel}>CATALOGUE · {CATALOGUE[activeTab].label.toUpperCase()}</div>
+                <div style={s.catalogLabel}>{t.catalogLabel} · {CATALOGUE[activeTab].label.toUpperCase()}</div>
                 <div style={s.tabs}>
                   {Object.entries(CATALOGUE).map(([key, cat]) => (
                     <button key={key} style={s.tab(activeTab === key)} onClick={() => setActiveTab(key)}>
-                      {cat.icon} {cat.label}
+                      {cat.icon} {lang === 'en' ? cat.label_en || cat.label : cat.label}
                     </button>
                   ))}
                 </div>
@@ -917,18 +1167,18 @@ export default function SurmesurTryOn() {
                           <div style={{ fontSize: '0.85rem', fontWeight: 300, marginBottom: '0.25rem' }}>{LOADING_MESSAGES[loadingMsg].fr}</div>
                           <div style={{ fontSize: '0.65rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '1rem' }}>{LOADING_MESSAGES[loadingMsg].en}</div>
                           <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
-                          <div style={{ fontSize: '0.6rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.4rem' }}>{Math.round(progress)}% · L'IA Surmesur travaille pour vous</div>
+                          <div style={{ fontSize: '0.6rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.4rem' }}>{Math.round(progress)}% · {t.aiWorking}</div>
                         </div>
                       ) : (
                         <button style={pendingItem ? s.btnTry : s.btnTryDisabled} onClick={pendingItem ? handleGenerate : undefined} disabled={!pendingItem}>
-                          {replaceMode !== null ? 'REMPLACER CETTE PIÈCE' : 'ESSAYER CETTE PIÈCE'}<br />
-                          <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{replaceMode !== null ? 'REPLACE THIS PIECE' : 'TRY THIS PIECE'}</span>
+                          {replaceMode !== null ? t.btnReplace : t.btnTry}<br />
+                          <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{replaceMode !== null ? t.btnReplaceSub : t.btnTrySub}</span>
                         </button>
                       )
                     ) : (
                       <div style={s.maxMsg}>
-                        ✦ Maximum {MAX_GENERATIONS} looks atteint<br />
-                        <span style={{ fontSize: '0.6rem', color: '#aaa' }}>Modifiez un look existant ou prenez rendez-vous</span>
+                        ✦ {t.maxReached}<br />
+                        <span style={{ fontSize: '0.6rem', color: '#aaa' }}>{t.maxSub}</span>
                       </div>
                     )}
                     {error && <div style={s.error}>⚠ {error}</div>}
@@ -951,19 +1201,19 @@ export default function SurmesurTryOn() {
                   <div style={{ padding: '1rem 1.25rem 0.75rem', flexShrink: 0 }}>
                     <div style={{ width: '40px', height: '4px', background: '#e0dbd4', borderRadius: '2px', margin: '0 auto 0.85rem' }} />
                     <div style={{ fontSize: '0.62rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', borderBottom: '1px solid #e8e4df', paddingBottom: '0.75rem' }}>
-                      VOTRE SÉLECTION · YOUR OUTFIT
+                      {t.selectionTitle}
                     </div>
                   </div>
                   <div style={{ flex: 1, overflowY: 'auto', padding: '0 1.25rem' }}>
                     {sidebarItems.length === 0 ? (
-                      <div style={{ textAlign: 'center', padding: '2rem 0', color: '#ccc', fontSize: '0.75rem', fontFamily: 'sans-serif' }}>Aucune pièce sélectionnée</div>
+                      <div style={{ textAlign: 'center', padding: '2rem 0', color: '#ccc', fontSize: '0.75rem', fontFamily: 'sans-serif' }}>{t.emptyState.split('\n')[0]}</div>
                     ) : (
                       sidebarItems.map((item) => (
                         <div key={item._stepIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0', borderBottom: '1px solid #f0ece6' }}>
                           <img src={item.image} alt={item.nom_fr} style={{ width: '48px', height: '60px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: '0.82rem', fontWeight: 400, marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.nom_fr}</div>
-                            <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif' }}>Étape {item._stepIdx + 1}</div>
+                            <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif' }}>{t.etape} {item._stepIdx + 1}</div>
                             <div style={{ fontSize: '0.82rem', color: '#C9A96E' }}>{item.prix}</div>
                           </div>
                           <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
@@ -979,20 +1229,20 @@ export default function SurmesurTryOn() {
                   <div style={{ padding: '1rem 1.25rem 5rem 1.25rem', borderTop: '1px solid #e8e4df', flexShrink: 0, background: '#fff' }}>
                     {sidebarItems.length > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.85rem' }}>
-                        <span style={{ fontSize: '0.65rem', color: '#888', fontFamily: 'sans-serif' }}>TOTAL ESTIMÉ</span>
+                        <span style={{ fontSize: '0.65rem', color: '#888', fontFamily: 'sans-serif' }}>{t.totalLabel}</span>
                         <span style={{ fontSize: '1.2rem', fontWeight: 300 }}>{formatPrice(totalPrice)}</span>
                       </div>
                     )}
                     <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer"
                       style={{ display: 'block', width: '100%', padding: '0.95rem', background: '#000', color: '#fff', fontSize: '0.72rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', textDecoration: 'none', marginBottom: '0.5rem', boxSizing: 'border-box' }}>
-                      PRENDRE MON RENDEZ-VOUS<br />
-                      <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>BOOK MY FREE APPOINTMENT</span>
+                      {t.btnAppt}<br />
+                      <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnApptSub}</span>
                     </a>
                     {sidebarItems.length > 0 && (
                       <button style={{ width: '100%', padding: '0.85rem', background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.12em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, boxSizing: 'border-box' }}
                         onClick={sendEmail}>
-                        ✉ ENVOYER AU VENDEUR<br />
-                        <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>SEND TO STYLIST</span>
+                        {t.btnVendor}<br />
+                        <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnVendorSub}</span>
                       </button>
                     )}
                   </div>
@@ -1004,14 +1254,14 @@ export default function SurmesurTryOn() {
                   style={{ flex: 1, padding: '0.85rem', background: showSidebar ? '#C9A96E' : 'transparent', color: '#fff', border: '1px solid #C9A96E', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
                   onClick={() => setShowSidebar(!showSidebar)}
                 >
-                  {showSidebar ? '✕ FERMER' : `✦ MA SÉLECTION${sidebarItems.length > 0 ? ` (${sidebarItems.length})` : ''}`}
+                  {showSidebar ? '✕' : `✦ ${sidebarItems.length > 0 ? `(${sidebarItems.length})` : ''}`}
                 </button>
                 {!showSidebar && !isGenerating && generations.length === 0 && (
                   <button
                     style={{ flex: 2, padding: '0.85rem', background: 'linear-gradient(135deg,#C9A96E,#e8c87a)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.65rem', letterSpacing: '0.08em', fontFamily: 'sans-serif' }}
                     onClick={() => { setSelectedOccasion(null); setShowSurpriseModal(true) }}
                   >
-                    ✦ SURPRENEZ-MOI
+                    {t.surprise}
                   </button>
                 )}
                 {!showSidebar && pendingItem && !isGenerating && (canAddMore || replaceMode !== null) && (
@@ -1019,7 +1269,7 @@ export default function SurmesurTryOn() {
                     style={{ flex: 2, padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
                     onClick={handleGenerate}
                   >
-                    ESSAYER →
+                    {t.btnTry.split(' ')[0]} →
                   </button>
                 )}
               </div>
@@ -1028,14 +1278,13 @@ export default function SurmesurTryOn() {
 
           {/* ── SIDEBAR DESKTOP ── */}
           <div style={s.sideCol}>
-            <div style={s.sideTitle}>VOTRE SÉLECTION · YOUR OUTFIT</div>
+            <div style={s.sideTitle}>{t.selectionTitle}</div>
 
-            {/* Bouton Surprenez-moi desktop dans sidebar */}
             {generations.length === 0 && !autoGenerating && (
               <button style={{ ...s.btnSurprise, fontSize: '0.7rem', padding: '0.85rem', marginBottom: '1rem' }}
                 onClick={() => { setSelectedOccasion(null); setShowSurpriseModal(true) }}>
-                ✦ SURPRENEZ-MOI<br />
-                <span style={{ fontSize: '0.55rem', opacity: 0.85 }}>Notre IA styliste choisit pour vous</span>
+                {t.surprise}<br />
+                <span style={{ fontSize: '0.55rem', opacity: 0.85 }}>{t.surpriseSub}</span>
               </button>
             )}
 
@@ -1043,7 +1292,7 @@ export default function SurmesurTryOn() {
               {sidebarItems.length === 0 ? (
                 <div style={s.emptyState}>
                   <div style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>✦</div>
-                  <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', lineHeight: 1.6 }}>Sélectionnez et essayez<br />vos pièces dans le catalogue<br />ou laissez notre IA choisir</div>
+                  <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.emptyState.split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}</div>
                 </div>
               ) : (
                 sidebarItems.map((item) => (
@@ -1051,7 +1300,7 @@ export default function SurmesurTryOn() {
                     <img src={item.image} alt={item.nom_fr} style={s.sideImg} />
                     <div style={s.sideInfo}>
                       <div style={s.sideName}>{item.nom_fr}</div>
-                      <div style={s.sideCat}>Étape {item._stepIdx + 1}</div>
+                      <div style={s.sideCat}>{t.etape} {item._stepIdx + 1}</div>
                       <div style={s.sidePrice}>{item.prix}</div>
                     </div>
                     <div style={s.sideActions}>
@@ -1066,22 +1315,22 @@ export default function SurmesurTryOn() {
             <div style={s.totalWrap}>
               {sidebarItems.length > 0 && (
                 <div style={s.totalRow}>
-                  <span style={s.totalLabel}>TOTAL ESTIMÉ</span>
+                  <span style={s.totalLabel}>{t.totalLabel}</span>
                   <span style={s.totalAmt}>{formatPrice(totalPrice)}</span>
                 </div>
               )}
               <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer" style={s.btnAppt}>
-                PRENDRE MON RENDEZ-VOUS<br />
-                <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>BOOK MY FREE APPOINTMENT</span>
+                {t.btnAppt}<br />
+                <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnApptSub}</span>
               </a>
               {sidebarItems.length > 0 && (
                 <button style={{ width: '100%', padding: '0.9rem', background: 'transparent', color: '#1a1a1a', border: '1px solid #1a1a1a', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, marginTop: '0.5rem', boxSizing: 'border-box' }}
                   onClick={sendEmail}>
-                  ✉ ENVOYER AU VENDEUR<br />
-                  <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>SEND TO STYLIST</span>
+                  {t.btnVendor}<br />
+                  <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnVendorSub}</span>
                 </button>
               )}
-              <button style={s.btnRestart} onClick={reset}>↺ RECOMMENCER · START OVER</button>
+              <button style={s.btnRestart} onClick={reset}>{t.btnRestart}</button>
             </div>
           </div>
         </div>
