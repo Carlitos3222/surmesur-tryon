@@ -458,11 +458,14 @@ export default function SurmesurTryOn() {
   }, 0)
   const formatPrice = (n) => {
     const city = selectedCity
-    if (!city) return '$' + n.toLocaleString('en-CA') + ' CAD'
-    if (city.currency === 'MXN') return '$' + Math.round(n * 13.5).toLocaleString('es-MX') + ' MXN'
-    if (city.currency === 'USD') return '$' + Math.round(n * 0.73).toLocaleString('en-US') + ' USD'
-    return '$' + n.toLocaleString('en-CA') + ' CAD'
+    const num = typeof n === 'string' ? parseFloat(n.replace(/[$,]/g, '')) : n
+    if (!city || city.currency === 'CAD') return '$' + num.toLocaleString('en-CA') + ' CAD'
+    if (city.currency === 'USD') return '$' + Math.round(num * 0.73).toLocaleString('en-US') + ' USD'
+    if (city.currency === 'MXN') return '$' + Math.round(num * 13.5).toLocaleString('es-MX') + ' MXN'
+    return '$' + num.toLocaleString('en-CA') + ' CAD'
   }
+
+  const displayItemPrice = (prix) => formatPrice(prix)
 
   // Camera
   const startCamera = async () => {
@@ -1042,7 +1045,7 @@ export default function SurmesurTryOn() {
                     <img src={pendingItem.image} alt={pendingItem.nom_fr} style={{ width: '44px', height: '55px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
                     <div>
                       <div style={{ fontSize: '0.78rem', fontWeight: 400, marginBottom: '0.1rem' }}>{pendingItem.nom_fr}</div>
-                      <div style={{ fontSize: '0.62rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{pendingItem.prix}</div>
+                      <div style={{ fontSize: '0.62rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{displayItemPrice(pendingItem.prix)}</div>
                     </div>
                   </div>
                 )}
@@ -1132,7 +1135,7 @@ export default function SurmesurTryOn() {
                         <div style={s.cardInfo}>
                           <div style={s.cardName}>{item.nom_fr}</div>
                           <div style={s.cardDesc}>{item.desc}</div>
-                          <div style={s.cardPrice}>{item.prix}</div>
+                          <div style={s.cardPrice}>{displayItemPrice(item.prix)}</div>
                         </div>
                       </div>
                     )
@@ -1147,7 +1150,7 @@ export default function SurmesurTryOn() {
                         <img src={pendingItem.image} alt={pendingItem.nom_fr} style={s.tryPreviewImg} />
                         <div>
                           <div style={{ fontSize: '0.8rem', fontWeight: 400 }}>{pendingItem.nom_fr}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#C9A96E' }}>{pendingItem.prix}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#C9A96E' }}>{displayItemPrice(pendingItem.prix)}</div>
                         </div>
                       </div>
                     )}
@@ -1159,7 +1162,7 @@ export default function SurmesurTryOn() {
                               <img src={pendingItem.image} alt={pendingItem.nom_fr} style={{ width: '52px', height: '65px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
                               <div>
                                 <div style={{ fontSize: '0.75rem', fontWeight: 400, marginBottom: '0.15rem' }}>{pendingItem.nom_fr}</div>
-                                <div style={{ fontSize: '0.65rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{pendingItem.prix}</div>
+                                <div style={{ fontSize: '0.65rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{displayItemPrice(pendingItem.prix)}</div>
                               </div>
                             </div>
                           )}
@@ -1214,7 +1217,7 @@ export default function SurmesurTryOn() {
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: '0.82rem', fontWeight: 400, marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.nom_fr}</div>
                             <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif' }}>{t.etape} {item._stepIdx + 1}</div>
-                            <div style={{ fontSize: '0.82rem', color: '#C9A96E' }}>{item.prix}</div>
+                            <div style={{ fontSize: '0.82rem', color: '#C9A96E' }}>{displayItemPrice(item.prix)}</div>
                           </div>
                           <div style={{ display: 'flex', gap: '0.4rem', flexShrink: 0 }}>
                             <button style={{ background: 'none', border: '1px solid #C9A96E', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '0.7rem', color: '#C9A96E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -1301,7 +1304,7 @@ export default function SurmesurTryOn() {
                     <div style={s.sideInfo}>
                       <div style={s.sideName}>{item.nom_fr}</div>
                       <div style={s.sideCat}>{t.etape} {item._stepIdx + 1}</div>
-                      <div style={s.sidePrice}>{item.prix}</div>
+                      <div style={s.sidePrice}>{displayItemPrice(item.prix)}</div>
                     </div>
                     <div style={s.sideActions}>
                       <button style={s.sideBtn('#C9A96E')} onClick={() => startReplace(item._stepIdx)}>✎</button>
