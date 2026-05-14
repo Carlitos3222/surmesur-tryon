@@ -625,55 +625,60 @@ export default function SurmesurTryOn() {
             <div style={s.stepSub}>Pour un résultat fidèle à votre silhouette · For a result true to your silhouette</div>
 
             {/* Guide photo — deux cartes */}
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '0', marginBottom: '1.75rem', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ marginBottom: '1.75rem', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
 
-              {/* Carte gauche — LA PHOTO PARFAITE — fond or */}
-              <div style={{ background: '#C9A96E', padding: '2rem 1.75rem' }}>
-                <div style={{ fontSize: '0.62rem', letterSpacing: '0.25em', color: '#fff', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>✦ LA PHOTO PARFAITE</div>
-                <div style={{ width: '30px', height: '1px', background: 'rgba(255,255,255,0.4)', marginBottom: '1.25rem' }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                  {[
-                    'Corps entier visible, posture droite et naturelle',
-                    'Lumière douce de face — fenêtre ou lumière naturelle',
-                    'Fond blanc, gris clair ou mur uni',
-                    'T-shirt ajusté blanc ou gris — révèle votre silhouette',
-                    'Bras légèrement écartés du corps',
-                    'Regard direct vers l\'appareil photo',
-                  ].map((text, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                      <span style={{ color: '#fff', fontSize: '0.55rem', flexShrink: 0, marginTop: '0.25rem', opacity: 0.7 }}>✦</span>
-                      <span style={{ fontSize: '0.75rem', fontFamily: 'sans-serif', color: '#fff', lineHeight: 1.5 }}>{text}</span>
-                    </div>
-                  ))}
+                {/* Carte gauche — LA PHOTO PARFAITE — fond or */}
+                <div style={{ background: '#C9A96E', padding: '2rem 1.75rem' }}>
+                  <div style={{ fontSize: '0.9rem', letterSpacing: '0.15em', color: '#000', fontFamily: 'sans-serif', fontWeight: 800, marginBottom: '0.3rem' }}>✦ LA PHOTO PARFAITE</div>
+                  <div style={{ width: '30px', height: '1px', background: 'rgba(0,0,0,0.2)', marginBottom: '1.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                    {[
+                      'Corps entier visible, posture droite et naturelle',
+                      'Lumière douce de face — fenêtre ou lumière naturelle',
+                      'Fond blanc, gris clair ou mur uni',
+                      'T-shirt ajusté blanc ou gris — révèle votre silhouette',
+                      'Bras légèrement écartés du corps',
+                      'Regard direct vers l\'appareil photo',
+                    ].map((text, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                        <span style={{ color: '#fff', fontSize: '0.55rem', flexShrink: 0, marginTop: '0.25rem', opacity: 0.8 }}>✦</span>
+                        <span style={{ fontSize: '0.75rem', fontFamily: 'sans-serif', color: '#fff', lineHeight: 1.5 }}>{text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Carte droite — À ÉVITER — fond noir */}
+                <div style={{ background: '#111', padding: '2rem 1.75rem' }}>
+                  <div style={{ fontSize: '0.9rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— À ÉVITER</div>
+                  <div style={{ width: '30px', height: '1px', background: 'rgba(201,169,110,0.3)', marginBottom: '1.25rem' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                    {[
+                      'Photo sombre, floue ou contre-jour',
+                      'Pieds ou tête hors cadre',
+                      'Vêtements amples ou superposés',
+                      'Photo de profil, en biais ou en mouvement',
+                      'Position assise ou décontractée',
+                      'Fond chargé, coloré ou encombré',
+                    ].map((text, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                        <span style={{ color: '#C9A96E', fontSize: '0.65rem', flexShrink: 0, marginTop: '0.1rem' }}>—</span>
+                        <span style={{ fontSize: '0.75rem', fontFamily: 'sans-serif', color: 'rgba(255,255,255,0.5)', lineHeight: 1.5, textDecoration: 'line-through', textDecorationColor: 'rgba(201,169,110,0.25)' }}>{text}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Carte droite — À ÉVITER — fond noir */}
-              <div style={{ background: '#111', padding: '2rem 1.75rem' }}>
-                <div style={{ fontSize: '0.62rem', letterSpacing: '0.25em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— À ÉVITER</div>
-                <div style={{ width: '30px', height: '1px', background: 'rgba(201,169,110,0.3)', marginBottom: '1.25rem' }} />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                  {[
-                    'Photo sombre, floue ou contre-jour',
-                    'Pieds ou tête hors cadre',
-                    'Vêtements amples ou superposés',
-                    'Photo de profil, en biais ou en mouvement',
-                    'Position assise ou décontractée',
-                    'Fond chargé, coloré ou encombré',
-                  ].map((text, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                      <span style={{ color: '#C9A96E', fontSize: '0.65rem', flexShrink: 0, marginTop: '0.1rem' }}>—</span>
-                      <span style={{ fontSize: '0.75rem', fontFamily: 'sans-serif', color: 'rgba(255,255,255,0.55)', lineHeight: 1.5, textDecoration: 'line-through', textDecorationColor: 'rgba(201,169,110,0.3)' }}>{text}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Note du styliste dans la carte noire */}
-                <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(201,169,110,0.15)' }}>
-                  <div style={{ fontSize: '0.58rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '0.4rem' }}>NOTE DU STYLISTE</div>
-                  <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'sans-serif', lineHeight: 1.7, fontStyle: 'italic' }}>
-                    "La qualité de votre photo détermine la précision du résultat. Une silhouette bien définie = un look généré remarquablement réaliste."
-                  </div>
+              {/* Note du styliste — fond blanc en bas */}
+              <div style={{ background: '#fff', padding: '1.1rem 1.75rem', display: 'flex', alignItems: 'center', gap: '0.85rem', borderTop: '1px solid #e8e4df' }}>
+                <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0 }}>✦</span>
+                <div>
+                  <span style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginRight: '0.75rem' }}>NOTE DU STYLISTE</span>
+                  <span style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>
+                    "La qualité de votre photo détermine la précision du résultat. Une silhouette bien définie = un look remarquablement réaliste."
+                  </span>
                 </div>
               </div>
             </div>
