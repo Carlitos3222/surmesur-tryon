@@ -622,61 +622,87 @@ export default function SurmesurTryOn() {
           <div style={s.photoWrap}>
             <div style={s.stepNum}>01</div>
             <div style={s.stepTitle}>Votre photo</div>
-            <div style={s.stepSub}>Pour un résultat optimal, suivez ce guide · For best results, follow this guide</div>
+            <div style={s.stepSub}>Pour un résultat fidèle à votre silhouette · For a result true to your silhouette</div>
 
-            {/* Guide photo */}
-            <div style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '1rem' }}>GUIDE PHOTO · PHOTO GUIDE</div>
+            {/* Guide photo luxueux */}
+            <div style={{ background: '#000', borderRadius: '4px', padding: '2rem', marginBottom: '1.75rem', position: 'relative', overflow: 'hidden' }}>
+              {/* Ligne décorative dorée */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)' }} />
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, #C9A96E, transparent)' }} />
 
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
-                {/* Bonne photo */}
-                <div style={{ background: '#f0fff4', border: '1px solid #86efac', borderRadius: '4px', padding: '1rem' }}>
-                  <div style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: '#16a34a', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '0.75rem' }}>✓ PHOTO IDÉALE</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ fontSize: '0.62rem', letterSpacing: '0.28em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '0.4rem', textAlign: 'center' }}>
+                GUIDE DU STYLISTE · STYLIST GUIDE
+              </div>
+              <div style={{ width: '40px', height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)', margin: '0 auto 1.5rem' }} />
+
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1.5rem' }}>
+                {/* Colonne idéale */}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <div style={{ width: '20px', height: '1px', background: '#C9A96E' }} />
+                    <div style={{ fontSize: '0.62rem', letterSpacing: '0.2em', color: '#C9A96E', fontFamily: 'sans-serif' }}>LA PHOTO PARFAITE</div>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(201,169,110,0.2)' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {[
-                      { icon: '🧍', text: 'Corps entier visible, debout droit' },
-                      { icon: '💡', text: 'Lumière naturelle de face, bien éclairé' },
-                      { icon: '⬜', text: 'Fond blanc, gris ou uni' },
-                      { icon: '👕', text: 'T-shirt blanc ou gris ajusté (pas ample)' },
-                      { icon: '📐', text: 'Bras légèrement écartés du corps' },
-                      { icon: '👀', text: 'Regarder droit vers l\'appareil photo' },
+                      { icon: '✦', text: 'Corps entier visible, posture droite et naturelle' },
+                      { icon: '✦', text: 'Lumière douce de face — fenêtre ou lumière naturelle' },
+                      { icon: '✦', text: 'Fond blanc, gris clair ou mur uni' },
+                      { icon: '✦', text: 'T-shirt ajusté blanc ou gris — révèle votre silhouette' },
+                      { icon: '✦', text: 'Bras légèrement écartés du corps' },
+                      { icon: '✦', text: 'Regard direct vers l\'appareil photo' },
                     ].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <span style={{ fontSize: '1rem', flexShrink: 0 }}>{item.icon}</span>
-                        <span style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: '#333', lineHeight: 1.4 }}>{item.text}</span>
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                        <span style={{ color: '#C9A96E', fontSize: '0.5rem', flexShrink: 0, marginTop: '0.2rem' }}>{item.icon}</span>
+                        <span style={{ fontSize: '0.72rem', fontFamily: 'sans-serif', color: '#e8e4df', lineHeight: 1.5 }}>{item.text}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Mauvaise photo */}
-                <div style={{ background: '#fff5f5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '1rem' }}>
-                  <div style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: '#dc2626', fontWeight: 600, letterSpacing: '0.1em', marginBottom: '0.75rem' }}>✕ À ÉVITER</div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {/* Séparateur vertical desktop */}
+                {!isMobile && (
+                  <div style={{ position: 'relative' }}>
+                    <div style={{ position: 'absolute', left: '-0.75rem', top: 0, bottom: 0, width: '1px', background: 'rgba(201,169,110,0.15)' }} />
+                  </div>
+                )}
+
+                {/* Colonne à éviter */}
+                <div style={isMobile ? { borderTop: '1px solid rgba(201,169,110,0.15)', paddingTop: '1.25rem' } : {}}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                    <div style={{ width: '20px', height: '1px', background: 'rgba(255,255,255,0.3)' }} />
+                    <div style={{ fontSize: '0.62rem', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.4)', fontFamily: 'sans-serif' }}>À ÉVITER</div>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     {[
-                      { icon: '🌑', text: 'Photo sombre ou contre-jour' },
-                      { icon: '✂️', text: 'Corps coupé — pieds ou tête hors cadre' },
-                      { icon: '🧥', text: 'Vêtements amples qui cachent la silhouette' },
-                      { icon: '🔄', text: 'Photo de profil ou en biais' },
-                      { icon: '🪑', text: 'Photo assis ou en mouvement' },
-                      { icon: '🌆', text: 'Fond chargé ou coloré' },
+                      { text: 'Photo sombre, floue ou contre-jour' },
+                      { text: 'Pieds ou tête hors cadre' },
+                      { text: 'Vêtements amples ou superposés' },
+                      { text: 'Photo de profil, en biais ou en mouvement' },
+                      { text: 'Position assise ou décontractée' },
+                      { text: 'Fond chargé, coloré ou encombré' },
                     ].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                        <span style={{ fontSize: '1rem', flexShrink: 0 }}>{item.icon}</span>
-                        <span style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: '#666', lineHeight: 1.4 }}>{item.text}</span>
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                        <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.65rem', flexShrink: 0, marginTop: '0.1rem' }}>—</span>
+                        <span style={{ fontSize: '0.72rem', fontFamily: 'sans-serif', color: 'rgba(255,255,255,0.35)', lineHeight: 1.5, textDecoration: 'line-through', textDecorationColor: 'rgba(255,255,255,0.15)' }}>{item.text}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              {/* Conseil pro */}
-              <div style={{ background: '#fffbf0', border: '1px solid #e8d8b8', borderRadius: '3px', padding: '0.75rem 1rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>💡</span>
+              {/* Conseil du styliste */}
+              <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(201,169,110,0.2)', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                <div style={{ flexShrink: 0 }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid #C9A96E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ color: '#C9A96E', fontSize: '0.7rem' }}>✦</span>
+                  </div>
+                </div>
                 <div>
-                  <div style={{ fontSize: '0.68rem', fontWeight: 500, color: '#7a5c1e', marginBottom: '0.2rem', fontFamily: 'sans-serif' }}>CONSEIL DU STYLISTE</div>
-                  <div style={{ fontSize: '0.65rem', color: '#7a5c1e', fontFamily: 'sans-serif', lineHeight: 1.6 }}>
-                    La qualité de votre photo détermine directement la précision du résultat IA. Une bonne photo = un look généré fidèle à votre vraie silhouette. · <em>Photo quality directly determines AI accuracy.</em>
+                  <div style={{ fontSize: '0.6rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '0.3rem' }}>NOTE DU STYLISTE</div>
+                  <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.55)', fontFamily: 'sans-serif', lineHeight: 1.7, fontStyle: 'italic' }}>
+                    "La précision de votre silhouette dans la photo détermine directement la fidélité du résultat. Une photo soignée vous donnera un aperçu remarquablement réaliste de chaque pièce sur vous."
                   </div>
                 </div>
               </div>
