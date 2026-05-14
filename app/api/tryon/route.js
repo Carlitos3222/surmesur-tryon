@@ -49,7 +49,7 @@ export async function POST(request) {
           product_image: garmentUrl,
           prompt,
           seed,
-          resolution: '1k',
+          resolution: '2k',
           generation_mode: 'balanced',
         }
       }),
