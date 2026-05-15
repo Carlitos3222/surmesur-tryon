@@ -33,8 +33,8 @@ export async function POST(request) {
       return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
     }
 
-    // Prompt court et direct — meilleurs résultats avec Fashn.ai
-    const prompt = `Preserve exact garment colors, patterns and design. Ensure the complete garment is fully visible including both sleeves and all details. Keep original person's face, pose and body unchanged. IMPORTANT: always tuck the shirt completely inside the pants. When wearing a jacket or blazer, always show the shirt collar and shirt cuffs visibly underneath the jacket. Clean white studio background with soft warm lighting.`
+    // Prompt renforcé — préservation morphologie exacte
+    const prompt = `CRITICAL: Preserve the exact body shape, body type, weight, and proportions of the person. Do NOT slim down, reshape, or alter the body in any way. If the person is overweight, keep them overweight. If the person is slim, keep them slim. Preserve exact body width, belly size, shoulder width, and all physical characteristics exactly as they appear in the original photo. Preserve exact face, hair, skin tone, and expression unchanged. The garment must conform to the person's actual body shape — do not change the body to fit the garment. Preserve exact garment colors, patterns and design. Ensure the complete garment is fully visible including both sleeves. IMPORTANT: always tuck the shirt completely inside the pants. When wearing a jacket or blazer, always show the shirt collar and shirt cuffs visibly underneath. Clean white studio background with soft warm lighting.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
@@ -50,7 +50,7 @@ export async function POST(request) {
           prompt,
           seed,
           resolution: '2k',
-          generation_mode: 'balanced',
+          generation_mode: 'quality',
         }
       }),
     })
