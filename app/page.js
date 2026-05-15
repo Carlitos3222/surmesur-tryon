@@ -240,15 +240,6 @@ const CATALOGUE = {
       { id: 'j4', nom_fr: 'Veston Crème Été', image: `${BASE_URL}/jacket-4.jpeg`, prix: '$610', desc: 'Cotton Linen · Relaxed Fit' },
     ]
   },
-  coats: {
-    label: 'Manteaux', label_en: 'Coats', icon: '🧣', categorie: 'tops',
-    items: [
-      { id: 'c1', nom_fr: 'Manteau Camel Premium', image: `${BASE_URL}/coat-1.jpeg`, prix: '$1,200', desc: 'Cashmere Blend · Mid-Length' },
-      { id: 'c2', nom_fr: 'Manteau Laine Tan', image: `${BASE_URL}/coat-2.jpeg`, prix: '$1,350', desc: 'Pure Wool · Full Length' },
-      { id: 'c3', nom_fr: 'Pardessus Noir Élégant', image: `${BASE_URL}/coat-3.jpeg`, prix: '$1,280', desc: 'Wool Cashmere · Slim Fit' },
-      { id: 'c4', nom_fr: 'Manteau Gris Anthracite', image: `${BASE_URL}/coat-4.jpeg`, prix: '$1,180', desc: 'Wool Blend · Classic Cut' },
-    ]
-  },
   shirts: {
     label: 'Chemises', label_en: 'Shirts', icon: '👔', categorie: 'tops',
     items: [
@@ -368,32 +359,7 @@ const OCCASIONS = [
         pieces: [
           { ...CATALOGUE.pants.items[3], _stepIdx: 0 },    // Jean Indigo
           { ...CATALOGUE.shirts.items[0], _stepIdx: 1 },   // Chemise Florale
-          { ...CATALOGUE.coats.items[0], _stepIdx: 2 },    // Manteau Camel
-        ]
-      },
-    ]
-  },
-  {
-    id: 'automne',
-    label: 'Automne / Hiver',
-    label_en: 'Fall / Winter',
-    icon: '🍂',
-    desc: 'Chaleur et élégance pour la saison froide',
-    outfits: [
-      {
-        nom: 'L\'Aristocrate Urbain',
-        pieces: [
-          { ...CATALOGUE.pants.items[1], _stepIdx: 0 },    // Pantalon Gris Flanelle
-          { ...CATALOGUE.shirts.items[3], _stepIdx: 1 },   // Chemise Carreaux
-          { ...CATALOGUE.coats.items[1], _stepIdx: 2 },    // Manteau Laine Tan
-        ]
-      },
-      {
-        nom: 'Le Gentleman d\'Hiver',
-        pieces: [
-          { ...CATALOGUE.pants.items[2], _stepIdx: 0 },    // Pantalon Navy
-          { ...CATALOGUE.shirts.items[1], _stepIdx: 1 },   // Chemise Blanche
-          { ...CATALOGUE.coats.items[2], _stepIdx: 2 },    // Pardessus Noir
+          { ...CATALOGUE.jackets.items[1], _stepIdx: 2 },  // Veston Tweed Brun
         ]
       },
     ]
