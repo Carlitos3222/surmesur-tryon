@@ -33,8 +33,14 @@ export async function POST(request) {
       return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
     }
 
-    // Prompt maximum — préservation morphologie absolue
-    const prompt = `ABSOLUTE PRIORITY — BODY PRESERVATION: The person's body shape MUST remain 100% identical to the original photo. This is non-negotiable. Do NOT slim the body. Do NOT reduce belly size. Do NOT narrow the waist. Do NOT thin the legs or arms. Do NOT idealize or beautify the body shape in any way. The generated image must show the EXACT same body weight, body width, belly shape, thigh thickness, arm thickness, and overall silhouette as the original photo. The clothing must stretch and conform to the real body — never alter the body to fit the clothing. Body shape preservation is more important than garment appearance. Preserve exact face, skin tone, hair, and expression. Preserve exact garment colors, patterns and textures. Show complete garment including both sleeves fully visible. Tuck shirt inside pants always. When jacket is worn, show shirt collar and cuffs underneath. White studio background, soft front lighting.`
+    // Prompt maximum — préservation morphologie absolue homme et femme
+    const prompt = `ABSOLUTE PRIORITY — FULL BODY PRESERVATION FOR ALL BODY TYPES (male and female): The person's complete body shape MUST remain 100% identical to the original photo. This is non-negotiable. 
+
+UPPER BODY: Do NOT slim the torso, chest, arms, or shoulders. Do NOT reduce belly size. Preserve exact body width and belly shape.
+
+LOWER BODY — CRITICAL: Do NOT slim, reshape, or alter the hips, waist, thighs, knees, calves, ankles, or feet in any way. Preserve the exact hip width, thigh thickness, calf size, and leg shape as seen in the original photo. Do NOT make legs thinner or longer. Do NOT narrow the hips. The pants or skirt must conform to the real leg and hip shape — never alter the lower body to fit the garment.
+
+GENERAL: Do NOT idealize or beautify the body shape in any way. The clothing must stretch and conform to the real body. Body shape preservation is the highest priority above all else. Preserve exact face, skin tone, hair, and expression. Preserve exact garment colors, patterns and textures. Show complete garment including both sleeves fully visible. Tuck shirt inside pants always. When jacket is worn, show shirt collar and cuffs underneath. White studio background, soft front lighting.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
