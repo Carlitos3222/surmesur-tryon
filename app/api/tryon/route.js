@@ -40,7 +40,9 @@ UPPER BODY: Do NOT slim the torso, chest, arms, or shoulders. Do NOT reduce bell
 
 LOWER BODY — CRITICAL: Do NOT slim, reshape, or alter the hips, waist, thighs, knees, calves, ankles, or feet in any way. Preserve the exact hip width, thigh thickness, calf size, and leg shape as seen in the original photo. Do NOT make legs thinner or longer. Do NOT narrow the hips. The pants or skirt must conform to the real leg and hip shape — never alter the lower body to fit the garment.
 
-GENERAL: Do NOT idealize or beautify the body shape in any way. The clothing must stretch and conform to the real body. Body shape preservation is the highest priority above all else. Preserve exact face, skin tone, hair, and expression. Preserve exact garment colors, patterns and textures. Show complete garment including both sleeves fully visible. Tuck shirt inside pants always. When jacket is worn, show shirt collar and cuffs underneath. White studio background, soft front lighting.`
+GARMENT FIDELITY — CRITICAL: Reproduce the garment with 100% exact fidelity to the product image. Do NOT alter, simplify, or reinterpret the garment in any way. Preserve exactly: the fabric texture and material appearance, every color and color variation, all patterns, stripes, checks, prints or motifs at exact scale and position, all buttons and their exact number, size, color and placement, all seams, stitching and construction details, all pockets and their exact position, lapels, collars, cuffs and their exact shape, any logos, labels or branding, the exact cut and silhouette of the garment. The garment in the output must be indistinguishable from the product image — any deviation is unacceptable.
+
+GENERAL: Do NOT idealize or beautify the body shape in any way. The clothing must stretch and conform to the real body. Preserve exact face, skin tone, hair, and expression. Tuck shirt inside pants always. When jacket is worn, show shirt collar and cuffs underneath. White studio background, soft front lighting.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
