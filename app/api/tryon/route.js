@@ -34,15 +34,30 @@ export async function POST(request) {
     }
 
     // Prompt maximum — préservation morphologie absolue homme et femme
-    const prompt = `ABSOLUTE PRIORITY — FULL BODY PRESERVATION FOR ALL BODY TYPES (male and female): The person's complete body shape MUST remain 100% identical to the original photo. This is non-negotiable. 
+    const prompt = `CRITICAL INSTRUCTION — BODY IDENTITY PRESERVATION:
 
-UPPER BODY: Do NOT slim the torso, chest, arms, or shoulders. Do NOT reduce belly size. Preserve exact body width and belly shape.
+The output image MUST show the exact same person with the exact same body. This is the highest priority rule that overrides everything else.
 
-LOWER BODY — CRITICAL: Do NOT slim, reshape, or alter the hips, waist, thighs, knees, calves, ankles, or feet in any way. Preserve the exact hip width, thigh thickness, calf size, and leg shape as seen in the original photo. Do NOT make legs thinner or longer. Do NOT narrow the hips. The pants or skirt must conform to the real leg and hip shape — never alter the lower body to fit the garment.
+MEASUREMENTS TO PRESERVE EXACTLY:
+- Total body height and proportions: identical to original
+- Leg length: exact same length as original — do NOT elongate or shorten legs
+- Leg width and thigh thickness: exact same width as original — do NOT slim legs
+- Torso width: exact same shoulder-to-shoulder width — do NOT narrow the chest or shoulders
+- Torso length: exact same distance from shoulder to waist — do NOT alter
+- Hip width: identical to original
+- Arm length and thickness: identical to original
+- Waist and belly shape: identical to original — do NOT reduce belly or waist size
+- Calf, ankle and foot size: identical to original
 
-GARMENT FIDELITY — CRITICAL: Reproduce the garment with 100% exact fidelity to the product image. Do NOT alter, simplify, or reinterpret the garment in any way. Preserve exactly: the fabric texture and material appearance, every color and color variation, all patterns, stripes, checks, prints or motifs at exact scale and position, all buttons and their exact number, size, color and placement, all seams, stitching and construction details, all pockets and their exact position, lapels, collars, cuffs and their exact shape, any logos, labels or branding, the exact cut and silhouette of the garment. The garment in the output must be indistinguishable from the product image — any deviation is unacceptable.
+BODY TYPE RULE: If the person appears athletic, muscular, slim, average, overweight, or any body type — preserve that body type 100% unchanged. Do NOT apply any body idealization, slimming, elongation, or beautification of any kind.
 
-GENERAL: Do NOT idealize or beautify the body shape in any way. The clothing must stretch and conform to the real body. Preserve exact face, skin tone, hair, and expression. Tuck shirt inside pants always. When jacket is worn, show shirt collar and cuffs underneath. White studio background, soft front lighting.`
+FACE AND IDENTITY: Preserve exact face, skin tone, hair color, hair style, beard, and facial expression unchanged.
+
+GARMENT RULE: The garment must conform to the real body shape. Never alter the body to fit the garment. The garment stretches and adapts to the person — not the other way around.
+
+GARMENT FIDELITY: Reproduce exact fabric texture, colors, patterns, buttons, seams, pockets, lapels, and all construction details with 100% accuracy. The garment must be indistinguishable from the product image.
+
+Always tuck shirt inside pants. Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
