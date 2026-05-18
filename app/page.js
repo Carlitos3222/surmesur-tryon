@@ -1285,25 +1285,68 @@ export default function SurmesurTryOn() {
 
                             {/* Morphologie */}
                             <div style={{ gridColumn: '1 / -1' }}>
-                              <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>MORPHOLOGIE · BODY TYPE</div>
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                              <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.5rem' }}>MORPHOLOGIE · BODY TYPE</div>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
                                 {[
-                                  { id: 'mince', label: 'Mince', sub: 'Slim · Delgado/a' },
-                                  { id: 'athletic', label: 'Athlétique', sub: 'Athletic · Atlético/a' },
-                                  { id: 'moyen', label: 'Moyen', sub: 'Average · Promedio' },
-                                  { id: 'costaud', label: 'Costaud', sub: 'Stocky · Corpulento/a' },
-                                  { id: 'enveloppe', label: 'Enveloppé', sub: 'Full · Robusto/a' },
-                                  { id: 'poire', label: 'Poire', sub: 'Pear · Pera' },
-                                  { id: 'sablier', label: 'Sablier', sub: 'Hourglass · Reloj de arena' },
-                                  { id: 'rectangle', label: 'Rectangle', sub: 'Rectangle · Rectángulo' },
-                                  { id: 'pomme', label: 'Pomme', sub: 'Apple · Manzana' },
-                                ].map(morph => (
-                                  <button key={morph.id} onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
-                                    style={{ padding: '0.5rem 0.35rem', border: mensurations.morphologie === morph.id ? '2px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.morphologie === morph.id ? '#fffbf0' : '#fff', cursor: 'pointer', borderRadius: '3px', textAlign: 'center' }}>
-                                    <div style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: mensurations.morphologie === morph.id ? '#C9A96E' : '#555', fontWeight: mensurations.morphologie === morph.id ? 600 : 400 }}>{morph.label}</div>
-                                    <div style={{ fontSize: '0.52rem', color: '#bbb', fontFamily: 'sans-serif', marginTop: '0.1rem' }}>{morph.sub}</div>
-                                  </button>
-                                ))}
+                                  {
+                                    id: 'mince', label: 'Mince', sub: 'Slim',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><rect x="15" y="18" width="10" height="28" rx="4" fill="currentColor"/><rect x="13" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-8 13 18)"/><rect x="23" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(8 27 18)"/><rect x="15" y="44" width="4" height="26" rx="2" fill="currentColor" transform="rotate(-3 15 44)"/><rect x="21" y="44" width="4" height="26" rx="2" fill="currentColor" transform="rotate(3 25 44)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M14 18 Q20 22 26 18 L28 42 Q20 46 12 42 Z" fill="currentColor"/><rect x="11" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-10 11 18)"/><rect x="25" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(10 29 18)"/><rect x="14" y="42" width="5" height="28" rx="2" fill="currentColor" transform="rotate(-2 14 42)"/><rect x="21" y="42" width="5" height="28" rx="2" fill="currentColor" transform="rotate(2 25 42)"/></svg>
+                                  },
+                                  {
+                                    id: 'athletic', label: 'Athlétique', sub: 'Athletic',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M11 18 Q20 16 29 18 L27 44 Q20 46 13 44 Z" fill="currentColor"/><rect x="9" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(-12 9 18)"/><rect x="26" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(12 31 18)"/><rect x="13" y="43" width="6" height="27" rx="2" fill="currentColor" transform="rotate(-3 13 43)"/><rect x="21" y="43" width="6" height="27" rx="2" fill="currentColor" transform="rotate(3 27 43)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M12 18 Q20 15 28 18 L30 36 Q24 44 16 44 L10 36 Z" fill="currentColor"/><rect x="9" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-12 9 18)"/><rect x="27" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(12 31 18)"/><rect x="14" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(-3 14 43)"/><rect x="21" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(3 26 43)"/></svg>
+                                  },
+                                  {
+                                    id: 'moyen', label: 'Moyen', sub: 'Average',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M13 18 Q20 17 27 18 L26 44 Q20 46 14 44 Z" fill="currentColor"/><rect x="11" y="18" width="4" height="21" rx="2" fill="currentColor" transform="rotate(-10 11 18)"/><rect x="25" y="18" width="4" height="21" rx="2" fill="currentColor" transform="rotate(10 29 18)"/><rect x="14" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(-3 14 43)"/><rect x="21" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(3 26 43)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M13 18 Q20 16 27 18 L29 36 Q22 44 18 44 L11 36 Z" fill="currentColor"/><rect x="11" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-10 11 18)"/><rect x="25" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(10 29 18)"/><rect x="14" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(-3 14 43)"/><rect x="21" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(3 26 43)"/></svg>
+                                  },
+                                  {
+                                    id: 'costaud', label: 'Costaud', sub: 'Stocky',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="8" ry="7" fill="currentColor"/><path d="M9 18 Q20 15 31 18 L29 44 Q20 47 11 44 Z" fill="currentColor"/><rect x="7" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(-14 7 18)"/><rect x="28" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(14 33 18)"/><rect x="12" y="43" width="7" height="27" rx="2" fill="currentColor" transform="rotate(-3 12 43)"/><rect x="21" y="43" width="7" height="27" rx="2" fill="currentColor" transform="rotate(3 28 43)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="8" ry="7" fill="currentColor"/><path d="M10 18 Q20 15 30 18 L33 36 Q24 48 16 48 L7 36 Z" fill="currentColor"/><rect x="8" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-14 8 18)"/><rect x="28" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(14 32 18)"/><rect x="13" y="46" width="6" height="24" rx="2" fill="currentColor" transform="rotate(-3 13 46)"/><rect x="21" y="46" width="6" height="24" rx="2" fill="currentColor" transform="rotate(3 27 46)"/></svg>
+                                  },
+                                  {
+                                    id: 'enveloppe', label: 'Enveloppé', sub: 'Full',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="8" ry="7" fill="currentColor"/><path d="M8 18 Q20 14 32 18 L34 46 Q20 50 6 46 Z" fill="currentColor"/><rect x="6" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(-16 6 18)"/><rect x="29" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(16 34 18)"/><rect x="11" y="45" width="7" height="25" rx="2" fill="currentColor" transform="rotate(-4 11 45)"/><rect x="22" y="45" width="7" height="25" rx="2" fill="currentColor" transform="rotate(4 29 45)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="8" ry="7" fill="currentColor"/><path d="M9 18 Q20 14 31 18 L35 38 Q24 52 16 52 L5 38 Z" fill="currentColor"/><rect x="7" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-16 7 18)"/><rect x="29" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(16 33 18)"/><rect x="13" y="50" width="6" height="20" rx="2" fill="currentColor" transform="rotate(-4 13 50)"/><rect x="21" y="50" width="6" height="20" rx="2" fill="currentColor" transform="rotate(4 27 50)"/></svg>
+                                  },
+                                  {
+                                    id: 'poire', label: 'Poire', sub: 'Pear',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M14 18 Q20 18 26 18 L28 32 Q26 46 12 46 L12 32 Z" fill="currentColor"/><rect x="12" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-8 12 18)"/><rect x="24" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(8 28 18)"/><rect x="12" y="44" width="6" height="26" rx="2" fill="currentColor" transform="rotate(-4 12 44)"/><rect x="22" y="44" width="6" height="26" rx="2" fill="currentColor" transform="rotate(4 28 44)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M15 18 Q20 17 25 18 L27 30 Q32 44 20 50 Q8 44 13 30 Z" fill="currentColor"/><rect x="13" y="18" width="4" height="18" rx="2" fill="currentColor" transform="rotate(-8 13 18)"/><rect x="23" y="18" width="4" height="18" rx="2" fill="currentColor" transform="rotate(8 27 18)"/><rect x="13" y="48" width="5" height="22" rx="2" fill="currentColor" transform="rotate(-4 13 48)"/><rect x="22" y="48" width="5" height="22" rx="2" fill="currentColor" transform="rotate(4 27 48)"/></svg>
+                                  },
+                                  {
+                                    id: 'sablier', label: 'Sablier', sub: 'Hourglass',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M11 18 Q20 15 29 18 L24 34 Q20 36 16 34 L11 18Z" fill="currentColor"/><path d="M16 34 Q20 36 24 34 L29 48 Q20 52 11 48 Z" fill="currentColor"/><rect x="9" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-12 9 18)"/><rect x="27" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(12 31 18)"/><rect x="12" y="46" width="6" height="24" rx="2" fill="currentColor" transform="rotate(-3 12 46)"/><rect x="22" y="46" width="6" height="24" rx="2" fill="currentColor" transform="rotate(3 28 46)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M12 18 Q20 14 28 18 L24 32 Q20 34 16 32 L12 18Z" fill="currentColor"/><path d="M16 32 Q20 34 24 32 L30 48 Q20 54 10 48 Z" fill="currentColor"/><rect x="10" y="18" width="4" height="18" rx="2" fill="currentColor" transform="rotate(-12 10 18)"/><rect x="26" y="18" width="4" height="18" rx="2" fill="currentColor" transform="rotate(12 30 18)"/><rect x="12" y="47" width="6" height="23" rx="2" fill="currentColor" transform="rotate(-3 12 47)"/><rect x="22" y="47" width="6" height="23" rx="2" fill="currentColor" transform="rotate(3 28 47)"/></svg>
+                                  },
+                                  {
+                                    id: 'rectangle', label: 'Rectangle', sub: 'Rectangle',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><rect x="13" y="18" width="14" height="26" rx="3" fill="currentColor"/><rect x="11" y="18" width="4" height="22" rx="2" fill="currentColor" transform="rotate(-9 11 18)"/><rect x="25" y="18" width="4" height="22" rx="2" fill="currentColor" transform="rotate(9 29 18)"/><rect x="14" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(-2 14 43)"/><rect x="21" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(2 26 43)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><rect x="14" y="18" width="12" height="26" rx="3" fill="currentColor"/><rect x="12" y="18" width="4" height="22" rx="2" fill="currentColor" transform="rotate(-9 12 18)"/><rect x="24" y="18" width="4" height="22" rx="2" fill="currentColor" transform="rotate(9 28 18)"/><rect x="14" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(-2 14 43)"/><rect x="21" y="43" width="5" height="27" rx="2" fill="currentColor" transform="rotate(2 26 43)"/></svg>
+                                  },
+                                  {
+                                    id: 'pomme', label: 'Pomme', sub: 'Apple',
+                                    svgH: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M10 18 Q20 14 30 18 L32 38 Q20 42 8 38 Z" fill="currentColor"/><rect x="8" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-14 8 18)"/><rect x="28" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(14 32 18)"/><rect x="14" y="40" width="5" height="30" rx="2" fill="currentColor" transform="rotate(-3 14 40)"/><rect x="21" y="40" width="5" height="30" rx="2" fill="currentColor" transform="rotate(3 26 40)"/></svg>,
+                                    svgF: <svg viewBox="0 0 40 80" width="32" height="64"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><path d="M11 18 Q20 13 29 18 L33 36 Q20 42 7 36 Z" fill="currentColor"/><rect x="9" y="18" width="4" height="18" rx="2" fill="currentColor" transform="rotate(-14 9 18)"/><rect x="27" y="18" width="4" height="18" rx="2" fill="currentColor" transform="rotate(14 31 18)"/><rect x="14" y="40" width="5" height="30" rx="2" fill="currentColor" transform="rotate(-3 14 40)"/><rect x="21" y="40" width="5" height="30" rx="2" fill="currentColor" transform="rotate(3 26 40)"/></svg>
+                                  },
+                                ].map(morph => {
+                                  const isSel = mensurations.morphologie === morph.id
+                                  const isFemme = mensurations.genre === 'Femme'
+                                  return (
+                                    <button key={morph.id} onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
+                                      style={{ padding: '0.75rem 0.35rem', border: isSel ? '2px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#fffbf0' : '#fff', cursor: 'pointer', borderRadius: '4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem' }}>
+                                      <div style={{ color: isSel ? '#C9A96E' : '#ccc', lineHeight: 0 }}>
+                                        {isFemme ? morph.svgF : morph.svgH}
+                                      </div>
+                                      <div style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: isSel ? '#C9A96E' : '#555', fontWeight: isSel ? 600 : 400, lineHeight: 1.2 }}>{morph.label}</div>
+                                      <div style={{ fontSize: '0.52rem', color: '#bbb', fontFamily: 'sans-serif' }}>{morph.sub}</div>
+                                    </button>
+                                  )
+                                })}
                               </div>
                             </div>
 
