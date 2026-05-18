@@ -1011,6 +1011,13 @@ export default function SurmesurTryOn() {
               </div>
             </div>
 
+            {/* Avertissement IA — mobile uniquement, sous la photo chargée */}
+            {isMobile && (
+              <div style={{ fontSize: '0.6rem', color: '#aaa', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.6, padding: '0.5rem 0.75rem', marginBottom: '0.75rem', background: '#fafaf8', border: '1px solid #e8e4df', borderRadius: '3px' }}>
+                ℹ Aperçu IA — approximation visuelle. Couleurs et ajustements réels peuvent différer. · <em>AI preview — actual fit may vary.</em>
+              </div>
+            )}
+
             {/* AUTO-GENERATE PROGRESS */}
             {autoGenerating && (
               <div style={s.autoProgress}>
