@@ -395,6 +395,17 @@ export default function SurmesurTryOn() {
   const [showSurpriseModal, setShowSurpriseModal] = useState(false)
   const [selectedOccasion, setSelectedOccasion] = useState(null)
 
+  // Mensurations optionnelles
+  const [mensurations, setMensurations] = useState({
+    genre: '',
+    taille: '',
+    tailleUnit: 'cm',
+    poids: '',
+    poidsUnit: 'kg',
+    morphologie: '',
+  })
+  const [showMensurationsForm, setShowMensurationsForm] = useState(false)
+
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
@@ -486,7 +497,7 @@ export default function SurmesurTryOn() {
   }
 
   // Génération unique
-  const generateOne = async (item, modelSource, photoClientFile) => {
+  const generateOne = async (item, modelSource, photoClientFile, mensurationsData = null) => {
     const fd = new FormData()
     if (modelSource) {
       fd.append('model_url', modelSource)
@@ -496,6 +507,9 @@ export default function SurmesurTryOn() {
     fd.append('garment_url', item.image)
     fd.append('background_prompt', '')
     fd.append('seed', Math.floor(Math.random() * 1000000).toString())
+    if (mensurationsData) {
+      fd.append('mensurations', JSON.stringify(mensurationsData))
+    }
     const res = await fetch('/api/tryon', { method: 'POST', body: fd })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || 'Erreur API')
@@ -1191,6 +1205,124 @@ export default function SurmesurTryOn() {
                         </div>
                       </div>
                     )}
+                    {/* Formulaire mensurations optionnel */}
+                    <div style={{ marginTop: '1.25rem', marginBottom: '0.75rem', border: '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden' }}>
+                      <button
+                        onClick={() => setShowMensurationsForm(!showMensurationsForm)}
+                        style={{ width: '100%', padding: '0.75rem 1rem', background: showMensurationsForm ? '#fffbf0' : '#fafaf8', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: showMensurationsForm ? '1px solid #e8d8b8' : 'none' }}
+                      >
+                        <div style={{ textAlign: 'left' }}>
+                          <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', color: '#C9A96E', fontWeight: 600, letterSpacing: '0.1em' }}>✦ MENSURATIONS · OPTIONNEL</div>
+                          <div style={{ fontSize: '0.58rem', fontFamily: 'sans-serif', color: '#aaa', marginTop: '0.15rem' }}>Pour un résultat encore plus fidèle · For a more accurate result</div>
+                        </div>
+                        <span style={{ color: '#C9A96E', fontSize: '0.8rem' }}>{showMensurationsForm ? '▲' : '▼'}</span>
+                      </button>
+
+                      {showMensurationsForm && (
+                        <div style={{ padding: '1rem', background: '#fffbf0' }}>
+                          <div style={{ fontSize: '0.62rem', color: '#7a5c1e', fontFamily: 'sans-serif', lineHeight: 1.6, marginBottom: '1rem', padding: '0.6rem 0.75rem', background: '#fff8ee', border: '1px solid #e8d8b8', borderRadius: '3px' }}>
+                            ✦ Ces informations sont <strong>optionnelles mais recommandées</strong>. Elles permettent à notre IA de créer un résultat encore plus réaliste et fidèle à votre morphologie réelle. Elles seront également transmises à votre styliste pour préparer votre rendez-vous. · <em>Optional but recommended for best results.</em>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+
+                            {/* Genre */}
+                            <div style={{ gridColumn: '1 / -1' }}>
+                              <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>GENRE · GENDER</div>
+                              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                {['Homme', 'Femme', 'Autre'].map(g => (
+                                  <button key={g} onClick={() => setMensurations(m => ({ ...m, genre: g }))}
+                                    style={{ flex: 1, padding: '0.5rem', border: mensurations.genre === g ? '2px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#fffbf0' : '#fff', cursor: 'pointer', fontSize: '0.68rem', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '3px' }}>
+                                    {g}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Taille */}
+                            <div>
+                              <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>TAILLE · HEIGHT</div>
+                              <div style={{ display: 'flex', gap: '0.35rem' }}>
+                                <input
+                                  type="number"
+                                  placeholder={mensurations.tailleUnit === 'cm' ? 'ex: 180' : mensurations.tailleUnit === 'po' ? 'ex: 71' : 'ex: 5.11'}
+                                  value={mensurations.taille}
+                                  onChange={e => setMensurations(m => ({ ...m, taille: e.target.value }))}
+                                  style={{ flex: 1, padding: '0.45rem 0.6rem', border: '1px solid #e8e4df', borderRadius: '3px', fontSize: '0.75rem', fontFamily: 'sans-serif', outline: 'none' }}
+                                />
+                                <div style={{ display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+                                  {['cm', 'po', 'pi'].map(u => (
+                                    <button key={u} onClick={() => setMensurations(m => ({ ...m, tailleUnit: u }))}
+                                      style={{ padding: '0.45rem 0.5rem', border: 'none', background: mensurations.tailleUnit === u ? '#C9A96E' : '#fff', color: mensurations.tailleUnit === u ? '#fff' : '#888', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif' }}>
+                                      {u}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Poids */}
+                            <div>
+                              <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>POIDS · WEIGHT</div>
+                              <div style={{ display: 'flex', gap: '0.35rem' }}>
+                                <input
+                                  type="number"
+                                  placeholder={mensurations.poidsUnit === 'kg' ? 'ex: 80' : 'ex: 176'}
+                                  value={mensurations.poids}
+                                  onChange={e => setMensurations(m => ({ ...m, poids: e.target.value }))}
+                                  style={{ flex: 1, padding: '0.45rem 0.6rem', border: '1px solid #e8e4df', borderRadius: '3px', fontSize: '0.75rem', fontFamily: 'sans-serif', outline: 'none' }}
+                                />
+                                <div style={{ display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+                                  {['kg', 'lb'].map(u => (
+                                    <button key={u} onClick={() => setMensurations(m => ({ ...m, poidsUnit: u }))}
+                                      style={{ padding: '0.45rem 0.5rem', border: 'none', background: mensurations.poidsUnit === u ? '#C9A96E' : '#fff', color: mensurations.poidsUnit === u ? '#fff' : '#888', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif' }}>
+                                      {u}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Morphologie */}
+                            <div style={{ gridColumn: '1 / -1' }}>
+                              <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>MORPHOLOGIE · BODY TYPE</div>
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                                {[
+                                  { id: 'mince', label: 'Mince', sub: 'Slim · Delgado/a' },
+                                  { id: 'athletic', label: 'Athlétique', sub: 'Athletic · Atlético/a' },
+                                  { id: 'moyen', label: 'Moyen', sub: 'Average · Promedio' },
+                                  { id: 'costaud', label: 'Costaud', sub: 'Stocky · Corpulento/a' },
+                                  { id: 'enveloppe', label: 'Enveloppé', sub: 'Full · Robusto/a' },
+                                  { id: 'poire', label: 'Poire', sub: 'Pear · Pera' },
+                                  { id: 'sablier', label: 'Sablier', sub: 'Hourglass · Reloj de arena' },
+                                  { id: 'rectangle', label: 'Rectangle', sub: 'Rectangle · Rectángulo' },
+                                  { id: 'pomme', label: 'Pomme', sub: 'Apple · Manzana' },
+                                ].map(morph => (
+                                  <button key={morph.id} onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
+                                    style={{ padding: '0.5rem 0.35rem', border: mensurations.morphologie === morph.id ? '2px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.morphologie === morph.id ? '#fffbf0' : '#fff', cursor: 'pointer', borderRadius: '3px', textAlign: 'center' }}>
+                                    <div style={{ fontSize: '0.7rem', fontFamily: 'sans-serif', color: mensurations.morphologie === morph.id ? '#C9A96E' : '#555', fontWeight: mensurations.morphologie === morph.id ? 600 : 400 }}>{morph.label}</div>
+                                    <div style={{ fontSize: '0.52rem', color: '#bbb', fontFamily: 'sans-serif', marginTop: '0.1rem' }}>{morph.sub}</div>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                          </div>
+
+                          {/* Résumé si rempli */}
+                          {(mensurations.genre || mensurations.taille || mensurations.poids || mensurations.morphologie) && (
+                            <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: '#fff', border: '1px solid #C9A96E', borderRadius: '3px', fontSize: '0.62rem', color: '#7a5c1e', fontFamily: 'sans-serif' }}>
+                              ✦ Transmis au styliste :
+                              {mensurations.genre && ` ${mensurations.genre}`}
+                              {mensurations.taille && ` · ${mensurations.taille} ${mensurations.tailleUnit}`}
+                              {mensurations.poids && ` · ${mensurations.poids} ${mensurations.poidsUnit}`}
+                              {mensurations.morphologie && ` · Morphologie ${mensurations.morphologie}`}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
                     {(canAddMore || replaceMode !== null) ? (
                       generating ? (
                         <div style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', textAlign: 'center' }}>
