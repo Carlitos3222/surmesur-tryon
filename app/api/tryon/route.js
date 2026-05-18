@@ -1,11 +1,26 @@
 export async function POST(request) {
   try {
     const formData = await request.formData()
-    const modelImage = formData.get('model_image')   // File upload (première génération)
-    const modelUrl = formData.get('model_url')        // URL string (générations suivantes)
+    const modelImage = formData.get('model_image')
+    const modelUrl = formData.get('model_url')
     const garmentUrl = formData.get('garment_url')
     const backgroundPrompt = formData.get('background_prompt') || ''
     const seed = parseInt(formData.get('seed') || Math.floor(Math.random() * 1000000))
+    const mensurationsRaw = formData.get('mensurations')
+    const mensurations = mensurationsRaw ? JSON.parse(mensurationsRaw) : null
+
+    // Construire le contexte mensurations pour le prompt
+    let mensurationsContext = ''
+    if (mensurations) {
+      const parts = []
+      if (mensurations.genre) parts.push(`Gender: ${mensurations.genre}`)
+      if (mensurations.taille) parts.push(`Height: ${mensurations.taille} ${mensurations.tailleUnit}`)
+      if (mensurations.poids) parts.push(`Weight: ${mensurations.poids} ${mensurations.poidsUnit}`)
+      if (mensurations.morphologie) parts.push(`Body type: ${mensurations.morphologie}`)
+      if (parts.length > 0) {
+        mensurationsContext = `\n\nCLIENT MEASUREMENTS PROVIDED: ${parts.join(', ')}. Use these measurements to ensure the garment proportions are accurate for this specific person's body type and size.`
+      }
+    }
 
     if (!garmentUrl) {
       return Response.json({ error: 'Images manquantes' }, { status: 400 })
@@ -57,7 +72,7 @@ GARMENT RULE: The garment must conform to the real body shape. Never alter the b
 
 GARMENT FIDELITY: Reproduce exact fabric texture, colors, patterns, buttons, seams, pockets, lapels, and all construction details with 100% accuracy. The garment must be indistinguishable from the product image.
 
-Always tuck shirt inside pants. Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.`
+Always tuck shirt inside pants. Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.${mensurationsContext}`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
