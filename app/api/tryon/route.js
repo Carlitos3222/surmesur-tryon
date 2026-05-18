@@ -52,7 +52,29 @@ export async function POST(request) {
       }
     }
 
-    // Prompt maximum — préservation morphologie absolue + mensurations client
+    if (!garmentUrl) {
+      return Response.json({ error: 'Images manquantes' }, { status: 400 })
+    }
+
+    if (!modelImage && !modelUrl) {
+      return Response.json({ error: 'Photo du modèle manquante' }, { status: 400 })
+    }
+
+    const apiKey = process.env.FASHN_API_KEY
+    if (!apiKey || apiKey === 'ta-clé-ici') {
+      return Response.json({ error: 'Clé API non configurée' }, { status: 500 })
+    }
+
+    // Construire le model_image
+    let modelImageValue
+    if (modelImage && typeof modelImage === 'object' && modelImage.arrayBuffer) {
+      const buffer = await modelImage.arrayBuffer()
+      modelImageValue = `data:image/jpeg;base64,${Buffer.from(buffer).toString('base64')}`
+    } else if (modelUrl) {
+      modelImageValue = modelUrl
+    } else {
+      return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
+    }
     const prompt = `CRITICAL INSTRUCTION — BODY IDENTITY PRESERVATION:
 
 The output image MUST show the exact same person with the exact same body. This is the highest priority rule that overrides everything else.
