@@ -1003,11 +1003,6 @@ export default function SurmesurTryOn() {
                 <button style={s.changeBtn} onClick={() => { stopCamera(); setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
                   Changer la photo
                 </button>
-                {photoPreview && (
-                  <a href={photoPreview} download="ma-photo-surmesur.jpg" style={{ ...s.changeBtn, marginLeft: '0.75rem' }}>
-                    ⬇ Sauvegarder
-                  </a>
-                )}
               </div>
             </div>
 
@@ -1080,23 +1075,67 @@ export default function SurmesurTryOn() {
                 {currentResult && (
                   <>
                     <img src={currentResult} alt="Look généré" style={s.resultImg} />
-                    <button
-                      onClick={async () => {
-                        try {
-                          const res = await fetch(currentResult)
-                          const blob = await res.blob()
-                          const url = URL.createObjectURL(blob)
-                          const a = document.createElement('a')
-                          a.href = url
-                          a.download = `look-surmesur-etape-${activeResultIdx + 1}.png`
-                          a.click()
-                          URL.revokeObjectURL(url)
-                        } catch { window.open(currentResult, '_blank') }
-                      }}
-                      style={{ display: 'inline-block', marginTop: '0.6rem', fontSize: '0.68rem', color: '#C9A96E', fontFamily: 'sans-serif', letterSpacing: '0.1em', background: 'none', border: '1px solid #C9A96E', padding: '0.4rem 0.85rem', borderRadius: '2px', cursor: 'pointer' }}
-                    >
-                      {t.download}
-                    </button>
+
+                    {/* Boutons partage social */}
+                    <div style={{ marginTop: '1rem' }}>
+                      <div style={{ fontSize: '0.6rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.6rem' }}>
+                        ✦ PARTAGER MON LOOK · SHARE MY LOOK
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {[
+                          { label: 'Instagram', icon: '📸', color: '#E1306C', action: async () => {
+                            try {
+                              const res = await fetch(currentResult)
+                              const blob = await res.blob()
+                              const url = URL.createObjectURL(blob)
+                              const a = document.createElement('a')
+                              a.href = url
+                              a.download = `look-surmesur.png`
+                              a.click()
+                              URL.revokeObjectURL(url)
+                              setTimeout(() => window.open('https://www.instagram.com', '_blank'), 500)
+                            } catch { window.open('https://www.instagram.com', '_blank') }
+                          }},
+                          { label: 'Facebook', icon: '📘', color: '#1877F2', action: () => {
+                            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://surmesur-tryon.vercel.app')}&quote=${encodeURIComponent('Découvrez mon look Surmesur ✦ surmesur-tryon.vercel.app')}`, '_blank')
+                          }},
+                          { label: 'TikTok', icon: '🎵', color: '#000', action: async () => {
+                            try {
+                              const res = await fetch(currentResult)
+                              const blob = await res.blob()
+                              const url = URL.createObjectURL(blob)
+                              const a = document.createElement('a')
+                              a.href = url
+                              a.download = `look-surmesur.png`
+                              a.click()
+                              URL.revokeObjectURL(url)
+                              setTimeout(() => window.open('https://www.tiktok.com', '_blank'), 500)
+                            } catch { window.open('https://www.tiktok.com', '_blank') }
+                          }},
+                          { label: 'WhatsApp', icon: '💬', color: '#25D366', action: () => {
+                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`, '_blank')
+                          }},
+                          { label: 'Message', icon: '✉️', color: '#555', action: () => {
+                            window.location.href = `sms:?body=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`
+                          }},
+                          { label: 'iMessage', icon: '💙', color: '#34AADC', action: () => {
+                            window.location.href = `imessage:?body=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`
+                          }},
+                        ].map(({ label, icon, color, action }) => (
+                          <button
+                            key={label}
+                            onClick={action}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.45rem 0.75rem', background: '#fff', border: `1px solid ${color}`, borderRadius: '3px', cursor: 'pointer', fontSize: '0.65rem', fontFamily: 'sans-serif', color, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}
+                          >
+                            <span>{icon}</span>
+                            <span>{label}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: '0.55rem', color: '#bbb', fontFamily: 'sans-serif', marginTop: '0.5rem', fontStyle: 'italic' }}>
+                        ✦ Powered by Surmesur Virtual Try-On · surmesur-tryon.vercel.app
+                      </div>
+                    </div>
 
                     {/* Avertissement sous l'image générée — supprimé, déplacé sous le bouton Essayer */}
                   </>
