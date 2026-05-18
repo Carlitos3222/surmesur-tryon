@@ -945,15 +945,6 @@ export default function SurmesurTryOn() {
               </div>
             </div>
 
-            {/* Avertissement IA — page d'accueil */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', padding: '0.85rem 1rem', background: '#fafaf8', border: '1px solid #e8e4df', borderRadius: '3px', marginBottom: '1.5rem' }}>
-              <span style={{ color: '#aaa', fontSize: '0.75rem', flexShrink: 0, marginTop: '0.05rem' }}>ℹ</span>
-              <div style={{ fontSize: '0.65rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.7 }}>
-                <span style={{ fontWeight: 600, color: '#666' }}>Aperçu virtuel · Virtual preview — </span>
-                Les images générées par l'IA sont des approximations visuelles destinées à vous aider à visualiser les pièces. Elles ne reproduisent pas à 100% les couleurs, textures ou ajustements réels. Le résultat final sur mesure sera toujours supérieur. · <em>AI-generated images are visual approximations to help you visualize the pieces. They do not 100% reproduce actual colors, textures or fit.</em>
-              </div>
-            </div>
-
             {!cameraActive && !photoConfirmation && (
               <>
                 <div style={s.uploadZone} onClick={() => fileInputRef.current?.click()}>
@@ -1100,13 +1091,7 @@ export default function SurmesurTryOn() {
                       {t.download}
                     </button>
 
-                    {/* Avertissement sous l'image générée */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginTop: '0.85rem', padding: '0.65rem 0.85rem', background: '#fafaf8', border: '1px solid #e8e4df', borderRadius: '3px' }}>
-                      <span style={{ color: '#bbb', fontSize: '0.7rem', flexShrink: 0 }}>ℹ</span>
-                      <div style={{ fontSize: '0.6rem', color: '#aaa', fontFamily: 'sans-serif', lineHeight: 1.6 }}>
-                        Aperçu virtuel — approximation visuelle générée par l'IA. Les couleurs, textures et ajustements réels peuvent différer. Le vêtement sur mesure sera toujours supérieur au résultat affiché. · <em>Virtual preview — AI approximation. Actual colors, textures and fit may differ.</em>
-                      </div>
-                    </div>
+                    {/* Avertissement sous l'image générée — supprimé, déplacé sous le bouton Essayer */}
                   </>
                 )}
                 <div style={s.thumbRow}>
@@ -1203,6 +1188,9 @@ export default function SurmesurTryOn() {
                           {replaceMode !== null ? t.btnReplace : t.btnTry}<br />
                           <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{replaceMode !== null ? t.btnReplaceSub : t.btnTrySub}</span>
                         </button>
+                        <div style={{ fontSize: '0.58rem', color: '#bbb', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.5rem', lineHeight: 1.5 }}>
+                          ℹ Aperçu IA — approximation visuelle. Couleurs et ajustements réels peuvent différer. · <em>AI preview — actual fit may vary.</em>
+                        </div>
                       )
                     ) : (
                       <div style={s.maxMsg}>
@@ -1294,12 +1282,17 @@ export default function SurmesurTryOn() {
                   </button>
                 )}
                 {!showSidebar && pendingItem && !isGenerating && (canAddMore || replaceMode !== null) && (
-                  <button
-                    style={{ flex: 2, padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
-                    onClick={handleGenerate}
-                  >
-                    {t.btnTry.split(' ')[0]} →
-                  </button>
+                  <div style={{ flex: 2, display: 'flex', flexDirection: 'column' }}>
+                    <button
+                      style={{ padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
+                      onClick={handleGenerate}
+                    >
+                      {t.btnTry.split(' ')[0]} →
+                    </button>
+                    <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.2rem', lineHeight: 1.4 }}>
+                      ℹ Aperçu IA · actual fit may vary
+                    </div>
+                  </div>
                 )}
               </div>
             </>
