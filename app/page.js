@@ -945,6 +945,15 @@ export default function SurmesurTryOn() {
               </div>
             </div>
 
+            {/* Avertissement IA — page d'accueil */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', padding: '0.85rem 1rem', background: '#fafaf8', border: '1px solid #e8e4df', borderRadius: '3px', marginBottom: '1.5rem' }}>
+              <span style={{ color: '#aaa', fontSize: '0.75rem', flexShrink: 0, marginTop: '0.05rem' }}>ℹ</span>
+              <div style={{ fontSize: '0.65rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.7 }}>
+                <span style={{ fontWeight: 600, color: '#666' }}>Aperçu virtuel · Virtual preview — </span>
+                Les images générées par l'IA sont des approximations visuelles destinées à vous aider à visualiser les pièces. Elles ne reproduisent pas à 100% les couleurs, textures ou ajustements réels. Le résultat final sur mesure sera toujours supérieur. · <em>AI-generated images are visual approximations to help you visualize the pieces. They do not 100% reproduce actual colors, textures or fit.</em>
+              </div>
+            </div>
+
             {!cameraActive && !photoConfirmation && (
               <>
                 <div style={s.uploadZone} onClick={() => fileInputRef.current?.click()}>
@@ -1090,6 +1099,14 @@ export default function SurmesurTryOn() {
                     >
                       {t.download}
                     </button>
+
+                    {/* Avertissement sous l'image générée */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginTop: '0.85rem', padding: '0.65rem 0.85rem', background: '#fafaf8', border: '1px solid #e8e4df', borderRadius: '3px' }}>
+                      <span style={{ color: '#bbb', fontSize: '0.7rem', flexShrink: 0 }}>ℹ</span>
+                      <div style={{ fontSize: '0.6rem', color: '#aaa', fontFamily: 'sans-serif', lineHeight: 1.6 }}>
+                        Aperçu virtuel — approximation visuelle générée par l'IA. Les couleurs, textures et ajustements réels peuvent différer. Le vêtement sur mesure sera toujours supérieur au résultat affiché. · <em>Virtual preview — AI approximation. Actual colors, textures and fit may differ.</em>
+                      </div>
+                    </div>
                   </>
                 )}
                 <div style={s.thumbRow}>
