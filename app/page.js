@@ -1167,6 +1167,102 @@ export default function SurmesurTryOn() {
                     : `${generations.length}/${MAX_GENERATIONS} ${t.step2Sub}`}
                 </div>
 
+                {/* Formulaire mensurations mobile — entre titre et catalogue */}
+                {isMobile && (
+                  <div style={{ marginBottom: '1rem', border: '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden' }}>
+                    <button
+                      onClick={() => setShowMensurationsForm(!showMensurationsForm)}
+                      style={{ width: '100%', padding: '0.75rem 1rem', background: showMensurationsForm ? '#fffbf0' : '#fafaf8', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: showMensurationsForm ? '1px solid #e8d8b8' : 'none' }}
+                    >
+                      <div style={{ textAlign: 'left' }}>
+                        <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', color: '#C9A96E', fontWeight: 600, letterSpacing: '0.1em' }}>✦ MENSURATIONS · OPTIONNEL</div>
+                        <div style={{ fontSize: '0.58rem', fontFamily: 'sans-serif', color: '#aaa', marginTop: '0.15rem' }}>Pour un résultat encore plus fidèle</div>
+                      </div>
+                      <span style={{ color: '#C9A96E', fontSize: '0.8rem' }}>{showMensurationsForm ? '▲' : '▼'}</span>
+                    </button>
+
+                    {showMensurationsForm && (
+                      <div style={{ padding: '1rem', background: '#fffbf0' }}>
+                        <div style={{ fontSize: '0.62rem', color: '#fff', fontFamily: 'sans-serif', lineHeight: 1.6, marginBottom: '1rem', padding: '0.6rem 0.75rem', background: '#000', border: '1px solid #C9A96E', borderRadius: '3px' }}>
+                          <span style={{ color: '#C9A96E' }}>✦</span> Ces informations sont <strong>optionnelles mais recommandées</strong>. Elles permettent à notre IA de créer un résultat plus réaliste et fidèle à votre morphologie.
+                        </div>
+
+                        {/* Genre */}
+                        <div style={{ marginBottom: '0.75rem' }}>
+                          <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>GENRE</div>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            {['Homme', 'Femme', 'Autre'].map(g => (
+                              <button key={g} onClick={() => setMensurations(m => ({ ...m, genre: g }))}
+                                style={{ flex: 1, padding: '0.5rem', border: mensurations.genre === g ? '2px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#fffbf0' : '#fff', cursor: 'pointer', fontSize: '0.68rem', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '3px' }}>
+                                {g}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Taille + Poids */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                          <div>
+                            <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>TAILLE</div>
+                            <div style={{ display: 'flex', gap: '0.35rem' }}>
+                              <input type="number" placeholder={mensurations.tailleUnit === 'cm' ? '180' : '71'} value={mensurations.taille}
+                                onChange={e => setMensurations(m => ({ ...m, taille: e.target.value }))}
+                                style={{ flex: 1, padding: '0.45rem 0.4rem', border: '1px solid #e8e4df', borderRadius: '3px', fontSize: '0.75rem', fontFamily: 'sans-serif', outline: 'none', minWidth: 0 }} />
+                              <div style={{ display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+                                {['cm', 'po'].map(u => (
+                                  <button key={u} onClick={() => setMensurations(m => ({ ...m, tailleUnit: u }))}
+                                    style={{ padding: '0.45rem 0.4rem', border: 'none', background: mensurations.tailleUnit === u ? '#C9A96E' : '#fff', color: mensurations.tailleUnit === u ? '#fff' : '#888', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif' }}>
+                                    {u}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>POIDS</div>
+                            <div style={{ display: 'flex', gap: '0.35rem' }}>
+                              <input type="number" placeholder={mensurations.poidsUnit === 'kg' ? '80' : '176'} value={mensurations.poids}
+                                onChange={e => setMensurations(m => ({ ...m, poids: e.target.value }))}
+                                style={{ flex: 1, padding: '0.45rem 0.4rem', border: '1px solid #e8e4df', borderRadius: '3px', fontSize: '0.75rem', fontFamily: 'sans-serif', outline: 'none', minWidth: 0 }} />
+                              <div style={{ display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+                                {['kg', 'lb'].map(u => (
+                                  <button key={u} onClick={() => setMensurations(m => ({ ...m, poidsUnit: u }))}
+                                    style={{ padding: '0.45rem 0.4rem', border: 'none', background: mensurations.poidsUnit === u ? '#C9A96E' : '#fff', color: mensurations.poidsUnit === u ? '#fff' : '#888', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif' }}>
+                                    {u}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Morphologie mobile */}
+                        <div>
+                          <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.5rem' }}>MORPHOLOGIE</div>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                            {['mince', 'moyen', 'athletic', 'poire', 'costaud', 'enveloppe'].map(id => {
+                              const labels = { mince: 'Mince', moyen: 'Moyen', athletic: 'Athlétique', poire: 'Poire', costaud: 'Costaud', enveloppe: 'Enveloppé' }
+                              const isSel = mensurations.morphologie === id
+                              return (
+                                <button key={id} onClick={() => setMensurations(m => ({ ...m, morphologie: id }))}
+                                  style={{ padding: '0.6rem 0.35rem', border: isSel ? '2px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#fffbf0' : '#fff', cursor: 'pointer', borderRadius: '3px', textAlign: 'center', fontSize: '0.68rem', fontFamily: 'sans-serif', color: isSel ? '#C9A96E' : '#555', fontWeight: isSel ? 600 : 400 }}>
+                                  {labels[id]}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
+
+                        {(mensurations.genre || mensurations.taille || mensurations.poids || mensurations.morphologie) && (
+                          <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: '#fff', border: '1px solid #C9A96E', borderRadius: '3px', fontSize: '0.62rem', color: '#7a5c1e', fontFamily: 'sans-serif' }}>
+                            ✦ {mensurations.genre}{mensurations.taille && ` · ${mensurations.taille} ${mensurations.tailleUnit}`}{mensurations.poids && ` · ${mensurations.poids} ${mensurations.poidsUnit}`}{mensurations.morphologie && ` · ${mensurations.morphologie}`}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div style={s.catalogLabel}>{t.catalogLabel} · {CATALOGUE[activeTab].label.toUpperCase()}</div>
                 <div style={s.tabs}>
                   {Object.entries(CATALOGUE).map(([key, cat]) => (
@@ -1472,17 +1568,12 @@ export default function SurmesurTryOn() {
                   </button>
                 )}
                 {!showSidebar && pendingItem && !isGenerating && (canAddMore || replaceMode !== null) && (
-                  <div style={{ flex: 2, display: 'flex', flexDirection: 'column' }}>
-                    <button
-                      style={{ padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
-                      onClick={handleGenerate}
-                    >
-                      {t.btnTry.split(' ')[0]} →
-                    </button>
-                    <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.2rem', lineHeight: 1.4 }}>
-                      ℹ Aperçu IA · actual fit may vary
-                    </div>
-                  </div>
+                  <button
+                    style={{ flex: 2, padding: '0.85rem', background: '#C9A96E', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.1em', fontFamily: 'sans-serif' }}
+                    onClick={handleGenerate}
+                  >
+                    {t.btnTry.split(' ')[0]} →
+                  </button>
                 )}
               </div>
             </>
