@@ -23,7 +23,7 @@ const T = {
     heroSub: 'Try our collections from the comfort of your home',
     stat1: 'LOOKS MAX',
     stat2: 'PIÈCES',
-    stat3: 'SUR MESURE',
+    stat3: 'SURMESUR',
     step1Title: 'Votre photo',
     step1Sub: 'Pour un résultat fidèle à votre silhouette · For a result true to your silhouette',
     guideTitle: 'LA PHOTO PARFAITE',
@@ -79,7 +79,7 @@ const T = {
     surpriseTry: '✦ ESSAYER CE LOOK →',
     etape: 'Étape',
     step: 'Step',
-    loadingMsgs: ['Analyse de votre silhouette...', 'Application du tissu sur mesure...', 'Ajustement des proportions...', 'Calibration des couleurs...', 'Finalisation de votre look...', 'Dernières retouches en cours...'],
+    loadingMsgs: ['Analyse de votre silhouette...', 'Application du tissu Surmesur...', 'Ajustement des proportions...', 'Calibration des couleurs...', 'Finalisation de votre look...', 'Dernières retouches en cours...'],
     emailSubject: 'Sélection client Surmesur Try-On',
     emailBody: (items, total, city) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
   },
@@ -91,7 +91,7 @@ const T = {
     heroSub: 'Essayez nos collections dans le confort de votre foyer',
     stat1: 'LOOKS MAX',
     stat2: 'PIECES',
-    stat3: 'MADE TO MEASURE',
+    stat3: 'SURMESUR',
     step1Title: 'Your photo',
     step1Sub: 'For a result true to your silhouette · Pour un résultat fidèle à votre silhouette',
     guideTitle: 'THE PERFECT PHOTO',
@@ -159,7 +159,7 @@ const T = {
     heroSub: 'Try our collections from the comfort of your home',
     stat1: 'LOOKS MÁX',
     stat2: 'PIEZAS',
-    stat3: 'A MEDIDA',
+    stat3: 'SURMESUR',
     step1Title: 'Tu foto',
     step1Sub: 'Para un resultado fiel a tu silueta · For a result true to your silhouette',
     guideTitle: 'LA FOTO PERFECTA',
@@ -359,7 +359,7 @@ const MAX_GENERATIONS = 3
 
 const LOADING_MESSAGES = [
   { fr: 'Analyse de votre silhouette...', en: 'Analyzing your silhouette...' },
-  { fr: 'Application du tissu sur mesure...', en: 'Applying the custom fabric...' },
+  { fr: 'Application du tissu Surmesur...', en: 'Applying the custom fabric...' },
   { fr: 'Ajustement des proportions...', en: 'Adjusting proportions...' },
   { fr: 'Calibration des couleurs...', en: 'Calibrating colors...' },
   { fr: 'Finalisation de votre look...', en: 'Finalizing your look...' },
@@ -867,7 +867,7 @@ export default function SurmesurTryOn() {
                   ✦ CRÉER MON LOOK {selectedOccasion.label.toUpperCase()}<br />
                   <span style={{ fontSize: '0.6rem', opacity: 0.8 }}>
                     {selectedOccasion.suitOnly
-                      ? 'Complet sur mesure · ~30 secondes'
+                      ? 'Complet Surmesur · ~30 secondes'
                       : 'Génération automatique en 3 étapes · ~90 secondes'}
                   </span>
                 </button>
