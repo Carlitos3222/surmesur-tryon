@@ -270,23 +270,12 @@ const OCCASIONS = [
     label_en: 'Wedding',
     icon: '💍',
     desc: 'Élégance intemporelle pour le grand jour',
+    suitOnly: true, // ← flag spécial : génère uniquement un complet en 1 seule image
     outfits: [
-      {
-        nom: 'Le Marié Impeccable',
-        pieces: [
-          { ...CATALOGUE.pants.items[1], _stepIdx: 0 },    // Pantalon Gris Flanelle
-          { ...CATALOGUE.shirts.items[1], _stepIdx: 1 },   // Chemise Blanche Classique
-          { ...CATALOGUE.suits.items[0], _stepIdx: 2 },    // Complet Bleu Pétrole
-        ]
-      },
-      {
-        nom: 'L\'Invité Distingué',
-        pieces: [
-          { ...CATALOGUE.pants.items[2], _stepIdx: 0 },    // Pantalon Navy
-          { ...CATALOGUE.shirts.items[1], _stepIdx: 1 },   // Chemise Blanche
-          { ...CATALOGUE.jackets.items[0], _stepIdx: 2 },  // Blazer Lin Cobalt
-        ]
-      },
+      { nom: 'Le Marié Impeccable', pieces: [{ ...CATALOGUE.suits.items[0], _stepIdx: 0 }] },
+      { nom: 'L\'Aristocrate', pieces: [{ ...CATALOGUE.suits.items[1], _stepIdx: 0 }] },
+      { nom: 'Le Prince de Galles', pieces: [{ ...CATALOGUE.suits.items[2], _stepIdx: 0 }] },
+      { nom: 'Le Gentleman Chevron', pieces: [{ ...CATALOGUE.suits.items[3], _stepIdx: 0 }] },
     ]
   },
   {
@@ -521,7 +510,45 @@ export default function SurmesurTryOn() {
 
     // Choisir un outfit aléatoire pour l'occasion
     const outfit = occasion.outfits[Math.floor(Math.random() * occasion.outfits.length)]
-    const pieces = outfit.pieces // [pantalon, chemise, veston/manteau]
+
+    // ── CAS SPÉCIAL MARIAGE : complet uniquement, 1 seule génération ──
+    if (occasion.suitOnly) {
+      // Choisir un complet au hasard parmi les 4
+      const suits = CATALOGUE.suits.items
+      const suit = suits[Math.floor(Math.random() * suits.length)]
+
+      setAutoGenerating(true)
+      setAutoTotal(1)
+      setAutoStep(1)
+      setGenerations([])
+      setSidebarItems([])
+      setActiveResultIdx(0)
+      setProgress(0)
+      setLoadingMsg(0)
+
+      const piv = setInterval(() => setProgress(p => p < 85 ? p + Math.random() * 2.5 : p), 800)
+      const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
+
+      try {
+        const resultUrl = await generateOne(suit, null, photoClient)
+        clearInterval(piv); clearInterval(msgiv)
+        setProgress(100)
+        setGenerations([{ item: suit, resultUrl }])
+        setSidebarItems([{ ...suit, _stepIdx: 0 }])
+        setActiveResultIdx(0)
+      } catch (err) {
+        clearInterval(piv); clearInterval(msgiv)
+        setError(err.message)
+      }
+
+      setAutoGenerating(false)
+      setAutoStep(0)
+      setTimeout(() => resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300)
+      return
+    }
+
+    // ── CAS NORMAL : pantalon → chemise → veston (3 générations séquentielles) ──
+    const pieces = outfit.pieces
 
     setAutoGenerating(true)
     setAutoTotal(pieces.length)
@@ -818,17 +845,33 @@ export default function SurmesurTryOn() {
                   <span style={s.occasionIcon}>{occ.icon}</span>
                   <div style={s.occasionLabel}>{occ.label}</div>
                   <div style={s.occasionDesc}>{occ.desc}</div>
+                  {occ.suitOnly && (
+                    <div style={{ marginTop: '0.4rem', fontSize: '0.55rem', fontFamily: 'sans-serif', color: '#C9A96E', letterSpacing: '0.1em', background: 'rgba(201,169,110,0.1)', padding: '0.2rem 0.4rem', borderRadius: '2px', display: 'inline-block' }}>
+                      COMPLET UNIQUEMENT
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
             {selectedOccasion && (
-              <button
-                style={{ ...s.btnSurprise, marginTop: '1.5rem', marginBottom: 0 }}
-                onClick={() => handleSurpriseGenerate(selectedOccasion)}
-              >
-                ✦ CRÉER MON LOOK {selectedOccasion.label.toUpperCase()}<br />
-                <span style={{ fontSize: '0.6rem', opacity: 0.8 }}>Génération automatique en 3 étapes · ~90 secondes</span>
-              </button>
+              <>
+                {selectedOccasion.suitOnly && (
+                  <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: '#fffbf0', border: '1px solid #e8d8b8', borderRadius: '3px', fontSize: '0.7rem', fontFamily: 'sans-serif', color: '#7a5c1e', lineHeight: 1.6 }}>
+                    ✦ Pour le mariage, notre styliste IA sélectionnera le complet idéal et le placera directement sur vous — en une seule génération. Élégance garantie.
+                  </div>
+                )}
+                <button
+                  style={{ ...s.btnSurprise, marginTop: '1rem', marginBottom: 0 }}
+                  onClick={() => handleSurpriseGenerate(selectedOccasion)}
+                >
+                  ✦ CRÉER MON LOOK {selectedOccasion.label.toUpperCase()}<br />
+                  <span style={{ fontSize: '0.6rem', opacity: 0.8 }}>
+                    {selectedOccasion.suitOnly
+                      ? 'Complet sur mesure · ~30 secondes'
+                      : 'Génération automatique en 3 étapes · ~90 secondes'}
+                  </span>
+                </button>
+              </>
             )}
             <button
               style={{ ...s.btnRestart, marginTop: '0.75rem' }}
