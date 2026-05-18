@@ -1184,13 +1184,15 @@ export default function SurmesurTryOn() {
                           <div style={{ fontSize: '0.6rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.4rem' }}>{Math.round(progress)}% · {t.aiWorking}</div>
                         </div>
                       ) : (
-                        <button style={pendingItem ? s.btnTry : s.btnTryDisabled} onClick={pendingItem ? handleGenerate : undefined} disabled={!pendingItem}>
-                          {replaceMode !== null ? t.btnReplace : t.btnTry}<br />
-                          <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{replaceMode !== null ? t.btnReplaceSub : t.btnTrySub}</span>
-                        </button>
-                        <div style={{ fontSize: '0.58rem', color: '#bbb', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.5rem', lineHeight: 1.5 }}>
-                          ℹ Aperçu IA — approximation visuelle. Couleurs et ajustements réels peuvent différer. · <em>AI preview — actual fit may vary.</em>
-                        </div>
+                        <>
+                          <button style={pendingItem ? s.btnTry : s.btnTryDisabled} onClick={pendingItem ? handleGenerate : undefined} disabled={!pendingItem}>
+                            {replaceMode !== null ? t.btnReplace : t.btnTry}<br />
+                            <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{replaceMode !== null ? t.btnReplaceSub : t.btnTrySub}</span>
+                          </button>
+                          <div style={{ fontSize: '0.58rem', color: '#bbb', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.5rem', lineHeight: 1.5 }}>
+                            ℹ Aperçu IA — approximation visuelle. Couleurs et ajustements réels peuvent différer. · <em>AI preview — actual fit may vary.</em>
+                          </div>
+                        </>
                       )
                     ) : (
                       <div style={s.maxMsg}>
