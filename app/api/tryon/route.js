@@ -9,52 +9,56 @@ export async function POST(request) {
     const mensurationsRaw = formData.get('mensurations')
     const mensurations = mensurationsRaw ? JSON.parse(mensurationsRaw) : null
 
-    // Construire le contexte mensurations pour le prompt
-    let mensurationsContext = ''
+    // Construire le bloc mensurations enrichi
+    let mensurationsBlock = ''
+    let mensurationsReinforcement = ''
     if (mensurations) {
       const parts = []
-      if (mensurations.genre) parts.push(`Gender: ${mensurations.genre}`)
-      if (mensurations.taille) parts.push(`Height: ${mensurations.taille} ${mensurations.tailleUnit}`)
-      if (mensurations.poids) parts.push(`Weight: ${mensurations.poids} ${mensurations.poidsUnit}`)
-      if (mensurations.morphologie) parts.push(`Body type: ${mensurations.morphologie}`)
+      if (mensurations.genre) {
+        const genreEN = mensurations.genre === 'Homme' ? 'male' : mensurations.genre === 'Femme' ? 'female' : 'non-binary'
+        parts.push(`Gender: ${genreEN}`)
+      }
+      if (mensurations.taille) {
+        // Convertir en cm pour uniformité
+        let tailleVal = parseFloat(mensurations.taille)
+        let tailleCm = tailleVal
+        if (mensurations.tailleUnit === 'po') tailleCm = Math.round(tailleVal * 2.54)
+        if (mensurations.tailleUnit === 'pi') tailleCm = Math.round(tailleVal * 30.48)
+        parts.push(`Height: ${tailleCm} cm`)
+        mensurationsReinforcement += `The person is ${tailleCm} cm tall — preserve this exact height in the output. Do NOT make them appear taller or shorter. `
+      }
+      if (mensurations.poids) {
+        let poidsVal = parseFloat(mensurations.poids)
+        let poidsKg = mensurations.poidsUnit === 'lb' ? Math.round(poidsVal * 0.453) : poidsVal
+        parts.push(`Weight: ${poidsKg} kg`)
+        mensurationsReinforcement += `The person weighs ${poidsKg} kg — preserve this exact body weight and mass in the output. Do NOT slim or reshape their body. `
+      }
+      if (mensurations.morphologie) {
+        const morphoMap = {
+          mince: 'slim / thin body type with narrow frame',
+          moyen: 'average / medium body type',
+          athletic: 'athletic / muscular body type with broad shoulders',
+          poire: 'pear-shaped body type with wider hips than shoulders',
+          costaud: 'stocky / broad body type with large frame',
+          enveloppe: 'full / overweight body type with rounded silhouette',
+        }
+        const morphoEN = morphoMap[mensurations.morphologie] || mensurations.morphologie
+        parts.push(`Body type: ${morphoEN}`)
+        mensurationsReinforcement += `The person has a ${morphoEN} — the generated image MUST reflect this body type accurately and visibly. `
+      }
+
       if (parts.length > 0) {
-        mensurationsContext = `\n\nCLIENT MEASUREMENTS PROVIDED: ${parts.join(', ')}. Use these measurements to ensure the garment proportions are accurate for this specific person's body type and size.`
+        mensurationsBlock = `\n\nVERIFIED CLIENT MEASUREMENTS — MANDATORY COMPLIANCE:\n${parts.join('\n')}\n${mensurationsReinforcement}\nThese measurements were provided by the client and MUST be respected in the output. Any deviation from these measurements is unacceptable.`
       }
     }
 
-    if (!garmentUrl) {
-      return Response.json({ error: 'Images manquantes' }, { status: 400 })
-    }
-
-    if (!modelImage && !modelUrl) {
-      return Response.json({ error: 'Photo du modèle manquante' }, { status: 400 })
-    }
-
-    const apiKey = process.env.FASHN_API_KEY
-    if (!apiKey || apiKey === 'ta-clé-ici') {
-      return Response.json({ error: 'Clé API non configurée' }, { status: 500 })
-    }
-
-    // Construire le model_image : soit base64 depuis fichier, soit URL directe
-    let modelImageValue
-    if (modelImage && typeof modelImage === 'object' && modelImage.arrayBuffer) {
-      // C'est un fichier uploadé — convertir en base64
-      const buffer = await modelImage.arrayBuffer()
-      modelImageValue = `data:image/jpeg;base64,${Buffer.from(buffer).toString('base64')}`
-    } else if (modelUrl) {
-      // C'est une URL — l'envoyer directement à Fashn.ai
-      modelImageValue = modelUrl
-    } else {
-      return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
-    }
-
-    // Prompt maximum — préservation morphologie absolue homme et femme
+    // Prompt maximum — préservation morphologie absolue + mensurations client
     const prompt = `CRITICAL INSTRUCTION — BODY IDENTITY PRESERVATION:
 
 The output image MUST show the exact same person with the exact same body. This is the highest priority rule that overrides everything else.
 
 MEASUREMENTS TO PRESERVE EXACTLY:
-- Total body height and proportions: identical to original
+- Total body height and proportions: identical to original photo
 - Leg length: exact same length as original — do NOT elongate or shorten legs
 - Leg width and thigh thickness: exact same width as original — do NOT slim legs
 - Torso width: exact same shoulder-to-shoulder width — do NOT narrow the chest or shoulders
@@ -72,7 +76,7 @@ GARMENT RULE: The garment must conform to the real body shape. Never alter the b
 
 GARMENT FIDELITY: Reproduce exact fabric texture, colors, patterns, buttons, seams, pockets, lapels, and all construction details with 100% accuracy. The garment must be indistinguishable from the product image.
 
-Always tuck shirt inside pants. Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.${mensurationsContext}`
+Always tuck shirt inside pants. Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.${mensurationsBlock}`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
