@@ -81,7 +81,7 @@ const T = {
     step: 'Step',
     loadingMsgs: ['Analyse de votre silhouette...', 'Application du tissu Surmesur...', 'Ajustement des proportions...', 'Calibration des couleurs...', 'Finalisation de votre look...', 'Dernières retouches en cours...'],
     emailSubject: 'Sélection client Surmesur Try-On',
-    emailBody: (items, total, city) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
+    emailBody: (items, total, city, mens) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}${mens}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
   },
   en: {
     tagline: 'VIRTUAL TECHNOLOGY · VIRTUAL TRY-ON',
@@ -149,7 +149,7 @@ const T = {
     step: 'Step',
     loadingMsgs: ['Analyzing your silhouette...', 'Applying the custom fabric...', 'Adjusting proportions...', 'Calibrating colors...', 'Finalizing your look...', 'Last finishing touches...'],
     emailSubject: 'Surmesur Try-On Client Selection',
-    emailBody: (items, total, city) => `Hello,\n\nA client from the ${city} boutique made a selection via the Surmesur Try-On app.\n\nCLIENT SELECTION:\n\n${items}\n\nESTIMATED TOTAL: ${total}\n\nPlease prepare this file for the appointment.\n\nBest regards,\nSurmesur Try-On`,
+    emailBody: (items, total, city, mens) => `Hello,\n\nA client from the ${city} boutique made a selection via the Surmesur Try-On app.\n\nCLIENT SELECTION:\n\n${items}\n\nESTIMATED TOTAL: ${total}${mens}\n\nPlease prepare this file for the appointment.\n\nBest regards,\nSurmesur Try-On`,
   },
   es: {
     tagline: 'TECNOLOGÍA VIRTUAL · VIRTUAL TRY-ON',
@@ -217,7 +217,7 @@ const T = {
     step: 'Step',
     loadingMsgs: ['Analizando tu silueta...', 'Aplicando la tela a medida...', 'Ajustando proporciones...', 'Calibrando colores...', 'Finalizando tu look...', 'Últimos retoques...'],
     emailSubject: 'Selección cliente Surmesur Try-On',
-    emailBody: (items, total, city) => `Hola,\n\nUn cliente de la boutique ${city} ha realizado una selección en la app Surmesur Try-On.\n\nSELECCIÓN DEL CLIENTE:\n\n${items}\n\nTOTAL ESTIMADO: ${total}\n\nPor favor prepare este expediente para la cita.\n\nAtentamente,\nSurmesur Try-On`,
+    emailBody: (items, total, city, mens) => `Hola,\n\nUn cliente de la boutique ${city} ha realizado una selección en la app Surmesur Try-On.\n\nSELECCIÓN DEL CLIENTE:\n\n${items}\n\nTOTAL ESTIMADO: ${total}${mens}\n\nPor favor prepare este expediente para la cita.\n\nAtentamente,\nSurmesur Try-On`,
   }
 }
 
@@ -681,8 +681,20 @@ export default function SurmesurTryOn() {
       const resultLine = gen?.resultUrl ? `\n  Look : ${gen.resultUrl}` : ''
       return `• ${it.nom_fr} — ${it.prix}\n  Photo : ${it.image}${resultLine}`
     }).join('\n\n')
+
+    // Bloc mensurations si disponibles
+    let mensBlock = ''
+    if (mensurations.genre || mensurations.taille || mensurations.poids || mensurations.morphologie) {
+      const morphoLabels = { mince: 'Mince', moyen: 'Moyen', athletic: 'Athlétique', poire: 'Poire', costaud: 'Costaud', enveloppe: 'Enveloppé' }
+      mensBlock = '\n\nMENSURATIONS DU CLIENT :'
+      if (mensurations.genre) mensBlock += `\n  Genre : ${mensurations.genre}`
+      if (mensurations.taille) mensBlock += `\n  Taille : ${mensurations.taille} ${mensurations.tailleUnit}`
+      if (mensurations.poids) mensBlock += `\n  Poids : ${mensurations.poids} ${mensurations.poidsUnit}`
+      if (mensurations.morphologie) mensBlock += `\n  Morphologie : ${morphoLabels[mensurations.morphologie] || mensurations.morphologie}`
+    }
+
     const subject = encodeURIComponent(t.emailSubject)
-    const body = encodeURIComponent(t.emailBody(itemsList, formatPrice(totalPrice), cityName))
+    const body = encodeURIComponent(t.emailBody(itemsList, formatPrice(totalPrice), cityName, mensBlock))
     window.location.href = `mailto:${vendorEmail}?subject=${subject}&body=${body}`
   }
 
