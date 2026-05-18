@@ -1083,7 +1083,7 @@ export default function SurmesurTryOn() {
                       </div>
                       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                         {[
-                          { label: 'Instagram', icon: '📸', color: '#E1306C', action: async () => {
+                          { label: 'Télécharger', icon: '⬇', color: '#C9A96E', action: async () => {
                             try {
                               const res = await fetch(currentResult)
                               const blob = await res.blob()
@@ -1093,33 +1093,13 @@ export default function SurmesurTryOn() {
                               a.download = `look-surmesur.png`
                               a.click()
                               URL.revokeObjectURL(url)
-                              setTimeout(() => window.open('https://www.instagram.com', '_blank'), 500)
-                            } catch { window.open('https://www.instagram.com', '_blank') }
-                          }},
-                          { label: 'Facebook', icon: '📘', color: '#1877F2', action: () => {
-                            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://surmesur-tryon.vercel.app')}&quote=${encodeURIComponent('Découvrez mon look Surmesur ✦ surmesur-tryon.vercel.app')}`, '_blank')
-                          }},
-                          { label: 'TikTok', icon: '🎵', color: '#000', action: async () => {
-                            try {
-                              const res = await fetch(currentResult)
-                              const blob = await res.blob()
-                              const url = URL.createObjectURL(blob)
-                              const a = document.createElement('a')
-                              a.href = url
-                              a.download = `look-surmesur.png`
-                              a.click()
-                              URL.revokeObjectURL(url)
-                              setTimeout(() => window.open('https://www.tiktok.com', '_blank'), 500)
-                            } catch { window.open('https://www.tiktok.com', '_blank') }
+                            } catch { window.open(currentResult, '_blank') }
                           }},
                           { label: 'WhatsApp', icon: '💬', color: '#25D366', action: () => {
                             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`, '_blank')
                           }},
                           { label: 'Message', icon: '✉️', color: '#555', action: () => {
                             window.location.href = `sms:?body=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`
-                          }},
-                          { label: 'iMessage', icon: '💙', color: '#34AADC', action: () => {
-                            window.location.href = `imessage:?body=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`
                           }},
                         ].map(({ label, icon, color, action }) => (
                           <button
