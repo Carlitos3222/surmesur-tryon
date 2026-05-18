@@ -1220,8 +1220,8 @@ export default function SurmesurTryOn() {
 
                       {showMensurationsForm && (
                         <div style={{ padding: '1rem', background: '#fffbf0' }}>
-                          <div style={{ fontSize: '0.62rem', color: '#C9A96E', fontFamily: 'sans-serif', lineHeight: 1.6, marginBottom: '1rem', padding: '0.6rem 0.75rem', background: '#000', border: '1px solid #C9A96E', borderRadius: '3px' }}>
-                            ✦ Ces informations sont <strong style={{ color: '#e8c87a' }}>optionnelles mais recommandées</strong>. Elles permettent à notre IA de créer un résultat encore plus réaliste et fidèle à votre morphologie réelle. Elles seront également transmises à votre styliste pour préparer votre rendez-vous. · <em>Optional but recommended for best results.</em>
+                          <div style={{ fontSize: '0.62rem', color: '#fff', fontFamily: 'sans-serif', lineHeight: 1.6, marginBottom: '1rem', padding: '0.6rem 0.75rem', background: '#000', border: '1px solid #C9A96E', borderRadius: '3px' }}>
+                            <span style={{ color: '#C9A96E' }}>✦</span> Ces informations sont <strong style={{ color: '#fff' }}>optionnelles mais recommandées</strong>. Elles permettent à notre IA de créer un résultat encore plus réaliste et fidèle à votre morphologie réelle. Elles seront également transmises à votre styliste pour préparer votre rendez-vous. · <em>Optional but recommended for best results.</em>
                           </div>
 
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
