@@ -493,6 +493,7 @@ export default function SurmesurTryOn() {
       stopCamera()
       setPhotoConfirmation(null)
       setPhase('build')
+      window.scrollTo({ top: 0, behavior: 'instant' })
     }, 'image/jpeg', 0.9)
   }
 
@@ -984,7 +985,7 @@ export default function SurmesurTryOn() {
                 </div>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => {
                   const f = e.target.files?.[0]; if (!f) return
-                  setPhotoClient(f); setPhotoPreview(URL.createObjectURL(f)); setPhase('build')
+                  setPhotoClient(f); setPhotoPreview(URL.createObjectURL(f)); setPhase('build'); window.scrollTo({ top: 0, behavior: 'instant' })
                 }} style={{ display: 'none' }} />
               </>
             )}
