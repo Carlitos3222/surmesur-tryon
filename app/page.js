@@ -978,6 +978,9 @@ export default function SurmesurTryOn() {
                   <div style={s.uploadIcon}>✦</div>
                   <div style={s.uploadTxt}>{t.uploadTxt}</div>
                   <div style={s.uploadSub}>{t.uploadSub}</div>
+                  <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.5rem' }}>
+                    {{ fr: 'Votre photo est utilisée uniquement pour générer votre look et n\'est pas stockée sur nos serveurs.', en: 'Your photo is used solely to generate your look and is not stored on our servers.', es: 'Tu foto se usa únicamente para generar tu look y no se almacena en nuestros servidores.' }[lang]}
+                  </div>
                 </div>
                 <div style={s.btnRow}>
                   <button style={s.btnBlack} onClick={startCamera}>{t.btnCamera}</button>
