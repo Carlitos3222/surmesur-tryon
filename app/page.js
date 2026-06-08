@@ -238,6 +238,11 @@ const CATALOGUE = {
       { id: 'j2', nom_fr: 'Veston Tweed Brun', image: `${BASE_URL}/jacket-2.jpeg`, prix: '$720', desc: 'British Tweed · Notch Lapel' },
       { id: 'j3', nom_fr: 'Blazer Navy Structuré', image: `${BASE_URL}/jacket-3.jpeg`, prix: '$695', desc: 'Wool Blend · Double Breasted' },
       { id: 'j4', nom_fr: 'Veston Crème Été', image: `${BASE_URL}/jacket-4.jpeg`, prix: '$610', desc: 'Cotton Linen · Relaxed Fit' },
+      { id: 'j5', nom_fr: 'Blazer Sarcelle Loro Piana', image: `${BASE_URL}/jacket-5.jpeg`, prix: '$890', desc: 'Wool-Silk-Linen · Loro Piana' },
+      { id: 'j6', nom_fr: 'Veston Ivoire Glen Plaid', image: `${BASE_URL}/jacket-6.jpeg`, prix: '$780', desc: 'Pure Wool · Glen Plaid' },
+      { id: 'j7', nom_fr: 'Blazer Prune Windowpane', image: `${BASE_URL}/jacket-7.jpeg`, prix: '$820', desc: 'Pure Wool · REDA Milano' },
+      { id: 'j8', nom_fr: 'Blazer Navy Glen Plaid', image: `${BASE_URL}/jacket-8.jpeg`, prix: '$840', desc: 'Super 100s · Drago Biella' },
+      { id: 'j9', nom_fr: 'Veston Gris Micro-Carreaux', image: `${BASE_URL}/jacket-9.jpeg`, prix: '$760', desc: 'Pure Wool · Holland & Sherry' },
     ]
   },
   shirts: {
