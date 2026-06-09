@@ -238,11 +238,11 @@ const CATALOGUE = {
       { id: 'j2', nom_fr: 'Veston Tweed Brun', image: `${BASE_URL}/jacket-2.jpeg`, prix: '$720', desc: 'British Tweed · Notch Lapel' },
       { id: 'j3', nom_fr: 'Blazer Navy Structuré', image: `${BASE_URL}/jacket-3.jpeg`, prix: '$695', desc: 'Wool Blend · Double Breasted' },
       { id: 'j4', nom_fr: 'Veston Crème Été', image: `${BASE_URL}/jacket-4.jpeg`, prix: '$610', desc: 'Cotton Linen · Relaxed Fit' },
-      { id: 'j5', nom_fr: 'Blazer Sarcelle Loro Piana', image: `${BASE_URL}/jacket-5.jpeg`, prix: '$890', desc: 'Wool-Silk-Linen · Loro Piana' },
-      { id: 'j6', nom_fr: 'Veston Ivoire Glen Plaid', image: `${BASE_URL}/jacket-6.jpeg`, prix: '$780', desc: 'Pure Wool · Glen Plaid' },
-      { id: 'j7', nom_fr: 'Blazer Prune Windowpane', image: `${BASE_URL}/jacket-7.jpeg`, prix: '$820', desc: 'Pure Wool · REDA Milano' },
-      { id: 'j8', nom_fr: 'Blazer Navy Glen Plaid', image: `${BASE_URL}/jacket-8.jpeg`, prix: '$840', desc: 'Super 100s · Drago Biella' },
-      { id: 'j9', nom_fr: 'Veston Gris Micro-Carreaux', image: `${BASE_URL}/jacket-9.jpeg`, prix: '$760', desc: 'Pure Wool · Holland & Sherry' },
+      { id: 'j5', nom_fr: 'Blazer Sarcelle Loro Piana', image: `${BASE_URL}/jacket-5.jpeg`, tissu: `${BASE_URL}/tissu-5.jpeg`, prix: '$890', desc: 'Wool-Silk-Linen · Loro Piana' },
+      { id: 'j6', nom_fr: 'Veston Ivoire Glen Plaid', image: `${BASE_URL}/jacket-6.jpeg`, tissu: `${BASE_URL}/tissu-6.jpeg`, prix: '$780', desc: 'Pure Wool · Glen Plaid' },
+      { id: 'j7', nom_fr: 'Blazer Prune Windowpane', image: `${BASE_URL}/jacket-7.jpeg`, tissu: `${BASE_URL}/tissu-7.jpeg`, prix: '$820', desc: 'Pure Wool · REDA Milano' },
+      { id: 'j8', nom_fr: 'Blazer Navy Glen Plaid', image: `${BASE_URL}/jacket-8.jpeg`, tissu: `${BASE_URL}/tissu-8.jpeg`, prix: '$840', desc: 'Super 100s · Drago Biella' },
+      { id: 'j9', nom_fr: 'Veston Gris Micro-Carreaux', image: `${BASE_URL}/jacket-9.jpeg`, tissu: `${BASE_URL}/tissu-9.jpeg`, prix: '$760', desc: 'Pure Wool · Holland & Sherry' },
     ]
   },
   shirts: {
@@ -760,6 +760,8 @@ export default function SurmesurTryOn() {
     grid: { display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill,minmax(140px,1fr))', gap: '0.85rem', marginBottom: '1.5rem' },
     card: (sel) => ({ border: sel ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', background: sel ? '#fffef8' : '#fff', position: 'relative', transition: 'border-color 0.15s' }),
     cardImg: { width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' },
+    cardImgWrap: { position: 'relative', lineHeight: 0 },
+    cardSwatch: { position: 'absolute', bottom: '8px', left: '8px', width: '46px', height: '46px', objectFit: 'cover', borderRadius: '6px', border: '2px solid #fff', boxShadow: '0 2px 8px rgba(0,0,0,0.3)' },
     cardInfo: { padding: '0.5rem' },
     cardName: { fontSize: '0.75rem', fontWeight: 400, marginBottom: '0.15rem', lineHeight: 1.2 },
     cardDesc: { fontSize: '0.58rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.25rem' },
@@ -1320,7 +1322,10 @@ export default function SurmesurTryOn() {
                     const isSel = pendingItem?.id === item.id
                     return (
                       <div key={item.id} style={s.card(isSel)} onClick={() => { setPendingItem(item); setError(null) }}>
-                        <img src={item.image} alt={item.nom_fr} style={s.cardImg} />
+                        <div style={s.cardImgWrap}>
+                          <img src={item.image} alt={item.nom_fr} style={s.cardImg} />
+                          {item.tissu && <img src={item.tissu} alt="Tissu" title="Aperçu du tissu" style={s.cardSwatch} />}
+                        </div>
                         {isSel && <div style={s.checkBadge}>✓</div>}
                         <div style={s.cardInfo}>
                           <div style={s.cardName}>{item.nom_fr}</div>
