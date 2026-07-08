@@ -50,6 +50,7 @@ const T = {
     catalogLabel: 'CATALOGUE',
     currentLook: 'VOTRE LOOK ACTUEL · YOUR CURRENT LOOK',
     download: '⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD',
+    regenerate: '↻ Régénérer cette image',
     replaceMode: 'Mode remplacement — Étape',
     cancelReplace: 'Annuler',
     btnTry: 'ESSAYER CETTE PIÈCE',
@@ -118,6 +119,7 @@ const T = {
     catalogLabel: 'CATALOGUE',
     currentLook: 'YOUR CURRENT LOOK · VOTRE LOOK ACTUEL',
     download: '⬇ DOWNLOAD THIS LOOK · TÉLÉCHARGER',
+    regenerate: '↻ Regenerate this image',
     replaceMode: 'Replace mode — Step',
     cancelReplace: 'Cancel',
     btnTry: 'TRY THIS PIECE',
@@ -186,6 +188,7 @@ const T = {
     catalogLabel: 'CATÁLOGO',
     currentLook: 'TU LOOK ACTUAL · YOUR CURRENT LOOK',
     download: '⬇ DESCARGAR ESTE LOOK · DOWNLOAD',
+    regenerate: '↻ Regenerar esta imagen',
     replaceMode: 'Modo reemplazo — Paso',
     cancelReplace: 'Cancelar',
     btnTry: 'PROBAR ESTA PRENDA',
@@ -668,6 +671,45 @@ export default function SurmesurTryOn() {
     }
   }
 
+  // Régénérer la dernière image (même pièce, nouveau rendu)
+  // Repart TOUJOURS de la dernière bonne image (l'étape précédente), jamais de l'image rejetée.
+  const handleRegenerate = async () => {
+    const idx = generations.length - 1
+    const gen = generations[idx]
+    if (!gen || isGenerating) return
+
+    setGenerating(true); setError(null); setProgress(0); setLoadingMsg(0)
+    const piv = setInterval(() => setProgress(p => p < 85 ? p + Math.random() * 2.5 : p), 800)
+    const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
+
+    try {
+      // Base = résultat de l'étape précédente (dernière bonne image), ou photo d'origine si 1re pièce
+      const baseUrl = idx === 0 ? null : generations[idx - 1]?.resultUrl
+
+      const fd = new FormData()
+      if (baseUrl) {
+        fd.append('model_url', baseUrl)
+      } else {
+        fd.append('model_image', photoClient)
+      }
+      fd.append('garment_url', gen.item.image)
+      fd.append('background_prompt', '')
+      fd.append('seed', Math.floor(Math.random() * 1000000).toString())
+
+      const res = await fetch('/api/tryon', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Erreur API')
+
+      setProgress(100)
+      setGenerations(prev => { const next = [...prev]; next[idx] = { item: gen.item, resultUrl: data.output }; return next })
+      setActiveResultIdx(idx)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      clearInterval(piv); clearInterval(msgiv); setGenerating(false)
+    }
+  }
+
   const removeFromSidebar = (stepIdx) => setSidebarItems(prev => prev.filter(it => it._stepIdx !== stepIdx))
   const startReplace = (stepIdx) => { setReplaceMode(stepIdx); setPendingItem(null); setError(null); window.scrollTo({ top: 0, behavior: 'smooth' }) }
   const cancelReplace = () => { setReplaceMode(null); setPendingItem(null) }
@@ -734,6 +776,7 @@ export default function SurmesurTryOn() {
     btnBlack: { flex: 1, padding: '1.1rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.12em', fontFamily: 'sans-serif' },
     btnOutline: { flex: 1, padding: '1.1rem', background: 'transparent', color: '#000', border: '1px solid #000', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.12em', fontFamily: 'sans-serif' },
     btnGhost: { flex: 1, padding: '1.1rem', background: 'transparent', color: '#888', border: '1px solid #ddd', cursor: 'pointer', fontSize: '0.8rem', letterSpacing: '0.12em', fontFamily: 'sans-serif' },
+    btnRegen: { display: 'block', width: '100%', marginTop: '0.85rem', padding: '0.75rem', background: 'transparent', color: '#C9A96E', border: '1px solid #C9A96E', borderRadius: '3px', cursor: 'pointer', fontSize: '0.7rem', letterSpacing: '0.12em', fontFamily: 'sans-serif' },
     camWrap: { borderRadius: '4px', overflow: 'hidden', background: '#000', aspectRatio: '4/3' },
     camVideo: { width: '100%', height: '100%', objectFit: 'cover' },
     camHint: { fontSize: '0.68rem', color: '#C9A96E', fontFamily: 'sans-serif', fontStyle: 'italic', textAlign: 'center', padding: '0.4rem' },
@@ -1112,6 +1155,10 @@ export default function SurmesurTryOn() {
                 {currentResult && (
                   <>
                     <img src={currentResult} alt="Look généré" style={s.resultImg} />
+
+                    {activeResultIdx === generations.length - 1 && !isGenerating && replaceMode === null && (
+                      <button style={s.btnRegen} onClick={handleRegenerate}>{t.regenerate}</button>
+                    )}
 
                     {/* Boutons partage social */}
                     <div style={{ marginTop: '1rem' }}>
