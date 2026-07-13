@@ -756,18 +756,19 @@ export default function SurmesurTryOn() {
   // ─── STYLES ───────────────────────────────────────────────────────────────
   const s = {
     page: { minHeight: '100vh', background: '#fafaf8', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
+    pagePhoto: { minHeight: '100vh', backgroundColor: '#fafaf8', backgroundImage: `linear-gradient(rgba(250,250,248,0.60), rgba(250,250,248,0.74)), url(${BASE_URL}/accueil.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
     header: { background: '#000', padding: '1.1rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' },
     logo: { color: '#fff', fontSize: '1rem', letterSpacing: '0.35em', fontWeight: 300 },
     goldLine: { width: '50px', height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)' },
     photoWrap: { maxWidth: '860px', margin: '0 auto', padding: '3rem 2rem' },
-    hero: { textAlign: 'center', padding: '4.5rem 2rem 3.5rem', backgroundColor: '#12161a', backgroundImage: `linear-gradient(rgba(15,18,22,0.66), rgba(15,18,22,0.82)), url(${BASE_URL}/accueil.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', borderBottom: '1px solid #000', color: '#fff' },
+    hero: { textAlign: 'center', padding: '4rem 2rem 3rem', background: '#fff', borderBottom: '1px solid #e8e4df' },
     eyebrow: { fontSize: '0.72rem', letterSpacing: '0.28em', color: '#C9A96E', marginBottom: '1.2rem', fontFamily: 'sans-serif' },
-    title: { fontSize: 'clamp(2.2rem,5vw,4rem)', fontWeight: 300, lineHeight: 1.15, marginBottom: '0.8rem', color: '#fff' },
+    title: { fontSize: 'clamp(2.2rem,5vw,4rem)', fontWeight: 300, lineHeight: 1.15, marginBottom: '0.8rem' },
     gold: { color: '#C9A96E', fontStyle: 'italic' },
-    sub: { fontSize: '0.8rem', color: 'rgba(255,255,255,0.78)', fontFamily: 'sans-serif', marginBottom: '1.5rem' },
+    sub: { fontSize: '0.8rem', color: '#999', fontFamily: 'sans-serif', marginBottom: '1.5rem' },
     stats: { display: 'flex', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', marginTop: '0.5rem' },
     statN: { fontSize: '1.8rem', fontWeight: 300, color: '#C9A96E' },
-    statL: { fontSize: '0.65rem', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.6)', fontFamily: 'sans-serif' },
+    statL: { fontSize: '0.65rem', letterSpacing: '0.15em', color: '#aaa', fontFamily: 'sans-serif' },
     stepNum: { fontSize: '2.5rem', fontWeight: 300, color: '#e8e4df', lineHeight: 1 },
     stepTitle: { fontSize: '1.4rem', fontWeight: 300, marginBottom: '0.25rem' },
     stepSub: { fontSize: '0.72rem', color: '#888', fontFamily: 'sans-serif', marginBottom: '1.25rem' },
@@ -861,7 +862,7 @@ export default function SurmesurTryOn() {
   const SpinnerStyle = `@keyframes spin { to { transform: rotate(360deg) } }`
 
   return (
-    <div style={s.page}>
+    <div style={phase === 'photo' ? s.pagePhoto : s.page}>
       <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
       <style>{SpinnerStyle}</style>
 
