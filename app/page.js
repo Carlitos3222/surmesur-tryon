@@ -756,7 +756,7 @@ export default function SurmesurTryOn() {
   // ─── STYLES ───────────────────────────────────────────────────────────────
   const s = {
     page: { minHeight: '100vh', background: '#fafaf8', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
-    pagePhoto: { minHeight: '100vh', backgroundColor: '#fafaf8', backgroundImage: `linear-gradient(rgba(250,250,248,0.60), rgba(250,250,248,0.74)), url(${BASE_URL}/accueil.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
+    pagePhoto: { minHeight: '100vh', backgroundColor: '#fafaf8', backgroundImage: `linear-gradient(rgba(250,250,248,0.46), rgba(250,250,248,0.56)), url(${BASE_URL}/accueil.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
     header: { background: '#000', padding: '1.1rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' },
     logo: { color: '#fff', fontSize: '1rem', letterSpacing: '0.35em', fontWeight: 300 },
     goldLine: { width: '50px', height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)' },
@@ -772,7 +772,7 @@ export default function SurmesurTryOn() {
     stepNum: { fontSize: '2.5rem', fontWeight: 300, color: '#e8e4df', lineHeight: 1 },
     stepTitle: { fontSize: '1.4rem', fontWeight: 300, marginBottom: '0.25rem' },
     stepSub: { fontSize: '0.72rem', color: '#888', fontFamily: 'sans-serif', marginBottom: '1.25rem' },
-    uploadZone: { border: '1px dashed #ccc', borderRadius: '4px', padding: '4rem 2rem', textAlign: 'center', cursor: 'pointer', background: '#fafaf8', marginBottom: '1rem' },
+    uploadZone: { border: '1px dashed #ccc', borderRadius: '4px', padding: '4rem 2rem', textAlign: 'center', cursor: 'pointer', background: 'rgba(250,250,248,0.68)', marginBottom: '1rem' },
     uploadIcon: { fontSize: '2.5rem', color: '#C9A96E', marginBottom: '0.75rem' },
     uploadTxt: { fontSize: '1.1rem', fontWeight: 300, color: '#333', marginBottom: '0.3rem' },
     uploadSub: { fontSize: '0.65rem', color: '#bbb', fontFamily: 'sans-serif' },
@@ -988,7 +988,7 @@ export default function SurmesurTryOn() {
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
 
                 {/* Carte gauche — LA PHOTO PARFAITE — fond or */}
-                <div style={{ background: '#C9A96E', padding: '2rem 1.75rem' }}>
+                <div style={{ background: 'rgba(201,169,110,0.86)', padding: '2rem 1.75rem' }}>
                 <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#000', fontFamily: 'sans-serif', fontWeight: 800, marginBottom: '0.3rem' }}>✦ {t.guideTitle}</div>
                   <div style={{ width: '30px', height: '1px', background: 'rgba(0,0,0,0.2)', marginBottom: '1.25rem' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -1002,7 +1002,7 @@ export default function SurmesurTryOn() {
                 </div>
 
                 {/* Carte droite — À ÉVITER — fond noir */}
-                <div style={{ background: '#111', padding: '2rem 1.75rem' }}>
+                <div style={{ background: 'rgba(17,17,17,0.82)', padding: '2rem 1.75rem' }}>
                   <div style={{ fontSize: '0.75rem', letterSpacing: '0.15em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 700, marginBottom: '0.3rem' }}>— {t.guideAvoid}</div>
                   <div style={{ width: '30px', height: '1px', background: 'rgba(201,169,110,0.3)', marginBottom: '1.25rem' }} />
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
