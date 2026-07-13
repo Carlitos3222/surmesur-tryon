@@ -1240,8 +1240,8 @@ export default function SurmesurTryOn() {
                     : `${generations.length}/${MAX_GENERATIONS} ${t.step2Sub}`}
                 </div>
 
-                {/* Formulaire mensurations mobile — entre titre et catalogue */}
-                {isMobile && (
+                {/* Formulaire mensurations — au-dessus du catalogue (mobile + desktop) */}
+                {(
                   <div style={{ marginBottom: '1rem', border: '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden' }}>
                     <button
                       onClick={() => setShowMensurationsForm(!showMensurationsForm)}
@@ -1399,8 +1399,8 @@ export default function SurmesurTryOn() {
                         </div>
                       </div>
                     )}
-                    {/* Formulaire mensurations optionnel */}
-                    <div style={{ marginTop: '1.25rem', marginBottom: '0.75rem', border: '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden' }}>
+                    {/* Formulaire mensurations optionnel — masqué : déplacé au-dessus du catalogue */}
+                    <div style={{ display: 'none', marginTop: '1.25rem', marginBottom: '0.75rem', border: '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden' }}>
                       <button
                         onClick={() => setShowMensurationsForm(!showMensurationsForm)}
                         style={{ width: '100%', padding: '0.75rem 1rem', background: showMensurationsForm ? '#fffbf0' : '#fafaf8', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: showMensurationsForm ? '1px solid #e8d8b8' : 'none' }}
