@@ -426,6 +426,7 @@ export default function SurmesurTryOn() {
   const canvasRef = useRef(null)
   const streamRef = useRef(null)
   const resultRef = useRef(null)
+  const loadingRef = useRef(null)
 
   const totalPrice = sidebarItems.reduce((sum, it) => {
     return sum + parseFloat(it.prix.replace('$', '').replace(',', ''))
@@ -622,6 +623,7 @@ export default function SurmesurTryOn() {
     if (!photoClient) return
 
     setGenerating(true); setError(null); setProgress(0); setLoadingMsg(0)
+    setTimeout(() => loadingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
     const piv = setInterval(() => setProgress(p => p < 85 ? p + Math.random() * 2.5 : p), 800)
     const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
 
@@ -679,6 +681,7 @@ export default function SurmesurTryOn() {
     if (!gen || isGenerating) return
 
     setGenerating(true); setError(null); setProgress(0); setLoadingMsg(0)
+    setTimeout(() => loadingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
     const piv = setInterval(() => setProgress(p => p < 85 ? p + Math.random() * 2.5 : p), 800)
     const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
 
@@ -1130,7 +1133,7 @@ export default function SurmesurTryOn() {
 
             {/* Spinner mobile génération manuelle */}
             {isMobile && generating && (
-              <div style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+              <div ref={loadingRef} style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
                 {pendingItem && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', padding: '0.6rem', background: '#fafaf8', borderRadius: '3px', textAlign: 'left' }}>
                     <img src={pendingItem.image} alt={pendingItem.nom_fr} style={{ width: '44px', height: '55px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
