@@ -98,7 +98,10 @@ GARMENT RULE: The garment must conform to the real body shape. Never alter the b
 
 GARMENT FIDELITY: Reproduce exact fabric texture, colors, patterns, buttons, seams, pockets, lapels, and all construction details with 100% accuracy. The garment must be indistinguishable from the product image.
 
-Always tuck shirt inside pants. Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.${mensurationsBlock}`
+SHIRT TUCKING — MANDATORY, HIGHEST-PRIORITY STYLING RULE:
+The shirt MUST always be fully and neatly tucked into the pants or trousers, all the way around the waist. NEVER render the shirt untucked, loose, or hanging outside the pants under any circumstances. This rule applies to EVERY shirt type without exception — dress shirts, casual shirts, short-sleeve shirts, and camp-collar / resort / Cuban-collar shirts that are normally worn untucked MUST still be shown fully tucked in here. Even if the product image or input photo shows the shirt untucked, override it and tuck it in completely. A visible waistband with the shirt tucked in is required.
+
+Show shirt collar and cuffs under jacket when worn. White studio background, soft front lighting.${mensurationsBlock}`
 
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
