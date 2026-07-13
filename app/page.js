@@ -756,7 +756,8 @@ export default function SurmesurTryOn() {
   // ─── STYLES ───────────────────────────────────────────────────────────────
   const s = {
     page: { minHeight: '100vh', background: '#fafaf8', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
-    pagePhoto: { minHeight: '100vh', backgroundColor: '#fafaf8', backgroundImage: `linear-gradient(rgba(250,250,248,0.46), rgba(250,250,248,0.56)), url(${BASE_URL}/accueil.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
+    pagePhoto: { minHeight: '100vh', backgroundColor: 'transparent', fontFamily: "'Cormorant Garamond', Georgia, serif", color: '#1a1a1a' },
+    bgLayer: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1, backgroundColor: '#fafaf8', backgroundImage: `linear-gradient(rgba(250,250,248,0.42), rgba(250,250,248,0.52)), url(${BASE_URL}/accueil.jpg)`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' },
     header: { background: '#000', padding: '1.1rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' },
     logo: { color: '#fff', fontSize: '1rem', letterSpacing: '0.35em', fontWeight: 300 },
     goldLine: { width: '50px', height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)' },
@@ -967,6 +968,7 @@ export default function SurmesurTryOn() {
       {/* ── PHASE PHOTO ── */}
       {phase === 'photo' && (
         <>
+          <div style={s.bgLayer} />
           <div style={s.hero}>
             <div style={s.eyebrow}>{t.tagline}</div>
             <h1 style={s.title}>{t.heroTitle1} <span style={s.gold}>{t.heroTitle2}</span><br />{t.heroTitle3}</h1>
