@@ -412,7 +412,7 @@ export default function SurmesurTryOn() {
     poidsUnit: 'kg',
     morphologie: '',
   })
-  const [showMensurationsForm, setShowMensurationsForm] = useState(false)
+  const [showMensurationsForm, setShowMensurationsForm] = useState(true)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
