@@ -1,5 +1,6 @@
 'use client'
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const BASE_URL = 'https://surmesur-tryon.vercel.app'
 
@@ -804,7 +805,7 @@ export default function SurmesurTryOn() {
     replaceBanner: { background: '#fff8ee', border: '1px solid #C9A96E', borderRadius: '4px', padding: '0.6rem 1rem', fontSize: '0.72rem', fontFamily: 'sans-serif', color: '#7a5c1e', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' },
     catalogLabel: { fontSize: '0.62rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.75rem' },
     tabs: { display: 'flex', borderBottom: '1px solid #e8e4df', marginBottom: '1.25rem', overflowX: 'auto' },
-    tab: (a) => ({ padding: '0.6rem 0.9rem', background: 'none', border: 'none', borderBottom: a ? '2px solid #C9A96E' : '2px solid transparent', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.07em', fontFamily: 'sans-serif', color: a ? '#C9A96E' : '#888', whiteSpace: 'nowrap' }),
+    tab: (a) => ({ padding: '0.6rem 0.9rem', background: 'none', border: 'none', borderBottom: '2px solid transparent', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.07em', fontFamily: 'sans-serif', color: a ? '#C9A96E' : '#888', whiteSpace: 'nowrap', position: 'relative' }),
     grid: { display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(auto-fill,minmax(140px,1fr))', gap: '0.85rem', marginBottom: '1.5rem' },
     card: (sel) => ({ border: sel ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden', cursor: 'pointer', background: sel ? '#fffef8' : '#fff', position: 'relative', transition: 'border-color 0.15s' }),
     cardImg: { width: '100%', aspectRatio: '3/4', objectFit: 'cover', display: 'block' },
@@ -862,6 +863,12 @@ export default function SurmesurTryOn() {
 
   const SpinnerStyle = `@keyframes spin { to { transform: rotate(360deg) } }`
 
+  const heroContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } } }
+  const heroItem = { hidden: { opacity: 0, y: 22 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } } }
+  const revealOnScroll = { hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } } }
+  const gridContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.045 } } }
+  const gridItem = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } } }
+
   return (
     <div style={phase === 'photo' ? s.pagePhoto : s.page}>
       <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
@@ -893,39 +900,46 @@ export default function SurmesurTryOn() {
       </header>
 
       {/* Modal sélection ville */}
+      <AnimatePresence>
       {showCityModal && (
         <>
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 300 }} onClick={() => setShowCityModal(false)} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: '#fff', zIndex: 301, borderRadius: '4px', padding: '2rem', maxWidth: '400px', width: '90vw' }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 300 }} onClick={() => setShowCityModal(false)} />
+          <motion.div initial={{ opacity: 0, scale: 0.95, x: '-50%', y: '-50%' }} animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }} exit={{ opacity: 0, scale: 0.95, x: '-50%', y: '-50%' }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }} style={{ position: 'fixed', top: '50%', left: '50%', background: '#fff', zIndex: 301, borderRadius: '4px', padding: '2rem', maxWidth: '400px', width: '90vw' }}>
             <div style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '0.5rem' }}>{t.cityLabel}</div>
             <div style={{ fontSize: '1.3rem', fontWeight: 300, marginBottom: '1.5rem' }}>{t.selectCity}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {CITIES.map(city => (
-                <button key={city.id}
+                <motion.button key={city.id}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => { setSelectedCity(city); setShowCityModal(false) }}
                   style={{ padding: '0.85rem 1rem', border: selectedCity?.id === city.id ? '2px solid #C9A96E' : '1px solid #e8e4df', borderRadius: '3px', background: selectedCity?.id === city.id ? '#fffef8' : '#fff', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'sans-serif' }}>
                   <span style={{ fontSize: '0.85rem', fontWeight: 300 }}>{city.label}</span>
                   <span style={{ fontSize: '0.7rem', color: '#C9A96E', letterSpacing: '0.1em' }}>{city.currency}</span>
-                </button>
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
         </>
       )}
+      </AnimatePresence>
 
       {/* ── MODAL SURPRENEZ-MOI ── */}
+      <AnimatePresence>
       {showSurpriseModal && (
-        <div style={s.modalOverlay} onClick={() => setShowSurpriseModal(false)}>
-          <div style={s.modal} onClick={e => e.stopPropagation()}>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} style={s.modalOverlay} onClick={() => setShowSurpriseModal(false)}>
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }} style={s.modal} onClick={e => e.stopPropagation()}>
             <div style={{ width: '40px', height: '4px', background: '#e0dbd4', borderRadius: '2px', margin: '0 auto 1.5rem' }} />
             <div style={s.modalTitle}>✦ Surprenez-moi</div>
             <div style={s.modalSub}>Choisissez votre occasion — notre styliste IA compose votre look parfait · Choose your occasion</div>
             <div style={s.occasionGrid}>
               {OCCASIONS.map(occ => (
-                <div
+                <motion.div
                   key={occ.id}
                   style={s.occasionCard(selectedOccasion?.id === occ.id)}
                   onClick={() => setSelectedOccasion(occ)}
+                  whileHover={{ y: -3, boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}
+                  whileTap={{ scale: 0.97 }}
                 >
                   <span style={s.occasionIcon}>{occ.icon}</span>
                   <div style={s.occasionLabel}>{occ.label}</div>
@@ -935,17 +949,20 @@ export default function SurmesurTryOn() {
                       COMPLET UNIQUEMENT
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
+            <AnimatePresence>
             {selectedOccasion && (
-              <>
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} style={{ overflow: 'hidden' }}>
                 {selectedOccasion.suitOnly && (
                   <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: '#fffbf0', border: '1px solid #e8d8b8', borderRadius: '3px', fontSize: '0.7rem', fontFamily: 'sans-serif', color: '#7a5c1e', lineHeight: 1.6 }}>
                     ✦ Pour le mariage, notre styliste IA sélectionnera le complet idéal et le placera directement sur vous — en une seule génération. Élégance garantie.
                   </div>
                 )}
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.97 }}
                   style={{ ...s.btnSurprise, marginTop: '1rem', marginBottom: 0 }}
                   onClick={() => handleSurpriseGenerate(selectedOccasion)}
                 >
@@ -955,32 +972,35 @@ export default function SurmesurTryOn() {
                       ? 'Complet Surmesur · ~30 secondes'
                       : 'Génération automatique en 3 étapes · ~90 secondes'}
                   </span>
-                </button>
-              </>
+                </motion.button>
+              </motion.div>
             )}
+            </AnimatePresence>
             <button
               style={{ ...s.btnRestart, marginTop: '0.75rem' }}
               onClick={() => setShowSurpriseModal(false)}
             >
               ANNULER
             </button>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* ── PHASE PHOTO ── */}
+      <AnimatePresence mode="wait">
       {phase === 'photo' && (
-        <>
-          <div style={s.hero}>
-            <div style={s.eyebrow}>{t.tagline}</div>
-            <h1 style={s.title}>{t.heroTitle1} <span style={s.gold}>{t.heroTitle2}</span><br />{t.heroTitle3}</h1>
-            <p style={s.sub}>{t.heroSub}</p>
-            <div style={s.stats}>
+        <motion.div key="photo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35, ease: 'easeInOut' }}>
+          <motion.div style={s.hero} initial="hidden" animate="visible" variants={heroContainer}>
+            <motion.div style={s.eyebrow} variants={heroItem}>{t.tagline}</motion.div>
+            <motion.h1 style={s.title} variants={heroItem}>{t.heroTitle1} <span style={s.gold}>{t.heroTitle2}</span><br />{t.heroTitle3}</motion.h1>
+            <motion.p style={s.sub} variants={heroItem}>{t.heroSub}</motion.p>
+            <motion.div style={s.stats} variants={heroItem}>
               <div><div style={s.statN}>3</div><div style={s.statL}>{t.stat1}</div></div>
               <div><div style={s.statN}>22+</div><div style={s.statL}>{t.stat2}</div></div>
               <div><div style={s.statN}>100%</div><div style={s.statL}>{t.stat3}</div></div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           <div style={s.photoWrap}>
             <div style={s.stepNum}>01</div>
@@ -988,7 +1008,13 @@ export default function SurmesurTryOn() {
             <div style={s.stepSub}>{t.step1Sub}</div>
 
             {/* Guide photo — deux cartes */}
-            <div style={{ marginBottom: '1.75rem', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+            <motion.div
+              style={{ marginBottom: '1.75rem', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              variants={revealOnScroll}
+            >
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr' }}>
 
                 {/* Carte gauche — LA PHOTO PARFAITE — fond or */}
@@ -1028,21 +1054,21 @@ export default function SurmesurTryOn() {
                   <div style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>{t.noteText}</div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {!cameraActive && !photoConfirmation && (
               <>
-                <div style={s.uploadZone} onClick={() => fileInputRef.current?.click()}>
+                <motion.div style={s.uploadZone} onClick={() => fileInputRef.current?.click()} whileHover={{ scale: 1.01, borderColor: '#C9A96E' }} whileTap={{ scale: 0.99 }}>
                   <div style={s.uploadIcon}>✦</div>
                   <div style={s.uploadTxt}>{t.uploadTxt}</div>
                   <div style={s.uploadSub}>{t.uploadSub}</div>
                   <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.5rem' }}>
                     {{ fr: 'Votre photo est utilisée uniquement pour générer votre look et n\'est pas stockée sur nos serveurs.', en: 'Your photo is used solely to generate your look and is not stored on our servers.', es: 'Tu foto se usa únicamente para generar tu look y no se almacena en nuestros servidores.' }[lang]}
                   </div>
-                </div>
+                </motion.div>
                 <div style={s.btnRow}>
-                  <button style={s.btnBlack} onClick={startCamera}>{t.btnCamera}</button>
-                  <button style={s.btnOutline} onClick={() => fileInputRef.current?.click()}>{t.btnGallery}</button>
+                  <motion.button style={s.btnBlack} onClick={startCamera} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>{t.btnCamera}</motion.button>
+                  <motion.button style={s.btnOutline} onClick={() => fileInputRef.current?.click()} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>{t.btnGallery}</motion.button>
                 </div>
                 <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => {
                   const f = e.target.files?.[0]; if (!f) return
@@ -1055,31 +1081,40 @@ export default function SurmesurTryOn() {
               <>
                 <div style={s.camWrap}><video ref={videoRef} style={s.camVideo} autoPlay playsInline muted /></div>
                 <div style={s.camHint}>⏱ 3 secondes pour vous placer après le bouton</div>
-                <button onClick={capturePhoto} disabled={countdown !== null} style={s.capBtn}>
-                  {countdown ? <span style={{ color: '#C9A96E', fontSize: '1.6rem', fontWeight: 300 }}>{countdown}</span> : <div style={s.capInner} />}
-                </button>
-                <button style={{ ...s.btnGhost, width: '100%', marginTop: '0.5rem' }} onClick={stopCamera}>ANNULER</button>
+                <motion.button onClick={capturePhoto} disabled={countdown !== null} style={s.capBtn} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <AnimatePresence mode="wait">
+                    {countdown ? (
+                      <motion.span key={countdown} initial={{ scale: 1.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.6, opacity: 0 }} transition={{ duration: 0.35 }} style={{ color: '#C9A96E', fontSize: '1.6rem', fontWeight: 300 }}>{countdown}</motion.span>
+                    ) : (
+                      <motion.div key="dot" initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={s.capInner} />
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+                <motion.button style={{ ...s.btnGhost, width: '100%', marginTop: '0.5rem' }} onClick={stopCamera} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>ANNULER</motion.button>
               </>
             )}
 
             {photoConfirmation && (
               <>
-                <img src={photoConfirmation} alt="Preview" style={s.confirmImg} />
+                <motion.img initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }} src={photoConfirmation} alt="Preview" style={s.confirmImg} />
                 <div style={s.confirmBtns}>
-                  <button style={s.btnBlack} onClick={confirmPhoto}>✓ UTILISER CETTE PHOTO</button>
-                  <button style={s.btnGhost} onClick={() => { setPhotoConfirmation(null); startCamera() }}>↺ REPRENDRE</button>
+                  <motion.button style={s.btnBlack} onClick={confirmPhoto} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>✓ UTILISER CETTE PHOTO</motion.button>
+                  <motion.button style={s.btnGhost} onClick={() => { setPhotoConfirmation(null); startCamera() }} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>↺ REPRENDRE</motion.button>
                 </div>
               </>
             )}
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
           </div>
-        </>
+        </motion.div>
       )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
 
       {/* ── PHASE BUILD ── */}
       {phase === 'build' && (
-        <div style={s.buildWrap}>
+        <motion.div key="build" style={s.buildWrap} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35, ease: 'easeInOut' }}>
           {/* Main column */}
           <div style={{ flex: 1, minWidth: 0, padding: isMobile ? '1rem' : '1.5rem', paddingBottom: isMobile ? '80px' : undefined }}>
 
@@ -1162,7 +1197,9 @@ export default function SurmesurTryOn() {
                 <div style={s.resultLabel}>{t.currentLook}</div>
                 {currentResult && (
                   <>
-                    <img src={currentResult} alt="Look généré" style={s.resultImg} />
+                    <AnimatePresence mode="wait">
+                      <motion.img key={currentResult} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} src={currentResult} alt="Look généré" style={s.resultImg} />
+                    </AnimatePresence>
 
                     {activeResultIdx === generations.length - 1 && !isGenerating && replaceMode === null && (
                       <button style={s.btnRegen} onClick={handleRegenerate}>{t.regenerate}</button>
@@ -1214,13 +1251,13 @@ export default function SurmesurTryOn() {
                 )}
                 <div style={s.thumbRow}>
                   {generations.map((gen, i) => (
-                    <div key={i} style={s.thumb(i === activeResultIdx)} onClick={() => setActiveResultIdx(i)}>
+                    <motion.div key={i} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} style={s.thumb(i === activeResultIdx)} onClick={() => setActiveResultIdx(i)}>
                       <img src={gen.resultUrl} alt={gen.item.nom_fr} style={s.thumbImg} />
                       <div style={s.thumbLabel}>{gen.item.nom_fr}</div>
                       {!isGenerating && (
                         <button style={s.thumbEdit} onClick={(e) => { e.stopPropagation(); startReplace(i) }}>✎</button>
                       )}
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -1256,10 +1293,19 @@ export default function SurmesurTryOn() {
                         <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', color: '#C9A96E', fontWeight: 600, letterSpacing: '0.1em' }}>✦ MENSURATIONS · OPTIONNEL</div>
                         <div style={{ fontSize: '0.58rem', fontFamily: 'sans-serif', color: '#aaa', marginTop: '0.15rem' }}>Pour un résultat encore plus fidèle</div>
                       </div>
-                      <span style={{ color: '#C9A96E', fontSize: '0.8rem' }}>{showMensurationsForm ? '▲' : '▼'}</span>
+                      <motion.span animate={{ rotate: showMensurationsForm ? 0 : 0 }} style={{ color: '#C9A96E', fontSize: '0.8rem', display: 'inline-block' }}>{showMensurationsForm ? '▲' : '▼'}</motion.span>
                     </button>
 
+                    <AnimatePresence initial={false}>
                     {showMensurationsForm && (
+                      <motion.div
+                        key="mensurations-panel"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        style={{ overflow: 'hidden' }}
+                      >
                       <div style={{ padding: '1rem', background: '#fffbf0' }}>
                         <div style={{ fontSize: '0.62rem', color: '#fff', fontFamily: 'sans-serif', lineHeight: 1.6, marginBottom: '1rem', padding: '0.6rem 0.75rem', background: '#000', border: '1px solid #C9A96E', borderRadius: '3px' }}>
                           <span style={{ color: '#C9A96E' }}>✦</span> Ces informations sont <strong>optionnelles mais recommandées</strong>. Elles permettent à notre IA de créer un résultat plus réaliste et fidèle à votre morphologie.
@@ -1359,7 +1405,9 @@ export default function SurmesurTryOn() {
                           </div>
                         )}
                       </div>
+                      </motion.div>
                     )}
+                    </AnimatePresence>
                   </div>
                 )}
 
@@ -1368,29 +1416,34 @@ export default function SurmesurTryOn() {
                   {Object.entries(CATALOGUE).map(([key, cat]) => (
                     <button key={key} style={s.tab(activeTab === key)} onClick={() => setActiveTab(key)}>
                       {cat.icon} {lang === 'en' ? cat.label_en || cat.label : cat.label}
+                      {activeTab === key && (
+                        <motion.div layoutId="tabIndicator" style={{ position: 'absolute', bottom: '-2px', left: 0, right: 0, height: '2px', background: '#C9A96E' }} transition={{ type: 'spring', stiffness: 500, damping: 40 }} />
+                      )}
                     </button>
                   ))}
                 </div>
 
-                <div style={s.grid}>
-                  {CATALOGUE[activeTab].items.map(item => {
-                    const isSel = pendingItem?.id === item.id
-                    return (
-                      <div key={item.id} style={s.card(isSel)} onClick={() => { setPendingItem(item); setError(null) }}>
-                        <div style={s.cardImgWrap}>
-                          <img src={item.image} alt={item.nom_fr} style={s.cardImg} />
-                          {item.tissu && <img src={item.tissu} alt="Tissu" title="Aperçu du tissu" style={s.cardSwatch} />}
-                        </div>
-                        {isSel && <div style={s.checkBadge}>✓</div>}
-                        <div style={s.cardInfo}>
-                          <div style={s.cardName}>{item.nom_fr}</div>
-                          <div style={s.cardDesc}>{item.desc}</div>
-                          <div style={s.cardPrice}>{displayItemPrice(item.prix)}</div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div key={activeTab} style={s.grid} initial="hidden" animate="visible" exit={{ opacity: 0 }} variants={gridContainer}>
+                    {CATALOGUE[activeTab].items.map(item => {
+                      const isSel = pendingItem?.id === item.id
+                      return (
+                        <motion.div key={item.id} variants={gridItem} style={s.card(isSel)} onClick={() => { setPendingItem(item); setError(null) }} whileHover={{ y: -4, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }} whileTap={{ scale: 0.98 }}>
+                          <div style={s.cardImgWrap}>
+                            <img src={item.image} alt={item.nom_fr} style={s.cardImg} />
+                            {item.tissu && <img src={item.tissu} alt="Tissu" title="Aperçu du tissu" style={s.cardSwatch} />}
+                          </div>
+                          {isSel && <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 500, damping: 25 }} style={s.checkBadge}>✓</motion.div>}
+                          <div style={s.cardInfo}>
+                            <div style={s.cardName}>{item.nom_fr}</div>
+                            <div style={s.cardDesc}>{item.desc}</div>
+                            <div style={s.cardPrice}>{displayItemPrice(item.prix)}</div>
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </motion.div>
+                </AnimatePresence>
 
                 {/* Try button — desktop only */}
                 {!isMobile && (
@@ -1587,7 +1640,9 @@ export default function SurmesurTryOn() {
                         <span style={{ fontSize: '0.6rem', color: '#aaa' }}>{t.maxSub}</span>
                       </div>
                     )}
-                    {error && <div style={s.error}>⚠ {error}</div>}
+                    <AnimatePresence>
+                      {error && <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} style={s.error}>⚠ {error}</motion.div>}
+                    </AnimatePresence>
                   </div>
                 )}
               </>
@@ -1614,8 +1669,10 @@ export default function SurmesurTryOn() {
                     {sidebarItems.length === 0 ? (
                       <div style={{ textAlign: 'center', padding: '2rem 0', color: '#ccc', fontSize: '0.75rem', fontFamily: 'sans-serif' }}>{t.emptyState.split('\n')[0]}</div>
                     ) : (
-                      sidebarItems.map((item) => (
-                        <div key={item._stepIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0', borderBottom: '1px solid #f0ece6' }}>
+                      <AnimatePresence initial={false}>
+                      {sidebarItems.map((item) => (
+                        <motion.div key={item._stepIdx} layout initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.25 }} style={{ overflow: 'hidden' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0', borderBottom: '1px solid #f0ece6' }}>
                           <img src={item.image} alt={item.nom_fr} style={{ width: '48px', height: '60px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: '0.82rem', fontWeight: 400, marginBottom: '0.1rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.nom_fr}</div>
@@ -1629,7 +1686,9 @@ export default function SurmesurTryOn() {
                               onClick={() => removeFromSidebar(item._stepIdx)}>✕</button>
                           </div>
                         </div>
-                      ))
+                        </motion.div>
+                      ))}
+                      </AnimatePresence>
                     )}
                   </div>
                   <div style={{ padding: '1rem 1.25rem 5rem 1.25rem', borderTop: '1px solid #e8e4df', flexShrink: 0, background: '#fff' }}>
@@ -1701,8 +1760,10 @@ export default function SurmesurTryOn() {
                   <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.emptyState.split('\n').map((line, i) => <span key={i}>{line}<br /></span>)}</div>
                 </div>
               ) : (
-                sidebarItems.map((item) => (
-                  <div key={item._stepIdx} style={s.sideItem}>
+                <AnimatePresence initial={false}>
+                {sidebarItems.map((item) => (
+                  <motion.div key={item._stepIdx} layout initial={{ opacity: 0, height: 0, x: -12 }} animate={{ opacity: 1, height: 'auto', x: 0 }} exit={{ opacity: 0, height: 0, x: -12 }} transition={{ duration: 0.25, ease: 'easeOut' }} style={{ overflow: 'hidden' }}>
+                  <div style={s.sideItem}>
                     <img src={item.image} alt={item.nom_fr} style={s.sideImg} />
                     <div style={s.sideInfo}>
                       <div style={s.sideName}>{item.nom_fr}</div>
@@ -1714,7 +1775,9 @@ export default function SurmesurTryOn() {
                       <button style={s.sideBtn('#ddd')} onClick={() => removeFromSidebar(item._stepIdx)}>✕</button>
                     </div>
                   </div>
-                ))
+                  </motion.div>
+                ))}
+                </AnimatePresence>
               )}
             </div>
 
@@ -1739,8 +1802,9 @@ export default function SurmesurTryOn() {
               <button style={s.btnRestart} onClick={reset}>{t.btnRestart}</button>
             </div>
           </div>
-        </div>
+        </motion.div>
       )}
+      </AnimatePresence>
       </div>
     </div>
   )
