@@ -926,7 +926,7 @@ export default function SurmesurTryOn() {
 
       {/* Header */}
       <header style={s.header}>
-        <div style={s.logo}>SURMESUR</div>
+        <img src={`${BASE_URL}/logo-surmesur.png`} alt="Surmesur Select" style={{ height: '28px', width: 'auto', display: 'block' }} />
         <div style={s.goldLine} />
         {/* Sélecteurs langue + ville */}
         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem', alignItems: 'center' }}>
@@ -964,8 +964,8 @@ export default function SurmesurTryOn() {
                 }}
                 style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', textAlign: 'center', background: '#fffef8' }}
               >
-                <div style={{ width: '100%', height: '150px', overflow: 'hidden' }}>
-                  <img src={`${BASE_URL}/outfit-1.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fffef8' }}>
+                  <img src={`${BASE_URL}/outfit-1.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
                 </div>
                 <div style={{ padding: '1.1rem 1.25rem 1.4rem' }}>
                   <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem', color: '#C9A96E' }}>{t.introOutfitsLabel}</div>
@@ -982,8 +982,8 @@ export default function SurmesurTryOn() {
                 }}
                 style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', textAlign: 'center', background: '#fff' }}
               >
-                <div style={{ width: '100%', height: '150px', overflow: 'hidden' }}>
-                  <img src={`${BASE_URL}/jacket-3.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fff' }}>
+                  <img src={`${BASE_URL}/jacket-3.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
                 </div>
                 <div style={{ padding: '1.1rem 1.25rem 1.4rem' }}>
                   <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem' }}>{t.introPiecesLabel}</div>
