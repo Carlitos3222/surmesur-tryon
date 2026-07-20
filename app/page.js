@@ -84,16 +84,16 @@ const T = {
     loadingMsgs: ['Analyse de votre silhouette...', 'Application du tissu Surmesur...', 'Ajustement des proportions...', 'Calibration des couleurs...', 'Finalisation de votre look...', 'Dernières retouches en cours...'],
     emailSubject: 'Sélection client Surmesur Try-On',
     emailBody: (items, total, city, mens) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}${mens}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
-    introTitle: 'Comment souhaitez-vous essayer nos vêtements ?',
+    introTitle: 'Que souhaitez-vous essayer aujourd\'hui ?',
     introSub: 'Choisissez votre expérience pour des instructions de photo personnalisées',
-    introOutfitsLabel: '✦ Essayer nos Outfits',
+    introOutfitsLabel: 'Essayer nos Outfits',
     introOutfitsDesc: 'Looks complets prêts à porter, générés en une seule photo — peu importe votre tenue actuelle.',
     introPiecesLabel: 'Essayer pièce par pièce',
     introPiecesDesc: 'Composez votre look à la carte, pièce par pièce — vestons, chemises, pantalons.',
     wearGuideOutfitsTitle: 'ASTUCE OUTFITS',
     wearGuideOutfitsText: 'Peu importe ce que vous portez sur la photo — l\'outfit complet remplacera entièrement votre tenue en une seule génération.',
     wearGuidePiecesTitle: 'ASTUCE PIÈCE PAR PIÈCE',
-    wearGuidePiecesText: 'Portez des vêtements neutres et ajustés (t-shirt uni, pantalon simple). Chaque pièce ajoutée laisse apparaître ce qu\'il y a en dessous — évitez le pyjama !',
+    wearGuidePiecesText: 'Portez une tenue propre et déjà bien assortie, qui pourrait accompagner un veston ou toute autre pièce sélectionnée dans l\'application — elle restera visible sous la pièce ajoutée.',
     changePieceBtn: '✎ CHANGER UNE PIÈCE',
   },
   en: {
@@ -164,16 +164,16 @@ const T = {
     loadingMsgs: ['Analyzing your silhouette...', 'Applying the custom fabric...', 'Adjusting proportions...', 'Calibrating colors...', 'Finalizing your look...', 'Last finishing touches...'],
     emailSubject: 'Surmesur Try-On Client Selection',
     emailBody: (items, total, city, mens) => `Hello,\n\nA client from the ${city} boutique made a selection via the Surmesur Try-On app.\n\nCLIENT SELECTION:\n\n${items}\n\nESTIMATED TOTAL: ${total}${mens}\n\nPlease prepare this file for the appointment.\n\nBest regards,\nSurmesur Try-On`,
-    introTitle: 'How would you like to try on our clothing?',
+    introTitle: 'What would you like to try today?',
     introSub: 'Choose your experience for personalized photo instructions',
-    introOutfitsLabel: '✦ Try our Outfits',
+    introOutfitsLabel: 'Try our Outfits',
     introOutfitsDesc: 'Complete ready-to-wear looks, generated in a single photo — no matter what you\'re currently wearing.',
     introPiecesLabel: 'Try piece by piece',
     introPiecesDesc: 'Build your look à la carte, piece by piece — jackets, shirts, pants.',
     wearGuideOutfitsTitle: 'OUTFITS TIP',
     wearGuideOutfitsText: 'No matter what you\'re wearing in the photo — the complete outfit will fully replace your outfit in a single generation.',
     wearGuidePiecesTitle: 'PIECE BY PIECE TIP',
-    wearGuidePiecesText: 'Wear neutral, fitted clothing (plain t-shirt, simple pants). Each added piece leaves what\'s underneath visible — avoid pajamas!',
+    wearGuidePiecesText: 'Wear clean, put-together clothing that could already pair with a jacket or any piece selected in the app — it will remain visible beneath the added piece.',
     changePieceBtn: '✎ CHANGE A PIECE',
   },
   es: {
@@ -244,23 +244,23 @@ const T = {
     loadingMsgs: ['Analizando tu silueta...', 'Aplicando la tela a medida...', 'Ajustando proporciones...', 'Calibrando colores...', 'Finalizando tu look...', 'Últimos retoques...'],
     emailSubject: 'Selección cliente Surmesur Try-On',
     emailBody: (items, total, city, mens) => `Hola,\n\nUn cliente de la boutique ${city} ha realizado una selección en la app Surmesur Try-On.\n\nSELECCIÓN DEL CLIENTE:\n\n${items}\n\nTOTAL ESTIMADO: ${total}${mens}\n\nPor favor prepare este expediente para la cita.\n\nAtentamente,\nSurmesur Try-On`,
-    introTitle: '¿Cómo deseas probar nuestra ropa?',
+    introTitle: '¿Qué deseas probar hoy?',
     introSub: 'Elige tu experiencia para instrucciones de foto personalizadas',
-    introOutfitsLabel: '✦ Probar nuestros Outfits',
+    introOutfitsLabel: 'Probar nuestros Outfits',
     introOutfitsDesc: 'Looks completos listos para usar, generados en una sola foto — sin importar lo que lleves puesto.',
     introPiecesLabel: 'Probar prenda por prenda',
     introPiecesDesc: 'Compón tu look a la carta, prenda por prenda — chaquetas, camisas, pantalones.',
     wearGuideOutfitsTitle: 'CONSEJO OUTFITS',
     wearGuideOutfitsText: 'No importa lo que lleves puesto en la foto — el outfit completo reemplazará totalmente tu ropa en una sola generación.',
     wearGuidePiecesTitle: 'CONSEJO PRENDA POR PRENDA',
-    wearGuidePiecesText: 'Usa ropa neutra y ajustada (camiseta lisa, pantalón simple). Cada prenda añadida deja visible lo que hay debajo — ¡evita la pijama!',
+    wearGuidePiecesText: 'Usa una tenida limpia y ya bien combinada, que pueda acompañar una chaqueta o cualquier otra prenda seleccionada en la aplicación — permanecerá visible debajo de la prenda añadida.',
     changePieceBtn: '✎ CAMBIAR UNA PRENDA',
   }
 }
 
 const CATALOGUE = {
   suits: {
-    label: 'Complets', label_en: 'Suits', icon: '🤵', categorie: 'one-pieces',
+    label: 'Complets', label_en: 'Suits', iconImage: `${BASE_URL}/suit-1.jpeg`, categorie: 'one-pieces',
     items: [
       { id: 's1', nom_fr: 'Complet Bleu Pétrole', image: `${BASE_URL}/suit-1.jpeg`, prix: '$1,100', desc: '3-Piece · Wool' },
       { id: 's2', nom_fr: 'Complet Charbon', image: `${BASE_URL}/suit-2.jpeg`, prix: '$1,150', desc: '3-Piece · Premium Wool' },
@@ -269,13 +269,13 @@ const CATALOGUE = {
     ]
   },
   outfits: {
-    label: 'Essayez nos Outfits', label_en: 'Try our Outfits', icon: '✦', categorie: 'one-pieces',
+    label: 'Essayez nos Outfits', label_en: 'Try our Outfits', iconImage: `${BASE_URL}/outfit-1.jpeg`, categorie: 'one-pieces',
     items: [
       { id: 'o1', nom_fr: 'Outfit Blazer Cobalt', image: `${BASE_URL}/outfit-1.jpeg`, prix: '$980', desc: 'Look Complet · Blazer + Chemise + Jean' },
     ]
   },
   jackets: {
-    label: 'Vestons', label_en: 'Jackets', icon: '🧥', categorie: 'tops',
+    label: 'Vestons', label_en: 'Jackets', iconImage: `${BASE_URL}/jacket-1.jpeg`, categorie: 'tops',
     items: [
       { id: 'j1', nom_fr: 'Blazer Lin Cobalt', image: `${BASE_URL}/jacket-1.jpeg`, prix: '$645', desc: 'Premium Linen · Single Breasted' },
       { id: 'j2', nom_fr: 'Veston Tweed Brun', image: `${BASE_URL}/jacket-2.jpeg`, prix: '$720', desc: 'British Tweed · Notch Lapel' },
@@ -289,7 +289,7 @@ const CATALOGUE = {
     ]
   },
   shirts: {
-    label: 'Chemises', label_en: 'Shirts', icon: '👔', categorie: 'tops',
+    label: 'Chemises', label_en: 'Shirts', iconImage: `${BASE_URL}/shirt-1.jpeg`, categorie: 'tops',
     items: [
       { id: 'sh1', nom_fr: 'Chemise Florale Bleue', image: `${BASE_URL}/shirt-1.jpeg`, prix: '$350', desc: 'Linen · Sport Shirt' },
       { id: 'sh2', nom_fr: 'Chemise Blanche Classique', image: `${BASE_URL}/shirt-2.jpeg`, prix: '$295', desc: 'Egyptian Cotton · French Cuff' },
@@ -298,7 +298,7 @@ const CATALOGUE = {
     ]
   },
   pants: {
-    label: 'Pantalons', label_en: 'Pants', icon: '👖', categorie: 'bottoms',
+    label: 'Pantalons', label_en: 'Pants', iconImage: `${BASE_URL}/jean-1.jpeg`, categorie: 'bottoms',
     items: [
       { id: 'p1', nom_fr: 'Jean Blanc Terio', image: `${BASE_URL}/jean-1.jpeg`, prix: '$250', desc: 'Custom Fit · White' },
       { id: 'p2', nom_fr: 'Pantalon Gris Flanelle', image: `${BASE_URL}/jean-2.jpeg`, prix: '$280', desc: 'Wool Flannel · Tailored' },
@@ -962,11 +962,15 @@ export default function SurmesurTryOn() {
                   setActiveTab('outfits')
                   setShowIntroModal(false)
                 }}
-                style={{ border: '1px solid #e8e4df', borderRadius: '6px', padding: '1.5rem 1.25rem', cursor: 'pointer', textAlign: 'center', background: '#fffef8' }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', textAlign: 'center', background: '#fffef8' }}
               >
-                <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>✦</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem', color: '#C9A96E' }}>{t.introOutfitsLabel}</div>
-                <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introOutfitsDesc}</div>
+                <div style={{ width: '100%', height: '150px', overflow: 'hidden' }}>
+                  <img src={`${BASE_URL}/outfit-1.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                </div>
+                <div style={{ padding: '1.1rem 1.25rem 1.4rem' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem', color: '#C9A96E' }}>{t.introOutfitsLabel}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introOutfitsDesc}</div>
+                </div>
               </motion.div>
               <motion.div
                 whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
@@ -976,11 +980,15 @@ export default function SurmesurTryOn() {
                   setActiveTab('jackets')
                   setShowIntroModal(false)
                 }}
-                style={{ border: '1px solid #e8e4df', borderRadius: '6px', padding: '1.5rem 1.25rem', cursor: 'pointer', textAlign: 'center', background: '#fff' }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', textAlign: 'center', background: '#fff' }}
               >
-                <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>🧥</div>
-                <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem' }}>{t.introPiecesLabel}</div>
-                <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introPiecesDesc}</div>
+                <div style={{ width: '100%', height: '150px', overflow: 'hidden' }}>
+                  <img src={`${BASE_URL}/jacket-3.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+                </div>
+                <div style={{ padding: '1.1rem 1.25rem 1.4rem' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem' }}>{t.introPiecesLabel}</div>
+                  <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introPiecesDesc}</div>
+                </div>
               </motion.div>
             </div>
           </motion.div>
@@ -1147,7 +1155,7 @@ export default function SurmesurTryOn() {
               {/* Astuce spécifique au mode choisi (Outfits vs Pièce par pièce) */}
               {tryMode && (
                 <div style={{ background: tryMode === 'outfits' ? 'rgba(201,169,110,0.12)' : '#111', padding: '1.1rem 1.75rem', borderTop: '1px solid #e8e4df', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
-                  <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0, marginTop: '0.05rem' }}>{tryMode === 'outfits' ? '✦' : '🧥'}</span>
+                  <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0, marginTop: '0.05rem' }}>✦</span>
                   <div>
                     <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginBottom: '0.35rem' }}>{tryMode === 'outfits' ? t.wearGuideOutfitsTitle : t.wearGuidePiecesTitle}</div>
                     <div style={{ fontSize: '0.72rem', color: tryMode === 'outfits' ? '#1a1a1a' : '#fff', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{tryMode === 'outfits' ? t.wearGuideOutfitsText : t.wearGuidePiecesText}</div>
@@ -1515,7 +1523,8 @@ export default function SurmesurTryOn() {
                 <div style={s.tabs}>
                   {Object.entries(CATALOGUE).filter(([key]) => visibleTabKeys.includes(key)).map(([key, cat]) => (
                     <button key={key} style={s.tab(activeTab === key)} onClick={() => setActiveTab(key)}>
-                      {cat.icon} {lang === 'en' ? cat.label_en || cat.label : cat.label}
+                      <img src={cat.iconImage} alt="" style={{ width: '18px', height: '18px', borderRadius: '50%', objectFit: 'cover', marginRight: '0.4rem', verticalAlign: 'middle', border: activeTab === key ? '1px solid #C9A96E' : '1px solid #e8e4df', opacity: activeTab === key ? 1 : 0.6 }} />
+                      {lang === 'en' ? cat.label_en || cat.label : cat.label}
                       {activeTab === key && (
                         <motion.div layoutId="tabIndicator" style={{ position: 'absolute', bottom: '-2px', left: 0, right: 0, height: '2px', background: '#C9A96E' }} transition={{ type: 'spring', stiffness: 500, damping: 40 }} />
                       )}
@@ -1529,7 +1538,7 @@ export default function SurmesurTryOn() {
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.97 }}
                     onClick={() => setShowAllTabs(true)}
-                    style={{ ...s.btnOutline, width: '100%', marginBottom: '1rem', fontSize: '0.68rem' }}
+                    style={{ ...s.btnBlack, width: '100%', marginBottom: '1rem', fontSize: '0.68rem' }}
                   >
                     {t.changePieceBtn}
                   </motion.button>
