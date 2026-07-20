@@ -84,6 +84,17 @@ const T = {
     loadingMsgs: ['Analyse de votre silhouette...', 'Application du tissu Surmesur...', 'Ajustement des proportions...', 'Calibration des couleurs...', 'Finalisation de votre look...', 'Dernières retouches en cours...'],
     emailSubject: 'Sélection client Surmesur Try-On',
     emailBody: (items, total, city, mens) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}${mens}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
+    introTitle: 'Comment souhaitez-vous essayer nos vêtements ?',
+    introSub: 'Choisissez votre expérience pour des instructions de photo personnalisées',
+    introOutfitsLabel: '✦ Essayer nos Outfits',
+    introOutfitsDesc: 'Looks complets prêts à porter, générés en une seule photo — peu importe votre tenue actuelle.',
+    introPiecesLabel: 'Essayer pièce par pièce',
+    introPiecesDesc: 'Composez votre look à la carte, pièce par pièce — vestons, chemises, pantalons.',
+    wearGuideOutfitsTitle: 'ASTUCE OUTFITS',
+    wearGuideOutfitsText: 'Peu importe ce que vous portez sur la photo — l\'outfit complet remplacera entièrement votre tenue en une seule génération.',
+    wearGuidePiecesTitle: 'ASTUCE PIÈCE PAR PIÈCE',
+    wearGuidePiecesText: 'Portez des vêtements neutres et ajustés (t-shirt uni, pantalon simple). Chaque pièce ajoutée laisse apparaître ce qu\'il y a en dessous — évitez le pyjama !',
+    changePieceBtn: '✎ CHANGER UNE PIÈCE',
   },
   en: {
     tagline: 'VIRTUAL TECHNOLOGY · VIRTUAL TRY-ON',
@@ -153,6 +164,17 @@ const T = {
     loadingMsgs: ['Analyzing your silhouette...', 'Applying the custom fabric...', 'Adjusting proportions...', 'Calibrating colors...', 'Finalizing your look...', 'Last finishing touches...'],
     emailSubject: 'Surmesur Try-On Client Selection',
     emailBody: (items, total, city, mens) => `Hello,\n\nA client from the ${city} boutique made a selection via the Surmesur Try-On app.\n\nCLIENT SELECTION:\n\n${items}\n\nESTIMATED TOTAL: ${total}${mens}\n\nPlease prepare this file for the appointment.\n\nBest regards,\nSurmesur Try-On`,
+    introTitle: 'How would you like to try on our clothing?',
+    introSub: 'Choose your experience for personalized photo instructions',
+    introOutfitsLabel: '✦ Try our Outfits',
+    introOutfitsDesc: 'Complete ready-to-wear looks, generated in a single photo — no matter what you\'re currently wearing.',
+    introPiecesLabel: 'Try piece by piece',
+    introPiecesDesc: 'Build your look à la carte, piece by piece — jackets, shirts, pants.',
+    wearGuideOutfitsTitle: 'OUTFITS TIP',
+    wearGuideOutfitsText: 'No matter what you\'re wearing in the photo — the complete outfit will fully replace your outfit in a single generation.',
+    wearGuidePiecesTitle: 'PIECE BY PIECE TIP',
+    wearGuidePiecesText: 'Wear neutral, fitted clothing (plain t-shirt, simple pants). Each added piece leaves what\'s underneath visible — avoid pajamas!',
+    changePieceBtn: '✎ CHANGE A PIECE',
   },
   es: {
     tagline: 'TECNOLOGÍA VIRTUAL · VIRTUAL TRY-ON',
@@ -222,6 +244,17 @@ const T = {
     loadingMsgs: ['Analizando tu silueta...', 'Aplicando la tela a medida...', 'Ajustando proporciones...', 'Calibrando colores...', 'Finalizando tu look...', 'Últimos retoques...'],
     emailSubject: 'Selección cliente Surmesur Try-On',
     emailBody: (items, total, city, mens) => `Hola,\n\nUn cliente de la boutique ${city} ha realizado una selección en la app Surmesur Try-On.\n\nSELECCIÓN DEL CLIENTE:\n\n${items}\n\nTOTAL ESTIMADO: ${total}${mens}\n\nPor favor prepare este expediente para la cita.\n\nAtentamente,\nSurmesur Try-On`,
+    introTitle: '¿Cómo deseas probar nuestra ropa?',
+    introSub: 'Elige tu experiencia para instrucciones de foto personalizadas',
+    introOutfitsLabel: '✦ Probar nuestros Outfits',
+    introOutfitsDesc: 'Looks completos listos para usar, generados en una sola foto — sin importar lo que lleves puesto.',
+    introPiecesLabel: 'Probar prenda por prenda',
+    introPiecesDesc: 'Compón tu look a la carta, prenda por prenda — chaquetas, camisas, pantalones.',
+    wearGuideOutfitsTitle: 'CONSEJO OUTFITS',
+    wearGuideOutfitsText: 'No importa lo que lleves puesto en la foto — el outfit completo reemplazará totalmente tu ropa en una sola generación.',
+    wearGuidePiecesTitle: 'CONSEJO PRENDA POR PRENDA',
+    wearGuidePiecesText: 'Usa ropa neutra y ajustada (camiseta lisa, pantalón simple). Cada prenda añadida deja visible lo que hay debajo — ¡evita la pijama!',
+    changePieceBtn: '✎ CAMBIAR UNA PRENDA',
   }
 }
 
@@ -233,6 +266,12 @@ const CATALOGUE = {
       { id: 's2', nom_fr: 'Complet Charbon', image: `${BASE_URL}/suit-2.jpeg`, prix: '$1,150', desc: '3-Piece · Premium Wool' },
       { id: 's3', nom_fr: 'Complet Prince de Galles', image: `${BASE_URL}/suit-3.jpeg`, prix: '$1,200', desc: '3-Piece · Flannel' },
       { id: 's4', nom_fr: 'Complet Gris Chevron', image: `${BASE_URL}/suit-4.jpeg`, prix: '$1,180', desc: '3-Piece · Herringbone' },
+    ]
+  },
+  outfits: {
+    label: 'Essayez nos Outfits', label_en: 'Try our Outfits', icon: '✦', categorie: 'one-pieces',
+    items: [
+      { id: 'o1', nom_fr: 'Outfit Blazer Cobalt', image: `${BASE_URL}/outfit-1.jpeg`, prix: '$980', desc: 'Look Complet · Blazer + Chemise + Jean' },
     ]
   },
   jackets: {
@@ -403,6 +442,9 @@ export default function SurmesurTryOn() {
   const t = T[lang]
   const [showSurpriseModal, setShowSurpriseModal] = useState(false)
   const [selectedOccasion, setSelectedOccasion] = useState(null)
+  const [tryMode, setTryMode] = useState(null)
+  const [showIntroModal, setShowIntroModal] = useState(true)
+  const [showAllTabs, setShowAllTabs] = useState(false)
 
   // Mensurations optionnelles
   const [mensurations, setMensurations] = useState({
@@ -869,6 +911,11 @@ export default function SurmesurTryOn() {
   const gridContainer = { hidden: {}, visible: { transition: { staggerChildren: 0.045 } } }
   const gridItem = { hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } } }
 
+  // Onglets visibles selon le mode choisi dans la modale d'intro
+  const visibleTabKeys = tryMode === 'pieces'
+    ? ['jackets', 'shirts', 'pants']
+    : (showAllTabs ? Object.keys(CATALOGUE) : ['suits', 'outfits'])
+
   return (
     <div style={phase === 'photo' ? s.pagePhoto : s.page}>
       <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
@@ -898,6 +945,48 @@ export default function SurmesurTryOn() {
           </button>
         </div>
       </header>
+
+      {/* ── MODAL INTRO : Outfits vs Pièce par pièce ── */}
+      <AnimatePresence>
+      {showIntroModal && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ ...s.modalOverlay, alignItems: 'center', zIndex: 400 }}>
+          <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} style={{ ...s.modal, maxWidth: '640px', borderRadius: '8px' }}>
+            <div style={s.modalTitle}>{t.introTitle}</div>
+            <div style={s.modalSub}>{t.introSub}</div>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
+              <motion.div
+                whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setTryMode('outfits')
+                  setActiveTab('outfits')
+                  setShowIntroModal(false)
+                }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', padding: '1.5rem 1.25rem', cursor: 'pointer', textAlign: 'center', background: '#fffef8' }}
+              >
+                <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>✦</div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem', color: '#C9A96E' }}>{t.introOutfitsLabel}</div>
+                <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introOutfitsDesc}</div>
+              </motion.div>
+              <motion.div
+                whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setTryMode('pieces')
+                  setActiveTab('jackets')
+                  setShowIntroModal(false)
+                }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', padding: '1.5rem 1.25rem', cursor: 'pointer', textAlign: 'center', background: '#fff' }}
+              >
+                <div style={{ fontSize: '1.6rem', marginBottom: '0.5rem' }}>🧥</div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem' }}>{t.introPiecesLabel}</div>
+                <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introPiecesDesc}</div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+      </AnimatePresence>
 
       {/* Modal sélection ville */}
       <AnimatePresence>
@@ -1054,6 +1143,17 @@ export default function SurmesurTryOn() {
                   <div style={{ fontSize: '0.72rem', color: '#1a1a1a', fontFamily: 'sans-serif', lineHeight: 1.6, fontStyle: 'italic' }}>{t.noteText}</div>
                 </div>
               </div>
+
+              {/* Astuce spécifique au mode choisi (Outfits vs Pièce par pièce) */}
+              {tryMode && (
+                <div style={{ background: tryMode === 'outfits' ? 'rgba(201,169,110,0.12)' : '#111', padding: '1.1rem 1.75rem', borderTop: '1px solid #e8e4df', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                  <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0, marginTop: '0.05rem' }}>{tryMode === 'outfits' ? '✦' : '🧥'}</span>
+                  <div>
+                    <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginBottom: '0.35rem' }}>{tryMode === 'outfits' ? t.wearGuideOutfitsTitle : t.wearGuidePiecesTitle}</div>
+                    <div style={{ fontSize: '0.72rem', color: tryMode === 'outfits' ? '#1a1a1a' : '#fff', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{tryMode === 'outfits' ? t.wearGuideOutfitsText : t.wearGuidePiecesText}</div>
+                  </div>
+                </div>
+              )}
             </motion.div>
 
             {!cameraActive && !photoConfirmation && (
@@ -1413,7 +1513,7 @@ export default function SurmesurTryOn() {
 
                 <div style={s.catalogLabel}>{t.catalogLabel} · {CATALOGUE[activeTab].label.toUpperCase()}</div>
                 <div style={s.tabs}>
-                  {Object.entries(CATALOGUE).map(([key, cat]) => (
+                  {Object.entries(CATALOGUE).filter(([key]) => visibleTabKeys.includes(key)).map(([key, cat]) => (
                     <button key={key} style={s.tab(activeTab === key)} onClick={() => setActiveTab(key)}>
                       {cat.icon} {lang === 'en' ? cat.label_en || cat.label : cat.label}
                       {activeTab === key && (
@@ -1422,6 +1522,18 @@ export default function SurmesurTryOn() {
                     </button>
                   ))}
                 </div>
+
+                {/* Bouton "Changer une pièce" — visible seulement en mode Outfits, après la 1ère génération */}
+                {tryMode === 'outfits' && generations.length > 0 && !showAllTabs && (
+                  <motion.button
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setShowAllTabs(true)}
+                    style={{ ...s.btnOutline, width: '100%', marginBottom: '1rem', fontSize: '0.68rem' }}
+                  >
+                    {t.changePieceBtn}
+                  </motion.button>
+                )}
 
                 <AnimatePresence mode="wait">
                   <motion.div key={activeTab} style={s.grid} initial="hidden" animate="visible" exit={{ opacity: 0 }} variants={gridContainer}>
