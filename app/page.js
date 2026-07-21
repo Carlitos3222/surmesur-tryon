@@ -49,6 +49,7 @@ const T = {
     step2TitleN: 'Ajouter une pièce',
     step2TitleR: 'Choisissez la pièce de remplacement',
     step2Sub: 'générations · Sélectionnez une pièce puis cliquez "Essayer"',
+    step2SubOutfit: 'Sélectionnez votre préféré puis cliquez "Essayer"',
     catalogLabel: 'CATALOGUE',
     currentLook: 'VOTRE LOOK ACTUEL · YOUR CURRENT LOOK',
     download: '⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD',
@@ -91,6 +92,8 @@ const T = {
     introOutfitsDesc: 'Looks complets prêts à porter, générés en une seule photo — peu importe votre tenue actuelle.',
     introPiecesLabel: 'Essayer pièce par pièce',
     introPiecesDesc: 'Composez votre look à la carte, pièce par pièce — vestons, chemises, pantalons.',
+    introTransitionOutfits: 'Préparation de votre essayage Outfits…',
+    introTransitionPieces: 'Préparation de votre essayage pièce par pièce…',
     wearGuideOutfitsTitle: 'ASTUCE OUTFITS',
     wearGuideOutfitsText: 'Peu importe ce que vous portez sur la photo — l\'outfit complet remplacera entièrement votre tenue en une seule génération.',
     wearGuidePiecesTitle: 'ASTUCE PIÈCE PAR PIÈCE',
@@ -130,6 +133,7 @@ const T = {
     step2TitleN: 'Add a piece',
     step2TitleR: 'Choose the replacement piece',
     step2Sub: 'generations · Select a piece then click "Try"',
+    step2SubOutfit: 'Select your favorite then click "Try"',
     catalogLabel: 'CATALOGUE',
     currentLook: 'YOUR CURRENT LOOK · VOTRE LOOK ACTUEL',
     download: '⬇ DOWNLOAD THIS LOOK · TÉLÉCHARGER',
@@ -172,6 +176,8 @@ const T = {
     introOutfitsDesc: 'Complete ready-to-wear looks, generated in a single photo — no matter what you\'re currently wearing.',
     introPiecesLabel: 'Try piece by piece',
     introPiecesDesc: 'Build your look à la carte, piece by piece — jackets, shirts, pants.',
+    introTransitionOutfits: 'Preparing your Outfits fitting…',
+    introTransitionPieces: 'Preparing your piece-by-piece fitting…',
     wearGuideOutfitsTitle: 'OUTFITS TIP',
     wearGuideOutfitsText: 'No matter what you\'re wearing in the photo — the complete outfit will fully replace your outfit in a single generation.',
     wearGuidePiecesTitle: 'PIECE BY PIECE TIP',
@@ -211,6 +217,7 @@ const T = {
     step2TitleN: 'Agregar una prenda',
     step2TitleR: 'Elige la prenda de reemplazo',
     step2Sub: 'generaciones · Selecciona una prenda y haz clic en "Probar"',
+    step2SubOutfit: 'Selecciona tu preferido y haz clic en "Probar"',
     catalogLabel: 'CATÁLOGO',
     currentLook: 'TU LOOK ACTUAL · YOUR CURRENT LOOK',
     download: '⬇ DESCARGAR ESTE LOOK · DOWNLOAD',
@@ -253,6 +260,8 @@ const T = {
     introOutfitsDesc: 'Looks completos listos para usar, generados en una sola foto — sin importar lo que lleves puesto.',
     introPiecesLabel: 'Probar prenda por prenda',
     introPiecesDesc: 'Compón tu look a la carta, prenda por prenda — chaquetas, camisas, pantalones.',
+    introTransitionOutfits: 'Preparando tu prueba de Outfits…',
+    introTransitionPieces: 'Preparando tu prueba pieza por pieza…',
     wearGuideOutfitsTitle: 'CONSEJO OUTFITS',
     wearGuideOutfitsText: 'No importa lo que lleves puesto en la foto — el outfit completo reemplazará totalmente tu ropa en una sola generación.',
     wearGuidePiecesTitle: 'CONSEJO PRENDA POR PRENDA',
@@ -448,6 +457,18 @@ export default function SurmesurTryOn() {
   const [tryMode, setTryMode] = useState(null)
   const [showIntroModal, setShowIntroModal] = useState(true)
   const [showAllTabs, setShowAllTabs] = useState(false)
+  const [introTransition, setIntroTransition] = useState(null) // null | 'outfits' | 'pieces'
+
+  useEffect(() => {
+    if (!introTransition) return
+    const timer = setTimeout(() => {
+      setTryMode(introTransition)
+      setActiveTab(introTransition === 'outfits' ? 'outfits' : 'jackets')
+      setShowIntroModal(false)
+      setIntroTransition(null)
+    }, 1400)
+    return () => clearTimeout(timer)
+  }, [introTransition])
 
   // Mensurations optionnelles
   const [mensurations, setMensurations] = useState({
@@ -967,12 +988,13 @@ export default function SurmesurTryOn() {
               <motion.div
                 whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
                 whileTap={{ scale: 0.98 }}
+                animate={introTransition ? (introTransition === 'outfits' ? { scale: 1.045, boxShadow: '0 16px 34px rgba(201,169,110,0.4)' } : { opacity: 0.3, scale: 0.96 }) : { scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => {
-                  setTryMode('outfits')
-                  setActiveTab('outfits')
-                  setShowIntroModal(false)
+                  if (introTransition) return
+                  setIntroTransition('outfits')
                 }}
-                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', textAlign: 'center', background: '#fffef8' }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: introTransition ? 'default' : 'pointer', textAlign: 'center', background: '#fffef8' }}
               >
                 <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fffef8' }}>
                   <img src={`${BASE_URL}/outfit-1.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
@@ -985,12 +1007,13 @@ export default function SurmesurTryOn() {
               <motion.div
                 whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
                 whileTap={{ scale: 0.98 }}
+                animate={introTransition ? (introTransition === 'pieces' ? { scale: 1.045, boxShadow: '0 16px 34px rgba(201,169,110,0.4)' } : { opacity: 0.3, scale: 0.96 }) : { scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => {
-                  setTryMode('pieces')
-                  setActiveTab('jackets')
-                  setShowIntroModal(false)
+                  if (introTransition) return
+                  setIntroTransition('pieces')
                 }}
-                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: 'pointer', textAlign: 'center', background: '#fff' }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: introTransition ? 'default' : 'pointer', textAlign: 'center', background: '#fff' }}
               >
                 <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fff' }}>
                   <img src={`${BASE_URL}/jacket-3.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
@@ -1000,6 +1023,52 @@ export default function SurmesurTryOn() {
                   <div style={{ fontSize: isMobile ? '0.62rem' : '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.5 }}>{t.introPiecesDesc}</div>
                 </div>
               </motion.div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+      </AnimatePresence>
+
+      {/* ── Transition élégante entre l'étape 1 (choix) et l'étape 2 (photo) ── */}
+      <AnimatePresence>
+      {introTransition && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.45, ease: 'easeInOut' }}
+          style={{ position: 'fixed', inset: 0, zIndex: 500, background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            style={{ textAlign: 'center', padding: '0 1.5rem' }}
+          >
+            <img src={`${BASE_URL}/logo-surmesur.png`} alt="Surmesur Select" style={{ height: '22px', width: 'auto', display: 'block', margin: '0 auto 1.6rem' }} />
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: '54px', opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)', margin: '0 auto 1.3rem' }}
+            />
+            <motion.div
+              key={introTransition}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.9rem', fontWeight: 500, color: '#fff', letterSpacing: '0.01em', marginBottom: '1.7rem' }}
+            >
+              {introTransition === 'outfits' ? t.introTransitionOutfits : t.introTransitionPieces}
+            </motion.div>
+            <div style={{ width: '170px', height: '2px', background: 'rgba(201,169,110,0.2)', margin: '0 auto', overflow: 'hidden', borderRadius: '2px' }}>
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: '0%' }}
+                transition={{ duration: 1.2, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                style={{ width: '100%', height: '100%', background: '#C9A96E' }}
+              />
             </div>
           </motion.div>
         </motion.div>
@@ -1397,7 +1466,9 @@ export default function SurmesurTryOn() {
                 <div style={s.stepSub}>
                   {replaceMode !== null
                     ? `${t.replaceMode} : ${generations[replaceMode]?.item.nom_fr}`
-                    : `${generations.length}/${MAX_GENERATIONS} ${t.step2Sub}`}
+                    : tryMode === 'outfits'
+                      ? t.step2SubOutfit
+                      : `${generations.length}/${MAX_GENERATIONS} ${t.step2Sub}`}
                 </div>
 
                 {/* Formulaire mensurations — au-dessus du catalogue (mobile + desktop) */}
