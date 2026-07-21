@@ -1750,7 +1750,7 @@ export default function SurmesurTryOn() {
                           <div style={{ display: 'flex', gap: '0.5rem' }}>
                             {['Homme', 'Femme', 'Autre'].map(g => (
                               <motion.button key={g} whileHover={{ y: -2 }} whileTap={{ scale: 0.96 }} onClick={() => setMensurations(m => ({ ...m, genre: g }))}
-                                style={{ flex: 1, padding: '0.6rem', border: mensurations.genre === g ? '1px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#000' : '#fff', cursor: 'pointer', fontSize: '0.66rem', letterSpacing: '0.06em', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '4px', transition: 'border-color .2s, background .2s', boxShadow: mensurations.genre === g ? '0 4px 14px rgba(0,0,0,0.15)' : 'none' }}>
+                                style={{ flex: 1, padding: '0.6rem', border: mensurations.genre === g ? '1px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#3a3a3a' : '#fff', cursor: 'pointer', fontSize: '0.66rem', letterSpacing: '0.06em', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '4px', transition: 'border-color .2s, background .2s', boxShadow: mensurations.genre === g ? '0 4px 14px rgba(0,0,0,0.12)' : 'none' }}>
                                 {g}
                               </motion.button>
                             ))}
@@ -1824,7 +1824,7 @@ export default function SurmesurTryOn() {
                                   initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.05 * i }}
                                   whileHover={{ y: -3, boxShadow: '0 8px 20px rgba(0,0,0,0.08)' }} whileTap={{ scale: 0.96 }}
                                   onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
-                                  style={{ padding: '0.75rem 0.25rem', border: isSel ? '1px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#000' : '#fff', cursor: 'pointer', borderRadius: '5px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', boxShadow: isSel ? '0 6px 18px rgba(0,0,0,0.16)' : 'none' }}>
+                                  style={{ padding: '0.75rem 0.25rem', border: isSel ? '1px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#3a3a3a' : '#fff', cursor: 'pointer', borderRadius: '5px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', boxShadow: isSel ? '0 6px 18px rgba(0,0,0,0.13)' : 'none' }}>
                                   <div style={{ color: isSel ? '#C9A96E' : '#ccc', lineHeight: 0, transition: 'color .2s' }}>
                                     {isFemme ? morph.svgF : morph.svgH}
                                   </div>
