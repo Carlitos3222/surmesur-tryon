@@ -6,11 +6,15 @@ const BASE_URL = 'https://surmesur-tryon.vercel.app'
 
 // ─── VILLES & DEVISES ─────────────────────────────────────────────────────
 const CITIES = [
+  { id: 'laval', label: 'Laval', currency: 'CAD', symbol: '$', email: 'laval@surmesur.com' },
+  { id: 'mississauga', label: 'Mississauga', currency: 'CAD', symbol: '$', email: 'mississauga@surmesur.com' },
   { id: 'montreal', label: 'Montréal', currency: 'CAD', symbol: '$', email: 'montreal@surmesur.com' },
-  { id: 'toronto', label: 'Toronto', currency: 'CAD', symbol: '$', email: 'toronto@surmesur.com' },
-  { id: 'vancouver', label: 'Vancouver', currency: 'CAD', symbol: '$', email: 'vancouver@surmesur.com' },
   { id: 'ottawa', label: 'Ottawa', currency: 'CAD', symbol: '$', email: 'ottawa@surmesur.com' },
   { id: 'pittsburgh', label: 'Pittsburgh', currency: 'USD', symbol: '$', email: 'pittsburgh@surmesur.com' },
+  { id: 'quebec', label: 'Québec', currency: 'CAD', symbol: '$', email: 'quebec@surmesur.com' },
+  { id: 'toronto', label: 'Toronto', currency: 'CAD', symbol: '$', email: 'toronto@surmesur.com' },
+  { id: 'vancouver', label: 'Vancouver', currency: 'CAD', symbol: '$', email: 'vancouver@surmesur.com' },
+  { id: 'waterloo', label: 'Waterloo', currency: 'CAD', symbol: '$', email: 'waterloo@surmesur.com' },
   { id: 'mexico', label: 'Mexico City', currency: 'MXN', symbol: '$', email: 'mexico@surmesur.com' },
 ]
 
