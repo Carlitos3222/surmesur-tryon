@@ -48,8 +48,8 @@ const T = {
     step2Title0Outfit: 'Essayez votre premier outfit',
     step2TitleN: 'Ajouter une pièce',
     step2TitleR: 'Choisissez la pièce de remplacement',
-    step2Sub: 'générations · Sélectionnez une pièce puis cliquez "Essayer"',
-    step2SubOutfit: 'Sélectionnez votre préféré puis cliquez "Essayer"',
+    step2Sub: 'générations · Sélectionnez une pièce puis cliquez sur "Essayer"',
+    step2SubOutfit: 'générations · Sélectionnez votre coup de cœur puis cliquez sur "Essayer"',
     catalogLabel: 'CATALOGUE',
     currentLook: 'VOTRE LOOK ACTUEL · YOUR CURRENT LOOK',
     download: '⬇ TÉLÉCHARGER CE LOOK · DOWNLOAD',
@@ -132,8 +132,8 @@ const T = {
     step2Title0Outfit: 'Try your first outfit',
     step2TitleN: 'Add a piece',
     step2TitleR: 'Choose the replacement piece',
-    step2Sub: 'generations · Select a piece then click "Try"',
-    step2SubOutfit: 'Select your favorite then click "Try"',
+    step2Sub: 'generations · Select a piece then click on "Try"',
+    step2SubOutfit: 'generations · Select your favorite then click on "Try"',
     catalogLabel: 'CATALOGUE',
     currentLook: 'YOUR CURRENT LOOK · VOTRE LOOK ACTUEL',
     download: '⬇ DOWNLOAD THIS LOOK · TÉLÉCHARGER',
@@ -217,7 +217,7 @@ const T = {
     step2TitleN: 'Agregar una prenda',
     step2TitleR: 'Elige la prenda de reemplazo',
     step2Sub: 'generaciones · Selecciona una prenda y haz clic en "Probar"',
-    step2SubOutfit: 'Selecciona tu preferido y haz clic en "Probar"',
+    step2SubOutfit: 'generaciones · Selecciona tu favorito y haz clic en "Probar"',
     catalogLabel: 'CATÁLOGO',
     currentLook: 'TU LOOK ACTUAL · YOUR CURRENT LOOK',
     download: '⬇ DESCARGAR ESTE LOOK · DOWNLOAD',
@@ -1466,9 +1466,7 @@ export default function SurmesurTryOn() {
                 <div style={s.stepSub}>
                   {replaceMode !== null
                     ? `${t.replaceMode} : ${generations[replaceMode]?.item.nom_fr}`
-                    : tryMode === 'outfits'
-                      ? t.step2SubOutfit
-                      : `${generations.length}/${MAX_GENERATIONS} ${t.step2Sub}`}
+                    : `${generations.length}/${MAX_GENERATIONS} ${tryMode === 'outfits' ? t.step2SubOutfit : t.step2Sub}`}
                 </div>
 
                 {/* Formulaire mensurations — au-dessus du catalogue (mobile + desktop) */}
