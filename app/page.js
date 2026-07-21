@@ -1921,7 +1921,7 @@ export default function SurmesurTryOn() {
                 >
                   {showSidebar ? '✕' : `✦ ${sidebarItems.length > 0 ? `(${sidebarItems.length})` : ''}`}
                 </button>
-                {!showSidebar && !isGenerating && generations.length === 0 && (
+                {!showSidebar && !isGenerating && generations.length === 0 && tryMode !== 'outfits' && (
                   <button
                     style={{ flex: 2, padding: '0.85rem', background: 'linear-gradient(135deg,#C9A96E,#e8c87a)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.65rem', letterSpacing: '0.08em', fontFamily: 'sans-serif' }}
                     onClick={() => { setSelectedOccasion(null); setShowSurpriseModal(true) }}
@@ -1945,7 +1945,7 @@ export default function SurmesurTryOn() {
           <div style={s.sideCol}>
             <div style={s.sideTitle}>{t.selectionTitle}</div>
 
-            {generations.length === 0 && !autoGenerating && (
+            {generations.length === 0 && !autoGenerating && tryMode !== 'outfits' && (
               <button style={{ ...s.btnSurprise, fontSize: '0.7rem', padding: '0.85rem', marginBottom: '1rem' }}
                 onClick={() => { setSelectedOccasion(null); setShowSurpriseModal(true) }}>
                 {t.surprise}<br />
