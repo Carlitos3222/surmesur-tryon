@@ -74,6 +74,7 @@ const T = {
     btnRestart: '↺ RECOMMENCER · START OVER',
     selectCity: 'Choisir votre ville',
     cityLabel: 'VOTRE BOUTIQUE',
+    cityRequiredHint: 'Veuillez sélectionner votre boutique pour continuer',
     surprise: '✦ SURPRENEZ-MOI',
     surpriseSub: 'SURPRISE ME · OUTFIT COMPLET',
     surpriseTitle: 'Quelle est l\'occasion ?',
@@ -158,6 +159,7 @@ const T = {
     btnRestart: '↺ START OVER · RECOMMENCER',
     selectCity: 'Choose your city',
     cityLabel: 'YOUR BOUTIQUE',
+    cityRequiredHint: 'Please select your boutique to continue',
     surprise: '✦ SURPRISE ME',
     surpriseSub: 'LET OUR AI STYLIST CHOOSE',
     surpriseTitle: 'What\'s the occasion?',
@@ -242,6 +244,7 @@ const T = {
     btnRestart: '↺ COMENZAR DE NUEVO',
     selectCity: 'Elige tu ciudad',
     cityLabel: 'TU BOUTIQUE',
+    cityRequiredHint: 'Selecciona tu boutique para continuar',
     surprise: '✦ SORPRÉNDEME',
     surpriseSub: 'DEJA QUE NUESTRA IA ELIJA',
     surpriseTitle: '¿Cuál es la ocasión?',
@@ -451,7 +454,23 @@ export default function SurmesurTryOn() {
   const [lang, setLang] = useState('fr')
   const [selectedCity, setSelectedCity] = useState(null)
   const [showCityModal, setShowCityModal] = useState(false)
+  const [clientInfo, setClientInfo] = useState(null) // { name, phone, customerId } — pré-rempli via l'URL si intégré depuis surmesur.com
   const t = T[lang]
+
+  // ─── Pré-remplissage via l'URL (bouton "Try On" intégré sur surmesur.com) ───
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const cityParam = (params.get('city') || params.get('ville') || '').toLowerCase()
+      const matchedCity = CITIES.find(c => c.id === cityParam)
+      if (matchedCity) setSelectedCity(matchedCity)
+
+      const name = params.get('name') || params.get('nom') || ''
+      const phone = params.get('phone') || params.get('telephone') || ''
+      const customerId = params.get('customerId') || params.get('client_id') || params.get('id') || ''
+      if (name || phone || customerId) setClientInfo({ name, phone, customerId })
+    } catch (e) { /* no-op */ }
+  }, [])
   const [showSurpriseModal, setShowSurpriseModal] = useState(false)
   const [selectedOccasion, setSelectedOccasion] = useState(null)
   const [tryMode, setTryMode] = useState(null)
@@ -811,8 +830,17 @@ export default function SurmesurTryOn() {
       if (mensurations.morphologie) mensBlock += `\n  Morphologie : ${morphoLabels[mensurations.morphologie] || mensurations.morphologie}`
     }
 
+    // Bloc identité client (si transmis via l'URL depuis le site surmesur.com)
+    let clientBlock = ''
+    if (clientInfo && (clientInfo.name || clientInfo.phone || clientInfo.customerId)) {
+      clientBlock = '\n\nIDENTITÉ DU CLIENT :'
+      if (clientInfo.name) clientBlock += `\n  Nom : ${clientInfo.name}`
+      if (clientInfo.phone) clientBlock += `\n  Téléphone : ${clientInfo.phone}`
+      if (clientInfo.customerId) clientBlock += `\n  # Client : ${clientInfo.customerId}`
+    }
+
     const subject = encodeURIComponent(t.emailSubject)
-    const body = encodeURIComponent(t.emailBody(itemsList, formatPrice(totalPrice), cityName, mensBlock))
+    const body = encodeURIComponent(t.emailBody(itemsList, formatPrice(totalPrice), cityName, mensBlock) + clientBlock)
     window.location.href = `mailto:${vendorEmail}?subject=${subject}&body=${body}`
   }
 
@@ -984,17 +1012,50 @@ export default function SurmesurTryOn() {
             </div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isMobile ? '1.5rem' : '1.85rem', fontWeight: 500, letterSpacing: '0.01em', marginBottom: '0.5rem', textAlign: 'center', color: '#1a1a1a' }}>{t.introTitle}</div>
             <div style={s.modalSub}>{t.introSub}</div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isMobile ? '0.6rem' : '1rem' }}>
+
+            {/* ── Sélection de la ville / boutique (obligatoire avant de continuer) ── */}
+            <div style={{ marginBottom: isMobile ? '1rem' : '1.3rem' }}>
+              <div style={{ fontSize: '0.6rem', letterSpacing: '0.2em', color: '#C9A96E', fontFamily: 'sans-serif', marginBottom: '0.6rem', textAlign: 'center' }}>{t.cityLabel}</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', justifyContent: 'center' }}>
+                {CITIES.map(city => (
+                  <motion.button
+                    key={city.id}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setSelectedCity(city)}
+                    style={{
+                      padding: isMobile ? '0.4rem 0.7rem' : '0.5rem 0.9rem',
+                      border: selectedCity?.id === city.id ? '1.5px solid #C9A96E' : '1px solid #e8e4df',
+                      borderRadius: '20px',
+                      background: selectedCity?.id === city.id ? '#C9A96E' : '#fff',
+                      color: selectedCity?.id === city.id ? '#fff' : '#444',
+                      cursor: 'pointer',
+                      fontFamily: 'sans-serif',
+                      fontSize: isMobile ? '0.68rem' : '0.75rem',
+                      fontWeight: selectedCity?.id === city.id ? 500 : 400,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    {city.label}
+                  </motion.button>
+                ))}
+              </div>
+              {!selectedCity && (
+                <div style={{ fontSize: isMobile ? '0.6rem' : '0.65rem', color: '#b8925a', fontFamily: 'sans-serif', textAlign: 'center', marginTop: '0.6rem', fontStyle: 'italic' }}>{t.cityRequiredHint}</div>
+              )}
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isMobile ? '0.6rem' : '1rem', opacity: selectedCity ? 1 : 0.45, pointerEvents: selectedCity ? 'auto' : 'none', transition: 'opacity 0.3s ease' }}>
               <motion.div
                 whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
                 whileTap={{ scale: 0.98 }}
                 animate={introTransition ? (introTransition === 'outfits' ? { scale: 1.045, boxShadow: '0 16px 34px rgba(201,169,110,0.4)' } : { opacity: 0.3, scale: 0.96 }) : { scale: 1, opacity: 1 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => {
-                  if (introTransition) return
+                  if (introTransition || !selectedCity) return
                   setIntroTransition('outfits')
                 }}
-                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: introTransition ? 'default' : 'pointer', textAlign: 'center', background: '#fffef8' }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: (introTransition || !selectedCity) ? 'default' : 'pointer', textAlign: 'center', background: '#fffef8' }}
               >
                 <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fffef8' }}>
                   <img src={`${BASE_URL}/outfit-1.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
@@ -1010,10 +1071,10 @@ export default function SurmesurTryOn() {
                 animate={introTransition ? (introTransition === 'pieces' ? { scale: 1.045, boxShadow: '0 16px 34px rgba(201,169,110,0.4)' } : { opacity: 0.3, scale: 0.96 }) : { scale: 1, opacity: 1 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 onClick={() => {
-                  if (introTransition) return
+                  if (introTransition || !selectedCity) return
                   setIntroTransition('pieces')
                 }}
-                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: introTransition ? 'default' : 'pointer', textAlign: 'center', background: '#fff' }}
+                style={{ border: '1px solid #e8e4df', borderRadius: '6px', overflow: 'hidden', cursor: (introTransition || !selectedCity) ? 'default' : 'pointer', textAlign: 'center', background: '#fff' }}
               >
                 <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fff' }}>
                   <img src={`${BASE_URL}/jacket-3.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
