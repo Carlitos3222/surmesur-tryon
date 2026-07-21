@@ -813,7 +813,7 @@ export default function SurmesurTryOn() {
     stats: { display: 'flex', justifyContent: 'center', gap: '4rem', flexWrap: 'wrap', marginTop: '0.5rem' },
     statN: { fontSize: '1.8rem', fontWeight: 300, color: '#C9A96E' },
     statL: { fontSize: '0.65rem', letterSpacing: '0.15em', color: '#aaa', fontFamily: 'sans-serif' },
-    stepNum: { fontSize: '2.5rem', fontWeight: 300, color: '#e8e4df', lineHeight: 1 },
+    stepNum: { fontSize: '2.5rem', fontWeight: 300, color: '#C9A96E', lineHeight: 1 },
     stepTitle: { fontSize: '1.4rem', fontWeight: 300, marginBottom: '0.25rem' },
     stepSub: { fontSize: '0.72rem', color: '#888', fontFamily: 'sans-serif', marginBottom: '1.25rem' },
     uploadZone: { border: '1px dashed #ccc', borderRadius: '4px', padding: '4rem 2rem', textAlign: 'center', cursor: 'pointer', background: 'rgba(250,250,248,0.68)', marginBottom: '1rem' },
@@ -951,6 +951,7 @@ export default function SurmesurTryOn() {
       {showIntroModal && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ ...s.modalOverlay, alignItems: 'center', zIndex: 400 }}>
           <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} style={{ ...s.modal, maxWidth: '640px', borderRadius: '8px' }}>
+            <div style={{ ...s.stepNum, fontSize: isMobile ? '1.6rem' : '1.9rem', textAlign: 'center', marginBottom: '0.3rem' }}>01</div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.1rem' }}>
               <img src={`${BASE_URL}/logo-surmesur-black.png`} alt="Surmesur Select" style={{ height: isMobile ? '20px' : '24px', width: 'auto', display: 'block' }} />
             </div>
@@ -1106,7 +1107,7 @@ export default function SurmesurTryOn() {
           </motion.div>
 
           <div style={s.photoWrap}>
-            <div style={s.stepNum}>01</div>
+            <div style={s.stepNum}>02</div>
             <div style={s.stepTitle}>{t.step1Title}</div>
             <div style={s.stepSub}>{t.step1Sub}</div>
 
@@ -1388,7 +1389,7 @@ export default function SurmesurTryOn() {
             {/* Catalog */}
             {!autoGenerating && (
               <>
-                <div style={s.stepNum}>0{generations.length === 0 ? '2' : generations.length + 1}</div>
+                <div style={s.stepNum}>0{generations.length === 0 ? '3' : generations.length + 2}</div>
                 <div style={s.stepTitle}>{replaceMode !== null ? t.step2TitleR : generations.length === 0 ? t.step2Title0 : t.step2TitleN}</div>
                 <div style={s.stepSub}>
                   {replaceMode !== null
