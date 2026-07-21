@@ -1898,7 +1898,8 @@ export default function SurmesurTryOn() {
                         <span style={{ fontSize: '1.2rem', fontWeight: 300 }}>{formatPrice(totalPrice)}</span>
                       </div>
                     )}
-                    <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer"
+                    <a href="https://surmesur.com/fr-ca/prendre-rendez-vous/" target="_blank" rel="noopener noreferrer"
+                      onClick={() => { if (sidebarItems.length > 0) sendEmail() }}
                       style={{ display: 'block', width: '100%', padding: '0.95rem', background: '#000', color: '#fff', fontSize: '0.72rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', textDecoration: 'none', marginBottom: '0.5rem', boxSizing: 'border-box' }}>
                       {t.btnAppt}<br />
                       <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnApptSub}</span>
@@ -1988,7 +1989,7 @@ export default function SurmesurTryOn() {
                   <span style={s.totalAmt}>{formatPrice(totalPrice)}</span>
                 </div>
               )}
-              <a href="https://www.surmesur.com" target="_blank" rel="noopener noreferrer" style={s.btnAppt}>
+              <a href="https://surmesur.com/fr-ca/prendre-rendez-vous/" target="_blank" rel="noopener noreferrer" onClick={() => { if (sidebarItems.length > 0) sendEmail() }} style={s.btnAppt}>
                 {t.btnAppt}<br />
                 <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnApptSub}</span>
               </a>
