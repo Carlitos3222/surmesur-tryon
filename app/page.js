@@ -951,9 +951,15 @@ export default function SurmesurTryOn() {
       {showIntroModal && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ ...s.modalOverlay, alignItems: 'center', zIndex: 400 }}>
           <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} style={{ ...s.modal, maxWidth: '640px', borderRadius: '8px' }}>
-            <div style={s.modalTitle}>{t.introTitle}</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.1rem' }}>
+              <img src={`${BASE_URL}/logo-surmesur-black.png`} alt="Surmesur Select" style={{ height: isMobile ? '20px' : '24px', width: 'auto', display: 'block' }} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.7rem' }}>
+              <div style={{ width: '36px', height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)' }} />
+            </div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isMobile ? '1.5rem' : '1.85rem', fontWeight: 500, letterSpacing: '0.01em', marginBottom: '0.5rem', textAlign: 'center', color: '#1a1a1a' }}>{t.introTitle}</div>
             <div style={s.modalSub}>{t.introSub}</div>
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isMobile ? '0.6rem' : '1rem' }}>
               <motion.div
                 whileHover={{ y: -3, boxShadow: '0 10px 24px rgba(0,0,0,0.12)' }}
                 whileTap={{ scale: 0.98 }}
@@ -967,9 +973,9 @@ export default function SurmesurTryOn() {
                 <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fffef8' }}>
                   <img src={`${BASE_URL}/outfit-1.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
                 </div>
-                <div style={{ padding: '1.1rem 1.25rem 1.4rem' }}>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem', color: '#C9A96E' }}>{t.introOutfitsLabel}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introOutfitsDesc}</div>
+                <div style={{ padding: isMobile ? '0.6rem 0.5rem 0.8rem' : '1.1rem 1.25rem 1.4rem' }}>
+                  <div style={{ fontSize: isMobile ? '0.78rem' : '0.95rem', fontWeight: 400, marginBottom: isMobile ? '0.3rem' : '0.5rem', color: '#C9A96E' }}>{t.introOutfitsLabel}</div>
+                  <div style={{ fontSize: isMobile ? '0.62rem' : '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.5 }}>{t.introOutfitsDesc}</div>
                 </div>
               </motion.div>
               <motion.div
@@ -985,9 +991,9 @@ export default function SurmesurTryOn() {
                 <div style={{ width: '100%', aspectRatio: '3 / 4', overflow: 'hidden', background: '#fff' }}>
                   <img src={`${BASE_URL}/jacket-3.jpeg`} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} />
                 </div>
-                <div style={{ padding: '1.1rem 1.25rem 1.4rem' }}>
-                  <div style={{ fontSize: '0.95rem', fontWeight: 400, marginBottom: '0.5rem' }}>{t.introPiecesLabel}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.6 }}>{t.introPiecesDesc}</div>
+                <div style={{ padding: isMobile ? '0.6rem 0.5rem 0.8rem' : '1.1rem 1.25rem 1.4rem' }}>
+                  <div style={{ fontSize: isMobile ? '0.78rem' : '0.95rem', fontWeight: 400, marginBottom: isMobile ? '0.3rem' : '0.5rem' }}>{t.introPiecesLabel}</div>
+                  <div style={{ fontSize: isMobile ? '0.62rem' : '0.7rem', color: '#888', fontFamily: 'sans-serif', lineHeight: 1.5 }}>{t.introPiecesDesc}</div>
                 </div>
               </motion.div>
             </div>
