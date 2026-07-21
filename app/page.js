@@ -1082,7 +1082,7 @@ export default function SurmesurTryOn() {
     photoThumbRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem', padding: '0.6rem', background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px' },
     photoThumb: { width: '52px', height: '66px', objectFit: 'cover', borderRadius: '2px', border: '1.5px solid #C9A96E', flexShrink: 0 },
     changeBtn: { fontSize: '0.65rem', color: '#C9A96E', fontFamily: 'sans-serif', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', padding: 0 },
-    modeSwitchBtn: { background: '#000', color: '#C9A96E', border: 'none', borderRadius: '4px', padding: '0.65rem 1rem', fontSize: '0.62rem', letterSpacing: '0.04em', fontFamily: 'sans-serif', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 },
+    modeSwitchBtn: { background: 'linear-gradient(135deg, #C9A96E, #d9bd85)', color: '#fff', border: 'none', borderRadius: '4px', padding: '0.65rem 1rem', fontSize: '0.62rem', letterSpacing: '0.04em', fontFamily: 'sans-serif', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0, boxShadow: '0 3px 10px rgba(201,169,110,0.35)' },
     error: { background: '#fff5f5', border: '1px solid #ffd0d0', padding: '0.6rem 0.85rem', borderRadius: '4px', fontSize: '0.68rem', color: '#c00', fontFamily: 'sans-serif', marginTop: '0.75rem' },
     // Surprise button
     btnSurprise: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #C9A96E, #e8c87a)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.78rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, marginBottom: '0.75rem', borderRadius: '2px' },
@@ -1704,17 +1704,24 @@ export default function SurmesurTryOn() {
 
                 {/* Formulaire mensurations — au-dessus du catalogue (mobile + desktop) */}
                 {(
-                  <div style={{ marginBottom: '1rem', border: '1px solid #e8e4df', borderRadius: '4px', overflow: 'hidden' }}>
-                    <button
+                  <div style={{ marginBottom: '1.5rem', border: '1px solid #e5ddc8', borderRadius: '8px', overflow: 'hidden', background: '#fff', boxShadow: '0 4px 28px rgba(26,26,26,0.05)' }}>
+                    <motion.button
                       onClick={() => setShowMensurationsForm(!showMensurationsForm)}
-                      style={{ width: '100%', padding: '0.75rem 1rem', background: showMensurationsForm ? '#fffbf0' : '#fafaf8', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: showMensurationsForm ? '1px solid #e8d8b8' : 'none' }}
+                      whileHover={{ backgroundColor: 'rgba(201,169,110,0.05)' }}
+                      style={{ width: '100%', padding: isMobile ? '0.9rem 1rem' : '1.1rem 1.4rem', background: 'transparent', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: showMensurationsForm ? '1px solid #ece2c8' : 'none' }}
                     >
-                      <div style={{ textAlign: 'left' }}>
-                        <div style={{ fontSize: '0.68rem', fontFamily: 'sans-serif', color: '#C9A96E', fontWeight: 600, letterSpacing: '0.1em' }}>✦ MENSURATIONS · OPTIONNEL</div>
-                        <div style={{ fontSize: '0.58rem', fontFamily: 'sans-serif', color: '#aaa', marginTop: '0.15rem' }}>Pour un résultat encore plus fidèle</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                        <div style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #C9A96E', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C9A96E', fontSize: '0.9rem', flexShrink: 0 }}>✦</div>
+                        <div style={{ textAlign: 'left' }}>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem', flexWrap: 'wrap' }}>
+                            <span style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '1.05rem', fontWeight: 500, letterSpacing: '0.02em', color: '#1a1a1a' }}>Mensurations</span>
+                            <span style={{ fontSize: '0.56rem', fontFamily: 'sans-serif', color: '#C9A96E', letterSpacing: '0.15em', fontWeight: 600 }}>OPTIONNEL</span>
+                          </div>
+                          <div style={{ fontSize: '0.62rem', fontFamily: 'sans-serif', color: '#aaa', marginTop: '0.2rem', letterSpacing: '0.01em' }}>Pour un résultat sur-mesure, fidèle à votre silhouette</div>
+                        </div>
                       </div>
-                      <motion.span animate={{ rotate: showMensurationsForm ? 0 : 0 }} style={{ color: '#C9A96E', fontSize: '0.8rem', display: 'inline-block' }}>{showMensurationsForm ? '▲' : '▼'}</motion.span>
-                    </button>
+                      <motion.span animate={{ rotate: showMensurationsForm ? 180 : 0 }} transition={{ duration: 0.3, ease: 'easeInOut' }} style={{ color: '#C9A96E', fontSize: '0.75rem', display: 'inline-block', flexShrink: 0, marginLeft: '0.5rem' }}>▾</motion.span>
+                    </motion.button>
 
                     <AnimatePresence initial={false}>
                     {showMensurationsForm && (
@@ -1723,39 +1730,45 @@ export default function SurmesurTryOn() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        transition={{ duration: 0.35, ease: 'easeInOut' }}
                         style={{ overflow: 'hidden' }}
                       >
-                      <div style={{ padding: '1rem', background: '#fffbf0' }}>
-                        <div style={{ fontSize: '0.62rem', color: '#fff', fontFamily: 'sans-serif', lineHeight: 1.6, marginBottom: '1rem', padding: '0.6rem 0.75rem', background: '#000', border: '1px solid #C9A96E', borderRadius: '3px' }}>
-                          <span style={{ color: '#C9A96E' }}>✦</span> Ces informations sont <strong>optionnelles mais recommandées</strong>. Elles permettent à notre IA de créer un résultat plus réaliste et fidèle à votre morphologie.
-                        </div>
+                      <div style={{ padding: isMobile ? '1.25rem 1rem 1.5rem' : '1.5rem 1.4rem 1.75rem', background: 'linear-gradient(180deg, #fffdf8 0%, #fff 100%)', display: 'flex', flexDirection: 'column', gap: '1.4rem' }}>
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.4, delay: 0.05 }}
+                          style={{ display: 'flex', gap: '0.65rem', alignItems: 'flex-start', fontSize: '0.72rem', color: '#8a6d3b', fontFamily: "'Cormorant Garamond', Georgia, serif", fontStyle: 'italic', lineHeight: 1.65, padding: '0.85rem 1rem', background: '#fdfaf3', borderLeft: '2px solid #C9A96E', borderRadius: '2px' }}
+                        >
+                          <span style={{ fontStyle: 'normal', color: '#C9A96E' }}>✦</span>
+                          <span>Ces informations sont <strong style={{ fontStyle: 'normal' }}>optionnelles mais recommandées</strong> — elles permettent à notre intelligence artificielle de sculpter un résultat encore plus fidèle à votre silhouette.</span>
+                        </motion.div>
 
                         {/* Genre */}
-                        <div style={{ marginBottom: '0.75rem' }}>
-                          <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>GENRE</div>
+                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
+                          <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', color: '#b8a888', fontFamily: 'sans-serif', marginBottom: '0.5rem', fontWeight: 600 }}>GENRE</div>
                           <div style={{ display: 'flex', gap: '0.5rem' }}>
                             {['Homme', 'Femme', 'Autre'].map(g => (
-                              <button key={g} onClick={() => setMensurations(m => ({ ...m, genre: g }))}
-                                style={{ flex: 1, padding: '0.5rem', border: mensurations.genre === g ? '2px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#fffbf0' : '#fff', cursor: 'pointer', fontSize: '0.68rem', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '3px' }}>
+                              <motion.button key={g} whileHover={{ y: -2 }} whileTap={{ scale: 0.96 }} onClick={() => setMensurations(m => ({ ...m, genre: g }))}
+                                style={{ flex: 1, padding: '0.6rem', border: mensurations.genre === g ? '1px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#000' : '#fff', cursor: 'pointer', fontSize: '0.66rem', letterSpacing: '0.06em', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '4px', transition: 'border-color .2s, background .2s', boxShadow: mensurations.genre === g ? '0 4px 14px rgba(0,0,0,0.15)' : 'none' }}>
                                 {g}
-                              </button>
+                              </motion.button>
                             ))}
                           </div>
-                        </div>
+                        </motion.div>
 
                         {/* Taille + Poids */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.15 }} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
                           <div>
-                            <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>TAILLE</div>
+                            <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', color: '#b8a888', fontFamily: 'sans-serif', marginBottom: '0.5rem', fontWeight: 600 }}>TAILLE</div>
                             <div style={{ display: 'flex', gap: '0.35rem' }}>
                               <input type="number" placeholder={mensurations.tailleUnit === 'cm' ? '180' : '71'} value={mensurations.taille}
                                 onChange={e => setMensurations(m => ({ ...m, taille: e.target.value }))}
-                                style={{ flex: 1, padding: '0.45rem 0.4rem', border: '1px solid #e8e4df', borderRadius: '3px', fontSize: '0.75rem', fontFamily: 'sans-serif', outline: 'none', minWidth: 0 }} />
-                              <div style={{ display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+                                style={{ flex: 1, padding: '0.55rem 0.5rem', border: '1px solid #e8e4df', borderRadius: '4px', fontSize: '0.8rem', fontFamily: "'Cormorant Garamond', Georgia, serif", outline: 'none', minWidth: 0, background: '#fff' }} />
+                              <div style={{ display: 'flex', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
                                 {['cm', 'po'].map(u => (
                                   <button key={u} onClick={() => setMensurations(m => ({ ...m, tailleUnit: u }))}
-                                    style={{ padding: '0.45rem 0.4rem', border: 'none', background: mensurations.tailleUnit === u ? '#C9A96E' : '#fff', color: mensurations.tailleUnit === u ? '#fff' : '#888', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif' }}>
+                                    style={{ padding: '0.5rem 0.45rem', border: 'none', background: mensurations.tailleUnit === u ? '#C9A96E' : '#fff', color: mensurations.tailleUnit === u ? '#fff' : '#aaa', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif', transition: 'all .2s' }}>
                                     {u}
                                   </button>
                                 ))}
@@ -1763,27 +1776,27 @@ export default function SurmesurTryOn() {
                             </div>
                           </div>
                           <div>
-                            <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.35rem' }}>POIDS</div>
+                            <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', color: '#b8a888', fontFamily: 'sans-serif', marginBottom: '0.5rem', fontWeight: 600 }}>POIDS</div>
                             <div style={{ display: 'flex', gap: '0.35rem' }}>
                               <input type="number" placeholder={mensurations.poidsUnit === 'kg' ? '80' : '176'} value={mensurations.poids}
                                 onChange={e => setMensurations(m => ({ ...m, poids: e.target.value }))}
-                                style={{ flex: 1, padding: '0.45rem 0.4rem', border: '1px solid #e8e4df', borderRadius: '3px', fontSize: '0.75rem', fontFamily: 'sans-serif', outline: 'none', minWidth: 0 }} />
-                              <div style={{ display: 'flex', borderRadius: '3px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
+                                style={{ flex: 1, padding: '0.55rem 0.5rem', border: '1px solid #e8e4df', borderRadius: '4px', fontSize: '0.8rem', fontFamily: "'Cormorant Garamond', Georgia, serif", outline: 'none', minWidth: 0, background: '#fff' }} />
+                              <div style={{ display: 'flex', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}>
                                 {['kg', 'lb'].map(u => (
                                   <button key={u} onClick={() => setMensurations(m => ({ ...m, poidsUnit: u }))}
-                                    style={{ padding: '0.45rem 0.4rem', border: 'none', background: mensurations.poidsUnit === u ? '#C9A96E' : '#fff', color: mensurations.poidsUnit === u ? '#fff' : '#888', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif' }}>
+                                    style={{ padding: '0.5rem 0.45rem', border: 'none', background: mensurations.poidsUnit === u ? '#C9A96E' : '#fff', color: mensurations.poidsUnit === u ? '#fff' : '#aaa', cursor: 'pointer', fontSize: '0.6rem', fontFamily: 'sans-serif', transition: 'all .2s' }}>
                                     {u}
                                   </button>
                                 ))}
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
 
                         {/* Morphologie mobile avec SVG */}
-                        <div>
-                          <div style={{ fontSize: '0.6rem', letterSpacing: '0.12em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.5rem' }}>MORPHOLOGIE</div>
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.2 }}>
+                          <div style={{ fontSize: '0.6rem', letterSpacing: '0.16em', color: '#b8a888', fontFamily: 'sans-serif', marginBottom: '0.6rem', fontWeight: 600 }}>MORPHOLOGIE</div>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
                             {[
                               { id: 'mince', label: 'Mince',
                                 svgH: <svg viewBox="0 0 40 80" width="28" height="56"><ellipse cx="20" cy="10" rx="7" ry="7" fill="currentColor"/><rect x="15" y="18" width="10" height="28" rx="4" fill="currentColor"/><rect x="13" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-8 13 18)"/><rect x="23" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(8 27 18)"/><rect x="15" y="44" width="4" height="26" rx="2" fill="currentColor" transform="rotate(-3 15 44)"/><rect x="21" y="44" width="4" height="26" rx="2" fill="currentColor" transform="rotate(3 25 44)"/></svg>,
@@ -1803,27 +1816,38 @@ export default function SurmesurTryOn() {
                               { id: 'enveloppe', label: 'Enveloppé',
                                 svgH: <svg viewBox="0 0 40 80" width="28" height="56"><ellipse cx="20" cy="10" rx="8" ry="7" fill="currentColor"/><path d="M8 18 Q20 14 32 18 L34 46 Q20 50 6 46 Z" fill="currentColor"/><rect x="6" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(-16 6 18)"/><rect x="29" y="18" width="5" height="22" rx="2" fill="currentColor" transform="rotate(16 34 18)"/><rect x="11" y="45" width="7" height="25" rx="2" fill="currentColor" transform="rotate(-4 11 45)"/><rect x="22" y="45" width="7" height="25" rx="2" fill="currentColor" transform="rotate(4 29 45)"/></svg>,
                                 svgF: <svg viewBox="0 0 40 80" width="28" height="56"><ellipse cx="20" cy="10" rx="8" ry="7" fill="currentColor"/><path d="M9 18 Q20 14 31 18 L35 38 Q24 52 16 52 L5 38 Z" fill="currentColor"/><rect x="7" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(-16 7 18)"/><rect x="29" y="18" width="4" height="20" rx="2" fill="currentColor" transform="rotate(16 33 18)"/><rect x="13" y="50" width="6" height="20" rx="2" fill="currentColor" transform="rotate(-4 13 50)"/><rect x="21" y="50" width="6" height="20" rx="2" fill="currentColor" transform="rotate(4 27 50)"/></svg> },
-                            ].map(morph => {
+                            ].map((morph, i) => {
                               const isSel = mensurations.morphologie === morph.id
                               const isFemme = mensurations.genre === 'Femme'
                               return (
-                                <button key={morph.id} onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
-                                  style={{ padding: '0.65rem 0.25rem', border: isSel ? '2px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#fffbf0' : '#fff', cursor: 'pointer', borderRadius: '4px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem' }}>
-                                  <div style={{ color: isSel ? '#C9A96E' : '#ccc', lineHeight: 0 }}>
+                                <motion.button key={morph.id}
+                                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.05 * i }}
+                                  whileHover={{ y: -3, boxShadow: '0 8px 20px rgba(0,0,0,0.08)' }} whileTap={{ scale: 0.96 }}
+                                  onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
+                                  style={{ padding: '0.75rem 0.25rem', border: isSel ? '1px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#000' : '#fff', cursor: 'pointer', borderRadius: '5px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', boxShadow: isSel ? '0 6px 18px rgba(0,0,0,0.16)' : 'none' }}>
+                                  <div style={{ color: isSel ? '#C9A96E' : '#ccc', lineHeight: 0, transition: 'color .2s' }}>
                                     {isFemme ? morph.svgF : morph.svgH}
                                   </div>
-                                  <div style={{ fontSize: '0.62rem', fontFamily: 'sans-serif', color: isSel ? '#C9A96E' : '#555', fontWeight: isSel ? 600 : 400, lineHeight: 1.2 }}>{morph.label}</div>
-                                </button>
+                                  <div style={{ fontSize: '0.6rem', fontFamily: 'sans-serif', letterSpacing: '0.03em', color: isSel ? '#C9A96E' : '#777', fontWeight: isSel ? 600 : 400, lineHeight: 1.2 }}>{morph.label}</div>
+                                </motion.button>
                               )
                             })}
                           </div>
-                        </div>
+                        </motion.div>
 
+                        <AnimatePresence>
                         {(mensurations.genre || mensurations.taille || mensurations.poids || mensurations.morphologie) && (
-                          <div style={{ marginTop: '0.75rem', padding: '0.5rem 0.75rem', background: '#fff', border: '1px solid #C9A96E', borderRadius: '3px', fontSize: '0.62rem', color: '#7a5c1e', fontFamily: 'sans-serif' }}>
-                            ✦ {mensurations.genre}{mensurations.taille && ` · ${mensurations.taille} ${mensurations.tailleUnit}`}{mensurations.poids && ` · ${mensurations.poids} ${mensurations.poidsUnit}`}{mensurations.morphologie && ` · ${mensurations.morphologie}`}
-                          </div>
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                            style={{ overflow: 'hidden' }}
+                          >
+                            <div style={{ padding: '0.65rem 0.9rem', background: '#fff', border: '1px solid #C9A96E', borderRadius: '4px', fontSize: '0.66rem', color: '#7a5c1e', fontFamily: 'sans-serif', letterSpacing: '0.02em' }}>
+                              <span style={{ color: '#C9A96E' }}>✦</span> {mensurations.genre}{mensurations.taille && ` · ${mensurations.taille} ${mensurations.tailleUnit}`}{mensurations.poids && ` · ${mensurations.poids} ${mensurations.poidsUnit}`}{mensurations.morphologie && ` · ${mensurations.morphologie}`}
+                            </div>
+                          </motion.div>
                         )}
+                        </AnimatePresence>
                       </div>
                       </motion.div>
                     )}
