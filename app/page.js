@@ -941,6 +941,19 @@ export default function SurmesurTryOn() {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
+  // ─── Bascule directement entre Outfits ⇄ Pièce par pièce depuis l'étape 3 ───
+  // Contrairement à backToStep1, on reste sur l'étape 3 et on garde la photo déjà
+  // téléversée/prise — le client n'a pas à refaire l'étape 2.
+  const toggleTryMode = () => {
+    const newMode = tryMode === 'outfits' ? 'pieces' : 'outfits'
+    setTryMode(newMode)
+    setActiveTab(newMode === 'outfits' ? 'outfits' : 'jackets')
+    setGenerations([]); setSidebarItems([]); setPendingItem(null)
+    setReplaceMode(null); setActiveResultIdx(0); setError(null); setProgress(0)
+    setAutoGenerating(false)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
+
   const sendEmail = () => {
     const vendorEmail = selectedCity?.email || 'vendeur@surmesur.com'
     const cityName = selectedCity?.label || 'Surmesur'
@@ -1066,9 +1079,10 @@ export default function SurmesurTryOn() {
     totalAmt: { fontSize: '1.2rem', fontWeight: 300 },
     btnAppt: { display: 'block', width: '100%', padding: '0.9rem', background: '#000', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.68rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', textDecoration: 'none', lineHeight: 1.7, boxSizing: 'border-box' },
     btnRestart: { display: 'block', width: '100%', padding: '0.65rem', background: 'transparent', color: '#aaa', border: '1px solid #e8e4df', cursor: 'pointer', fontSize: '0.62rem', letterSpacing: '0.12em', fontFamily: 'sans-serif', marginTop: '0.4rem', textAlign: 'center' },
-    photoThumbRow: { display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem', padding: '0.6rem', background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px' },
+    photoThumbRow: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem', padding: '0.6rem', background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px' },
     photoThumb: { width: '52px', height: '66px', objectFit: 'cover', borderRadius: '2px', border: '1.5px solid #C9A96E', flexShrink: 0 },
     changeBtn: { fontSize: '0.65rem', color: '#C9A96E', fontFamily: 'sans-serif', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', padding: 0 },
+    modeSwitchBtn: { background: '#000', color: '#C9A96E', border: 'none', borderRadius: '4px', padding: '0.65rem 1rem', fontSize: '0.62rem', letterSpacing: '0.04em', fontFamily: 'sans-serif', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 },
     error: { background: '#fff5f5', border: '1px solid #ffd0d0', padding: '0.6rem 0.85rem', borderRadius: '4px', fontSize: '0.68rem', color: '#c00', fontFamily: 'sans-serif', marginTop: '0.75rem' },
     // Surprise button
     btnSurprise: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #C9A96E, #e8c87a)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '0.78rem', letterSpacing: '0.15em', fontFamily: 'sans-serif', textAlign: 'center', lineHeight: 1.7, marginBottom: '0.75rem', borderRadius: '2px' },
@@ -1516,18 +1530,23 @@ export default function SurmesurTryOn() {
 
             {/* Photo thumb */}
             <div style={s.photoThumbRow}>
-              {photoPreview && <img src={photoPreview} alt="Votre photo" style={s.photoThumb} />}
-              <div>
-                <div style={{ fontSize: '0.78rem', fontWeight: 300, marginBottom: '0.3rem' }}>Photo chargée ✓</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                {photoPreview && <img src={photoPreview} alt="Votre photo" style={s.photoThumb} />}
+                <div>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 300, marginBottom: '0.3rem' }}>Photo chargée ✓</div>
                   <button style={s.changeBtn} onClick={() => { stopCamera(); setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
                     Changer la photo
                   </button>
-                  <button style={s.changeBtn} onClick={backToStep1}>
-                    {t.btnChangeMode}
-                  </button>
                 </div>
               </div>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.96 }}
+                style={s.modeSwitchBtn}
+                onClick={toggleTryMode}
+              >
+                {tryMode === 'outfits' ? t.introPiecesLabel : t.introOutfitsLabel}
+              </motion.button>
             </div>
 
             {/* Avertissement IA — mobile uniquement, sous la photo chargée */}
