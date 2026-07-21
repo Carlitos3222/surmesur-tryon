@@ -45,6 +45,7 @@ const T = {
     changePhoto: 'Changer la photo',
     savePhoto: '⬇ Sauvegarder ma photo',
     step2Title0: 'Choisissez votre première pièce',
+    step2Title0Outfit: 'Essayez votre premier outfit',
     step2TitleN: 'Ajouter une pièce',
     step2TitleR: 'Choisissez la pièce de remplacement',
     step2Sub: 'générations · Sélectionnez une pièce puis cliquez "Essayer"',
@@ -125,6 +126,7 @@ const T = {
     changePhoto: 'Change photo',
     savePhoto: '⬇ Save my photo',
     step2Title0: 'Choose your first piece',
+    step2Title0Outfit: 'Try your first outfit',
     step2TitleN: 'Add a piece',
     step2TitleR: 'Choose the replacement piece',
     step2Sub: 'generations · Select a piece then click "Try"',
@@ -205,6 +207,7 @@ const T = {
     changePhoto: 'Cambiar foto',
     savePhoto: '⬇ Guardar mi foto',
     step2Title0: 'Elige tu primera prenda',
+    step2Title0Outfit: 'Prueba tu primer outfit',
     step2TitleN: 'Agregar una prenda',
     step2TitleR: 'Elige la prenda de reemplazo',
     step2Sub: 'generaciones · Selecciona una prenda y haz clic en "Probar"',
@@ -1390,7 +1393,7 @@ export default function SurmesurTryOn() {
             {!autoGenerating && (
               <>
                 <div style={s.stepNum}>0{generations.length === 0 ? '3' : generations.length + 2}</div>
-                <div style={s.stepTitle}>{replaceMode !== null ? t.step2TitleR : generations.length === 0 ? t.step2Title0 : t.step2TitleN}</div>
+                <div style={s.stepTitle}>{replaceMode !== null ? t.step2TitleR : generations.length === 0 ? (tryMode === 'outfits' ? t.step2Title0Outfit : t.step2Title0) : t.step2TitleN}</div>
                 <div style={s.stepSub}>
                   {replaceMode !== null
                     ? `${t.replaceMode} : ${generations[replaceMode]?.item.nom_fr}`
