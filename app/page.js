@@ -3,6 +3,42 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const BASE_URL = 'https://surmesur-tryon.vercel.app'
+const SESSION_KEY = 'surmesur_tryon_session'
+
+// ─── Compresse une photo (galerie) en JPEG redimensionné + renvoie blob + dataURL ──
+const compressPhotoForStorage = (file, maxDim = 1280, quality = 0.85) => new Promise((resolve, reject) => {
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const img = new Image()
+    img.onload = () => {
+      let { width, height } = img
+      if (width > maxDim || height > maxDim) {
+        if (width > height) { height = Math.round(height * (maxDim / width)); width = maxDim }
+        else { width = Math.round(width * (maxDim / height)); height = maxDim }
+      }
+      const canvas = document.createElement('canvas')
+      canvas.width = width; canvas.height = height
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height)
+      const dataUrl = canvas.toDataURL('image/jpeg', quality)
+      canvas.toBlob((blob) => resolve({ blob, dataUrl }), 'image/jpeg', quality)
+    }
+    img.onerror = reject
+    img.src = e.target.result
+  }
+  reader.onerror = reject
+  reader.readAsDataURL(file)
+})
+
+// ─── Reconstruit un Blob à partir d'une dataURL (utilisé pour restaurer la photo après un refresh) ──
+const dataUrlToBlob = (dataUrl) => {
+  const [header, base64] = dataUrl.split(',')
+  const mimeMatch = header.match(/data:(.*?);base64/)
+  const mime = mimeMatch ? mimeMatch[1] : 'image/jpeg'
+  const binary = atob(base64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+  return new Blob([bytes], { type: mime })
+}
 
 // ─── VILLES & DEVISES ─────────────────────────────────────────────────────
 const CITIES = [
@@ -76,6 +112,8 @@ const T = {
     btnVendor: '✉ ENVOYER AU VENDEUR',
     btnVendorSub: 'SEND TO STYLIST',
     btnRestart: '↺ RECOMMENCER · START OVER',
+    btnChangeMode: '⇄ Changer d\'option',
+    btnChangeModeSub: 'Outfits · Pièce par pièce',
     selectCity: 'Choisir votre ville',
     cityLabel: 'VOTRE BOUTIQUE',
     cityRequiredHint: 'Veuillez sélectionner votre boutique pour continuer',
@@ -161,6 +199,8 @@ const T = {
     btnVendor: '✉ SEND TO STYLIST',
     btnVendorSub: 'ENVOYER AU VENDEUR',
     btnRestart: '↺ START OVER · RECOMMENCER',
+    btnChangeMode: '⇄ Change option',
+    btnChangeModeSub: 'Outfits · Piece by piece',
     selectCity: 'Choose your city',
     cityLabel: 'YOUR BOUTIQUE',
     cityRequiredHint: 'Please select your boutique to continue',
@@ -246,6 +286,8 @@ const T = {
     btnVendor: '✉ ENVIAR AL ESTILISTA',
     btnVendorSub: 'SEND TO STYLIST',
     btnRestart: '↺ COMENZAR DE NUEVO',
+    btnChangeMode: '⇄ Cambiar de opción',
+    btnChangeModeSub: 'Outfits · Prenda por prenda',
     selectCity: 'Elige tu ciudad',
     cityLabel: 'TU BOUTIQUE',
     cityRequiredHint: 'Selecciona tu boutique para continuar',
@@ -459,9 +501,73 @@ export default function SurmesurTryOn() {
   const [selectedCity, setSelectedCity] = useState(null)
   const [showCityModal, setShowCityModal] = useState(false)
   const [clientInfo, setClientInfo] = useState(null) // { name, phone, customerId } — pré-rempli via l'URL si intégré depuis surmesur.com
+  const [showSurpriseModal, setShowSurpriseModal] = useState(false)
+  const [selectedOccasion, setSelectedOccasion] = useState(null)
+  const [tryMode, setTryMode] = useState(null)
+  const [showIntroModal, setShowIntroModal] = useState(true)
+  const [showAllTabs, setShowAllTabs] = useState(false)
+  const [introTransition, setIntroTransition] = useState(null) // null | 'outfits' | 'pieces'
+  // Mensurations optionnelles
+  const [mensurations, setMensurations] = useState({
+    genre: '',
+    taille: '',
+    tailleUnit: 'cm',
+    poids: '',
+    poidsUnit: 'kg',
+    morphologie: '',
+  })
+  const [showMensurationsForm, setShowMensurationsForm] = useState(true)
   const t = T[lang]
+  // État (et non ref) : une ref se mute de façon synchrone, avant que les setState
+  // du useEffect de restauration n'aient été appliqués dans un nouveau rendu — ce qui
+  // provoquait une écriture prématurée des valeurs par défaut (phase/showIntroModal/
+  // activeTab) dans sessionStorage. Un state garantit que l'effet de sauvegarde ne se
+  // redéclenche qu'après que TOUTES les valeurs restaurées soient appliquées ensemble.
+  const [restored, setRestored] = useState(false)
+
+  // ─── Restauration de la session après un rafraîchissement de page (F5) ───
+  // Le client reste sur l'étape où il était (photo, choix de vêtements, etc.)
+  // plutôt que de revenir complètement au début. La page remonte en haut.
+  useEffect(() => {
+    try {
+      if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+      const raw = sessionStorage.getItem(SESSION_KEY)
+      if (raw) {
+        const saved = JSON.parse(raw)
+        if (saved.selectedCityId) {
+          const city = CITIES.find(c => c.id === saved.selectedCityId)
+          if (city) setSelectedCity(city)
+        }
+        if (saved.clientInfo) setClientInfo(saved.clientInfo)
+        if (saved.lang) setLang(saved.lang)
+        if (saved.tryMode) setTryMode(saved.tryMode)
+        if (typeof saved.showIntroModal === 'boolean') setShowIntroModal(saved.showIntroModal)
+        if (saved.activeTab) setActiveTab(saved.activeTab)
+        if (saved.mensurations) setMensurations(saved.mensurations)
+        if (typeof saved.showMensurationsForm === 'boolean') setShowMensurationsForm(saved.showMensurationsForm)
+        if (Array.isArray(saved.generations)) setGenerations(saved.generations)
+        if (Array.isArray(saved.sidebarItems)) setSidebarItems(saved.sidebarItems)
+        if (saved.replaceMode === null || typeof saved.replaceMode === 'number') setReplaceMode(saved.replaceMode)
+        if (typeof saved.activeResultIdx === 'number') setActiveResultIdx(saved.activeResultIdx)
+        if (saved.photoPreview) {
+          setPhotoPreview(saved.photoPreview)
+          try { setPhotoClient(dataUrlToBlob(saved.photoPreview)) } catch (e) { /* no-op */ }
+        }
+        if (saved.phase) setPhase(saved.phase)
+      }
+    } catch (e) { /* no-op */ }
+    setRestored(true)
+    // Remonte en haut immédiatement, puis re-confirme après que les images/animations
+    // aient fini de charger (elles peuvent décaler la hauteur de la page et donc le scroll).
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }))
+    const t1 = setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 150)
+    const t2 = setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 500)
+    return () => { clearTimeout(t1); clearTimeout(t2) }
+  }, [])
 
   // ─── Pré-remplissage via l'URL (bouton "Try On" intégré sur surmesur.com) ───
+  // Prioritaire sur la session restaurée : un lien entrant explicite doit gagner.
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search)
@@ -475,12 +581,30 @@ export default function SurmesurTryOn() {
       if (name || phone || customerId) setClientInfo({ name, phone, customerId })
     } catch (e) { /* no-op */ }
   }, [])
-  const [showSurpriseModal, setShowSurpriseModal] = useState(false)
-  const [selectedOccasion, setSelectedOccasion] = useState(null)
-  const [tryMode, setTryMode] = useState(null)
-  const [showIntroModal, setShowIntroModal] = useState(true)
-  const [showAllTabs, setShowAllTabs] = useState(false)
-  const [introTransition, setIntroTransition] = useState(null) // null | 'outfits' | 'pieces'
+
+  // ─── Sauvegarde continue de la session (survit à un F5, effacée si l'onglet est fermé) ───
+  useEffect(() => {
+    if (!restored) return
+    try {
+      const toSave = {
+        selectedCityId: selectedCity?.id || null,
+        clientInfo,
+        lang,
+        tryMode,
+        showIntroModal,
+        activeTab,
+        mensurations,
+        showMensurationsForm,
+        generations,
+        sidebarItems,
+        replaceMode,
+        activeResultIdx,
+        photoPreview,
+        phase,
+      }
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(toSave))
+    } catch (e) { /* quota dépassé ou navigation privée — on ignore silencieusement */ }
+  }, [restored, selectedCity, clientInfo, lang, tryMode, showIntroModal, activeTab, mensurations, showMensurationsForm, generations, sidebarItems, replaceMode, activeResultIdx, photoPreview, phase])
 
   useEffect(() => {
     if (!introTransition) return
@@ -492,17 +616,6 @@ export default function SurmesurTryOn() {
     }, 1400)
     return () => clearTimeout(timer)
   }, [introTransition])
-
-  // Mensurations optionnelles
-  const [mensurations, setMensurations] = useState({
-    genre: '',
-    taille: '',
-    tailleUnit: 'cm',
-    poids: '',
-    poidsUnit: 'kg',
-    morphologie: '',
-  })
-  const [showMensurationsForm, setShowMensurationsForm] = useState(true)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -812,6 +925,20 @@ export default function SurmesurTryOn() {
     setGenerations([]); setSidebarItems([]); setPendingItem(null)
     setReplaceMode(null); setActiveResultIdx(0); setError(null); setProgress(0)
     setAutoGenerating(false); stopCamera()
+  }
+
+  // ─── Retour à l'étape 1 (choix Outfits / Pièce par pièce) sans rafraîchir la page ───
+  // Permet au client de changer d'option en cours de route (ex: depuis l'étape 2 ou 3).
+  const backToStep1 = () => {
+    stopCamera()
+    setPhase('photo'); setPhotoClient(null); setPhotoPreview(null)
+    setGenerations([]); setSidebarItems([]); setPendingItem(null)
+    setReplaceMode(null); setActiveResultIdx(0); setError(null); setProgress(0)
+    setAutoGenerating(false)
+    setTryMode(null)
+    setIntroTransition(null)
+    setShowIntroModal(true)
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
   const sendEmail = () => {
@@ -1248,6 +1375,17 @@ export default function SurmesurTryOn() {
             <div style={s.stepTitle}>{t.step1Title}</div>
             <div style={s.stepSub}>{t.step1Sub}</div>
 
+            {tryMode && (
+              <motion.button
+                whileHover={{ scale: 1.02, borderColor: '#C9A96E', color: '#C9A96E' }}
+                whileTap={{ scale: 0.97 }}
+                onClick={backToStep1}
+                style={{ display: 'inline-block', background: 'none', border: '1px solid #e8e4df', borderRadius: '20px', padding: '0.45rem 0.9rem', cursor: 'pointer', fontSize: '0.65rem', letterSpacing: '0.05em', fontFamily: 'sans-serif', color: '#888', marginTop: '0.7rem', marginBottom: '0.3rem' }}
+              >
+                {t.btnChangeMode}
+              </motion.button>
+            )}
+
             {/* Guide photo — deux cartes */}
             <motion.div
               style={{ marginBottom: '1.75rem', borderRadius: '4px', overflow: 'hidden', border: '1px solid #e8e4df' }}
@@ -1322,9 +1460,15 @@ export default function SurmesurTryOn() {
                   <motion.button style={s.btnBlack} onClick={startCamera} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>{t.btnCamera}</motion.button>
                   <motion.button style={s.btnOutline} onClick={() => fileInputRef.current?.click()} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.96 }}>{t.btnGallery}</motion.button>
                 </div>
-                <input ref={fileInputRef} type="file" accept="image/*" onChange={(e) => {
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={async (e) => {
                   const f = e.target.files?.[0]; if (!f) return
-                  setPhotoClient(f); setPhotoPreview(URL.createObjectURL(f)); setPhase('build'); window.scrollTo({ top: 0, behavior: 'instant' })
+                  try {
+                    const { blob, dataUrl } = await compressPhotoForStorage(f)
+                    setPhotoClient(blob); setPhotoPreview(dataUrl)
+                  } catch (err) {
+                    setPhotoClient(f); setPhotoPreview(URL.createObjectURL(f))
+                  }
+                  setPhase('build'); window.scrollTo({ top: 0, behavior: 'instant' })
                 }} style={{ display: 'none' }} />
               </>
             )}
@@ -1375,9 +1519,14 @@ export default function SurmesurTryOn() {
               {photoPreview && <img src={photoPreview} alt="Votre photo" style={s.photoThumb} />}
               <div>
                 <div style={{ fontSize: '0.78rem', fontWeight: 300, marginBottom: '0.3rem' }}>Photo chargée ✓</div>
-                <button style={s.changeBtn} onClick={() => { stopCamera(); setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
-                  Changer la photo
-                </button>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <button style={s.changeBtn} onClick={() => { stopCamera(); setPhase('photo'); setPhotoClient(null); setPhotoPreview(null); setGenerations([]); setSidebarItems([]); setPendingItem(null) }}>
+                    Changer la photo
+                  </button>
+                  <button style={s.changeBtn} onClick={backToStep1}>
+                    {t.btnChangeMode}
+                  </button>
+                </div>
               </div>
             </div>
 
