@@ -507,6 +507,7 @@ export default function SurmesurTryOn() {
   const [showIntroModal, setShowIntroModal] = useState(true)
   const [showAllTabs, setShowAllTabs] = useState(false)
   const [introTransition, setIntroTransition] = useState(null) // null | 'outfits' | 'pieces'
+  const [modeTransition, setModeTransition] = useState(null) // null | 'outfits' | 'pieces' — animation de bascule de mode à l'étape 3
   // Mensurations optionnelles
   const [mensurations, setMensurations] = useState({
     genre: '',
@@ -616,6 +617,22 @@ export default function SurmesurTryOn() {
     }, 1400)
     return () => clearTimeout(timer)
   }, [introTransition])
+
+  // Bascule de mode à l'étape 3 — même animation élégante que le choix initial (étape 1)
+  useEffect(() => {
+    if (!modeTransition) return
+    const timer = setTimeout(() => {
+      const newMode = modeTransition
+      setTryMode(newMode)
+      setActiveTab(newMode === 'outfits' ? 'outfits' : 'jackets')
+      setGenerations([]); setSidebarItems([]); setPendingItem(null)
+      setReplaceMode(null); setActiveResultIdx(0); setError(null); setProgress(0)
+      setAutoGenerating(false)
+      window.scrollTo({ top: 0, behavior: 'instant' })
+      setModeTransition(null)
+    }, 1400)
+    return () => clearTimeout(timer)
+  }, [modeTransition])
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -945,13 +962,9 @@ export default function SurmesurTryOn() {
   // Contrairement à backToStep1, on reste sur l'étape 3 et on garde la photo déjà
   // téléversée/prise — le client n'a pas à refaire l'étape 2.
   const toggleTryMode = () => {
+    if (modeTransition) return
     const newMode = tryMode === 'outfits' ? 'pieces' : 'outfits'
-    setTryMode(newMode)
-    setActiveTab(newMode === 'outfits' ? 'outfits' : 'jackets')
-    setGenerations([]); setSidebarItems([]); setPendingItem(null)
-    setReplaceMode(null); setActiveResultIdx(0); setError(null); setProgress(0)
-    setAutoGenerating(false)
-    window.scrollTo({ top: 0, behavior: 'instant' })
+    setModeTransition(newMode)
   }
 
   const sendEmail = () => {
@@ -1267,6 +1280,52 @@ export default function SurmesurTryOn() {
               style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.9rem', fontWeight: 500, color: '#fff', letterSpacing: '0.01em', marginBottom: '1.7rem' }}
             >
               {introTransition === 'outfits' ? t.introTransitionOutfits : t.introTransitionPieces}
+            </motion.div>
+            <div style={{ width: '170px', height: '2px', background: 'rgba(201,169,110,0.2)', margin: '0 auto', overflow: 'hidden', borderRadius: '2px' }}>
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: '0%' }}
+                transition={{ duration: 1.2, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                style={{ width: '100%', height: '100%', background: '#C9A96E' }}
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+      </AnimatePresence>
+
+      {/* ── Transition élégante lors de la bascule de mode depuis l'étape 3 ── */}
+      <AnimatePresence>
+      {modeTransition && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.45, ease: 'easeInOut' }}
+          style={{ position: 'fixed', inset: 0, zIndex: 500, background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            style={{ textAlign: 'center', padding: '0 1.5rem' }}
+          >
+            <img src={`${BASE_URL}/logo-surmesur.png`} alt="Surmesur Select" style={{ height: '22px', width: 'auto', display: 'block', margin: '0 auto 1.6rem' }} />
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: '54px', opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              style={{ height: '1px', background: 'linear-gradient(90deg,transparent,#C9A96E,transparent)', margin: '0 auto 1.3rem' }}
+            />
+            <motion.div
+              key={modeTransition}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.9rem', fontWeight: 500, color: '#fff', letterSpacing: '0.01em', marginBottom: '1.7rem' }}
+            >
+              {modeTransition === 'outfits' ? t.introTransitionOutfits : t.introTransitionPieces}
             </motion.div>
             <div style={{ width: '170px', height: '2px', background: 'rgba(201,169,110,0.2)', margin: '0 auto', overflow: 'hidden', borderRadius: '2px' }}>
               <motion.div
@@ -1750,7 +1809,7 @@ export default function SurmesurTryOn() {
                           <div style={{ display: 'flex', gap: '0.5rem' }}>
                             {['Homme', 'Femme', 'Autre'].map(g => (
                               <motion.button key={g} whileHover={{ y: -2 }} whileTap={{ scale: 0.96 }} onClick={() => setMensurations(m => ({ ...m, genre: g }))}
-                                style={{ flex: 1, padding: '0.6rem', border: mensurations.genre === g ? '1px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#3a3a3a' : '#fff', cursor: 'pointer', fontSize: '0.66rem', letterSpacing: '0.06em', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#C9A96E' : '#666', borderRadius: '4px', transition: 'border-color .2s, background .2s', boxShadow: mensurations.genre === g ? '0 4px 14px rgba(0,0,0,0.12)' : 'none' }}>
+                                style={{ flex: 1, padding: '0.6rem', border: mensurations.genre === g ? '1px solid #C9A96E' : '1px solid #e8e4df', background: mensurations.genre === g ? '#C9A96E' : '#fff', cursor: 'pointer', fontSize: '0.66rem', letterSpacing: '0.06em', fontFamily: 'sans-serif', color: mensurations.genre === g ? '#fff' : '#666', borderRadius: '4px', transition: 'border-color .2s, background .2s', boxShadow: mensurations.genre === g ? '0 4px 14px rgba(201,169,110,0.35)' : 'none' }}>
                                 {g}
                               </motion.button>
                             ))}
@@ -1824,11 +1883,11 @@ export default function SurmesurTryOn() {
                                   initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.05 * i }}
                                   whileHover={{ y: -3, boxShadow: '0 8px 20px rgba(0,0,0,0.08)' }} whileTap={{ scale: 0.96 }}
                                   onClick={() => setMensurations(m => ({ ...m, morphologie: morph.id }))}
-                                  style={{ padding: '0.75rem 0.25rem', border: isSel ? '1px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#3a3a3a' : '#fff', cursor: 'pointer', borderRadius: '5px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', boxShadow: isSel ? '0 6px 18px rgba(0,0,0,0.13)' : 'none' }}>
-                                  <div style={{ color: isSel ? '#C9A96E' : '#ccc', lineHeight: 0, transition: 'color .2s' }}>
+                                  style={{ padding: '0.75rem 0.25rem', border: isSel ? '1px solid #C9A96E' : '1px solid #e8e4df', background: isSel ? '#C9A96E' : '#fff', cursor: 'pointer', borderRadius: '5px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', boxShadow: isSel ? '0 6px 18px rgba(201,169,110,0.35)' : 'none' }}>
+                                  <div style={{ color: isSel ? '#fff' : '#ccc', lineHeight: 0, transition: 'color .2s' }}>
                                     {isFemme ? morph.svgF : morph.svgH}
                                   </div>
-                                  <div style={{ fontSize: '0.6rem', fontFamily: 'sans-serif', letterSpacing: '0.03em', color: isSel ? '#C9A96E' : '#777', fontWeight: isSel ? 600 : 400, lineHeight: 1.2 }}>{morph.label}</div>
+                                  <div style={{ fontSize: '0.6rem', fontFamily: 'sans-serif', letterSpacing: '0.03em', color: isSel ? '#fff' : '#777', fontWeight: isSel ? 600 : 400, lineHeight: 1.2 }}>{morph.label}</div>
                                 </motion.button>
                               )
                             })}
@@ -2257,7 +2316,6 @@ export default function SurmesurTryOn() {
                   <span style={{ fontSize: '0.58rem', opacity: 0.65 }}>{t.btnVendorSub}</span>
                 </button>
               )}
-              <button style={s.btnRestart} onClick={reset}>{t.btnRestart}</button>
             </div>
           </div>
         </motion.div>
