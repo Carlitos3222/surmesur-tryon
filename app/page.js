@@ -1487,21 +1487,22 @@ export default function SurmesurTryOn() {
 
           <div style={s.photoWrap}>
             {/* Fond translucide derrière le texte — le garde lisible peu importe la photo en arrière-plan */}
-            <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '10px', padding: isMobile ? '1.1rem 1.25rem' : '1.4rem 1.75rem', marginBottom: '1.75rem', boxShadow: '0 4px 22px rgba(0,0,0,0.07)' }}>
+            <div style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '10px', padding: isMobile ? '1.1rem 1.25rem' : '1.4rem 1.75rem', marginBottom: '1.75rem', boxShadow: '0 4px 22px rgba(0,0,0,0.07)' }}>
+              {tryMode && (
+                <div style={{ display: 'flex', justifyContent: isMobile ? 'flex-start' : 'flex-end', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #e8e4df' }}>
+                  <motion.button
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={backToStep1}
+                    style={s.modeSwitchBtn}
+                  >
+                    {t.btnChangeMode}
+                  </motion.button>
+                </div>
+              )}
               <div style={s.stepNum}>02</div>
               <div style={s.stepTitle}>{t.step1Title}</div>
-              <div style={{ ...s.stepSub, marginBottom: tryMode ? '0.6rem' : 0 }}>{t.step1Sub}</div>
-
-              {tryMode && (
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.96 }}
-                  onClick={backToStep1}
-                  style={{ ...s.modeSwitchBtn, display: 'inline-block' }}
-                >
-                  {t.btnChangeMode}
-                </motion.button>
-              )}
+              <div style={s.stepSub}>{t.step1Sub}</div>
             </div>
 
             {/* Guide photo — deux cartes */}
