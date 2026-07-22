@@ -1486,20 +1486,23 @@ export default function SurmesurTryOn() {
           </motion.div>
 
           <div style={s.photoWrap}>
-            <div style={s.stepNum}>02</div>
-            <div style={s.stepTitle}>{t.step1Title}</div>
-            <div style={s.stepSub}>{t.step1Sub}</div>
+            {/* Fond translucide derrière le texte — le garde lisible peu importe la photo en arrière-plan */}
+            <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '10px', padding: isMobile ? '1.1rem 1.25rem' : '1.4rem 1.75rem', marginBottom: '1.75rem', boxShadow: '0 4px 22px rgba(0,0,0,0.07)' }}>
+              <div style={s.stepNum}>02</div>
+              <div style={s.stepTitle}>{t.step1Title}</div>
+              <div style={{ ...s.stepSub, marginBottom: tryMode ? '0.6rem' : 0 }}>{t.step1Sub}</div>
 
-            {tryMode && (
-              <motion.button
-                whileHover={{ scale: 1.02, borderColor: '#C9A96E', color: '#C9A96E' }}
-                whileTap={{ scale: 0.97 }}
-                onClick={backToStep1}
-                style={{ display: 'inline-block', background: 'none', border: '1px solid #e8e4df', borderRadius: '20px', padding: '0.45rem 0.9rem', cursor: 'pointer', fontSize: '0.65rem', letterSpacing: '0.05em', fontFamily: 'sans-serif', color: '#888', marginTop: '0.7rem', marginBottom: '0.3rem' }}
-              >
-                {t.btnChangeMode}
-              </motion.button>
-            )}
+              {tryMode && (
+                <motion.button
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={backToStep1}
+                  style={{ ...s.modeSwitchBtn, display: 'inline-block' }}
+                >
+                  {t.btnChangeMode}
+                </motion.button>
+              )}
+            </div>
 
             {/* Guide photo — deux cartes */}
             <motion.div
@@ -1646,7 +1649,7 @@ export default function SurmesurTryOn() {
                 style={s.modeSwitchBtn}
                 onClick={toggleTryMode}
               >
-                {tryMode === 'outfits' ? t.introPiecesLabel : t.introOutfitsLabel}
+                ⇄ {tryMode === 'outfits' ? t.introPiecesLabel : t.introOutfitsLabel}
               </motion.button>
             </div>
 
