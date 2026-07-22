@@ -131,6 +131,7 @@ const T = {
     emailBody: (items, total, city, mens) => `Bonjour,\n\nUn client de la boutique ${city} a effectué une sélection via l'application Surmesur Try-On.\n\nSÉLECTION DU CLIENT :\n\n${items}\n\nTOTAL ESTIMÉ : ${total}${mens}\n\nMerci de préparer ce dossier pour le rendez-vous.\n\nCordialement,\nSurmesur Try-On`,
     introTitle: 'Que souhaitez-vous essayer aujourd\'hui ?',
     introSub: 'Choisissez votre expérience pour des instructions de photo personnalisées',
+    chooseLanguage: 'Choisissez votre langue',
     introOutfitsLabel: 'Essayer nos Outfits',
     introOutfitsDesc: 'Looks complets prêts à porter, générés en une seule photo — peu importe votre tenue actuelle.',
     introPiecesLabel: 'Essayer pièce par pièce',
@@ -218,6 +219,7 @@ const T = {
     emailBody: (items, total, city, mens) => `Hello,\n\nA client from the ${city} boutique made a selection via the Surmesur Try-On app.\n\nCLIENT SELECTION:\n\n${items}\n\nESTIMATED TOTAL: ${total}${mens}\n\nPlease prepare this file for the appointment.\n\nBest regards,\nSurmesur Try-On`,
     introTitle: 'What would you like to try today?',
     introSub: 'Choose your experience for personalized photo instructions',
+    chooseLanguage: 'Choose your language',
     introOutfitsLabel: 'Try our Outfits',
     introOutfitsDesc: 'Complete ready-to-wear looks, generated in a single photo — no matter what you\'re currently wearing.',
     introPiecesLabel: 'Try piece by piece',
@@ -305,6 +307,7 @@ const T = {
     emailBody: (items, total, city, mens) => `Hola,\n\nUn cliente de la boutique ${city} ha realizado una selección en la app Surmesur Try-On.\n\nSELECCIÓN DEL CLIENTE:\n\n${items}\n\nTOTAL ESTIMADO: ${total}${mens}\n\nPor favor prepare este expediente para la cita.\n\nAtentamente,\nSurmesur Try-On`,
     introTitle: '¿Qué deseas probar hoy?',
     introSub: 'Elige tu experiencia para instrucciones de foto personalizadas',
+    chooseLanguage: 'Elige tu idioma',
     introOutfitsLabel: 'Probar nuestros Outfits',
     introOutfitsDesc: 'Looks completos listos para usar, generados en una sola foto — sin importar lo que lleves puesto.',
     introPiecesLabel: 'Probar prenda por prenda',
@@ -532,9 +535,17 @@ export default function SurmesurTryOn() {
   useEffect(() => {
     try {
       if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+      const detectBrowserLang = () => {
+        const browserLang = (navigator.language || '').toLowerCase()
+        if (browserLang.startsWith('en')) return 'en'
+        if (browserLang.startsWith('es')) return 'es'
+        return 'fr'
+      }
       const raw = sessionStorage.getItem(SESSION_KEY)
-      if (raw) {
-        const saved = JSON.parse(raw)
+      const saved = raw ? JSON.parse(raw) : null
+      if (saved && saved.phase === 'build') {
+        // Le client était à l'étape 3 (construction du look) au moment du refresh :
+        // on restaure toute sa session pour qu'il reprenne exactement où il était.
         if (saved.selectedCityId) {
           const city = CITIES.find(c => c.id === saved.selectedCityId)
           if (city) setSelectedCity(city)
@@ -554,7 +565,14 @@ export default function SurmesurTryOn() {
           setPhotoPreview(saved.photoPreview)
           try { setPhotoClient(dataUrlToBlob(saved.photoPreview)) } catch (e) { /* no-op */ }
         }
-        if (saved.phase) setPhase(saved.phase)
+        setPhase('build')
+      } else {
+        // Le client était à l'étape 1 (popup) ou à l'étape 2 (photo) au moment du
+        // refresh, ou c'est sa première visite : on repart complètement à zéro —
+        // le popup de l'étape 1 réapparaît — et on détecte la langue du navigateur
+        // pour que le popup s'affiche d'emblée dans une langue qu'il comprend.
+        if (saved) sessionStorage.removeItem(SESSION_KEY)
+        setLang(detectBrowserLang())
       }
     } catch (e) { /* no-op */ }
     setRestored(true)
@@ -1161,6 +1179,30 @@ export default function SurmesurTryOn() {
       {showIntroModal && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} style={{ ...s.modalOverlay, alignItems: 'center', zIndex: 400 }}>
           <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} style={{ ...s.modal, maxWidth: '640px', borderRadius: '8px' }}>
+            {/* Sélecteur de langue — visible en tout premier, car ce popup couvre le sélecteur du header */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35rem', marginBottom: '1rem', paddingBottom: '0.9rem', borderBottom: '1px solid #f0ece4' }}>
+              <div style={{ fontSize: '0.58rem', letterSpacing: '0.15em', color: '#aaa', fontFamily: 'sans-serif' }}>{t.chooseLanguage}</div>
+              <div style={{ display: 'flex', gap: '0.4rem' }}>
+                {['fr', 'en', 'es'].map(l => (
+                  <button key={l} onClick={() => setLang(l)}
+                    style={{
+                      padding: '0.3rem 0.9rem',
+                      borderRadius: '20px',
+                      border: lang === l ? '1.5px solid #C9A96E' : '1px solid #e8e4df',
+                      background: lang === l ? '#C9A96E' : '#fff',
+                      color: lang === l ? '#fff' : '#888',
+                      cursor: 'pointer',
+                      fontSize: '0.68rem',
+                      fontWeight: lang === l ? 600 : 400,
+                      letterSpacing: '0.06em',
+                      fontFamily: 'sans-serif',
+                      transition: 'all 0.2s ease',
+                    }}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div style={{ ...s.stepNum, fontSize: isMobile ? '1.6rem' : '1.9rem', textAlign: 'center', marginBottom: '0.3rem' }}>01</div>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.1rem' }}>
               <img src={`${BASE_URL}/logo-surmesur-black.png`} alt="Surmesur Select" style={{ height: isMobile ? '20px' : '24px', width: 'auto', display: 'block' }} />
