@@ -1489,7 +1489,7 @@ export default function SurmesurTryOn() {
             {/* Fond translucide derrière le texte — le garde lisible peu importe la photo en arrière-plan */}
             <div style={{ width: '100%', boxSizing: 'border-box', background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)', borderRadius: '10px', padding: isMobile ? '1.1rem 1.25rem' : '1.4rem 1.75rem', marginBottom: '1.75rem', boxShadow: '0 4px 22px rgba(0,0,0,0.07)' }}>
               {tryMode && (
-                <div style={{ display: 'flex', justifyContent: isMobile ? 'flex-start' : 'flex-end', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #e8e4df' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #e8e4df' }}>
                   <motion.button
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.96 }}
