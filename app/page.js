@@ -1555,7 +1555,7 @@ export default function SurmesurTryOn() {
 
               {/* Astuce spécifique au mode choisi (Outfits vs Pièce par pièce) */}
               {tryMode && (
-                <div style={{ background: tryMode === 'outfits' ? 'rgba(201,169,110,0.12)' : 'rgba(17,17,17,0.68)', backdropFilter: tryMode === 'outfits' ? undefined : 'blur(6px)', WebkitBackdropFilter: tryMode === 'outfits' ? undefined : 'blur(6px)', padding: '1.1rem 1.75rem', borderTop: '1px solid #e8e4df', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
+                <div style={{ background: tryMode === 'outfits' ? 'rgba(201,169,110,0.12)' : 'rgba(17,17,17,0.82)', backdropFilter: tryMode === 'outfits' ? undefined : 'blur(6px)', WebkitBackdropFilter: tryMode === 'outfits' ? undefined : 'blur(6px)', padding: '1.1rem 1.75rem', borderTop: '1px solid #e8e4df', display: 'flex', alignItems: 'flex-start', gap: '0.85rem' }}>
                   <span style={{ color: '#C9A96E', fontSize: '0.8rem', flexShrink: 0, marginTop: '0.05rem' }}>✦</span>
                   <div>
                     <div style={{ fontSize: '0.65rem', letterSpacing: '0.18em', color: '#C9A96E', fontFamily: 'sans-serif', fontWeight: 600, marginBottom: '0.35rem' }}>{tryMode === 'outfits' ? t.wearGuideOutfitsTitle : t.wearGuidePiecesTitle}</div>
