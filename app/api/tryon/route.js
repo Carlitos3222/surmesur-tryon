@@ -13,6 +13,7 @@ export async function POST(request) {
     const cityId = formData.get('city_id') || null
     const cityLabel = formData.get('city_label') || null
     const genType = formData.get('gen_type') || 'generate'
+    const isMultiGarment = formData.get('is_multi_garment') === 'true'
     const clientRaw = formData.get('client_info')
     const client = clientRaw ? (() => { try { return JSON.parse(clientRaw) } catch { return null } })() : null
 
@@ -82,6 +83,12 @@ export async function POST(request) {
     } else {
       return Response.json({ error: 'Format de photo invalide' }, { status: 400 })
     }
+
+    const multiGarmentBlock = isMultiGarment ? `
+
+MULTI-GARMENT OUTFIT — MANDATORY, HIGHEST-PRIORITY RULE:
+The product image shows a COMPLETE OUTFIT made of MULTIPLE separate garments worn together (for example: jacket/blazer AND shirt AND pants/trousers — possibly also a vest). You MUST replace EVERY SINGLE garment the person is currently wearing with its corresponding piece from the product image — the jacket, the shirt, AND the pants, without exception. Do NOT leave any part of the person's original clothing in place. In particular, the pants/trousers shown in the product image MUST be applied to the output — do NOT keep the person's original pants just because the body-preservation rules above protect leg shape/length/width (those rules protect the BODY underneath, never the ORIGINAL CLOTHING). Every visible garment in the product reference photo must appear correctly on the person in the output image, matched exactly in fabric, color, pattern and cut, for the jacket, the shirt, and the pants alike.` : ''
+
     const prompt = `CRITICAL INSTRUCTION — BODY IDENTITY PRESERVATION:
 
 The output image MUST show the exact same person with the exact same body. This is the highest priority rule that overrides everything else.
@@ -104,6 +111,7 @@ FACE AND IDENTITY: Preserve exact face, skin tone, hair color, hair style, beard
 GARMENT RULE: The garment must conform to the real body shape. Never alter the body to fit the garment. The garment stretches and adapts to the person — not the other way around.
 
 GARMENT FIDELITY: Reproduce exact fabric texture, colors, patterns, buttons, seams, pockets, lapels, and all construction details with 100% accuracy. The garment must be indistinguishable from the product image.
+${multiGarmentBlock}
 
 SHIRT TUCKING — MANDATORY, HIGHEST-PRIORITY STYLING RULE:
 The shirt MUST always be fully and neatly tucked into the pants or trousers, all the way around the waist. NEVER render the shirt untucked, loose, or hanging outside the pants under any circumstances. This rule applies to EVERY shirt type without exception — dress shirts, casual shirts, short-sleeve shirts, and camp-collar / resort / Cuban-collar shirts that are normally worn untucked MUST still be shown fully tucked in here. Even if the product image or input photo shows the shirt untucked, override it and tuck it in completely. A visible waistband with the shirt tucked in is required.

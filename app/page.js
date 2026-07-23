@@ -326,16 +326,16 @@ const CATALOGUE = {
   suits: {
     label: 'Complets', label_en: 'Suits', iconImage: `${BASE_URL}/suit-1.jpeg`, categorie: 'one-pieces',
     items: [
-      { id: 's1', nom_fr: 'Complet Bleu Pétrole', image: `${BASE_URL}/suit-1.jpeg`, prix: '$1,100', desc: '3-Piece · Wool' },
-      { id: 's2', nom_fr: 'Complet Charbon', image: `${BASE_URL}/suit-2.jpeg`, prix: '$1,150', desc: '3-Piece · Premium Wool' },
-      { id: 's3', nom_fr: 'Complet Prince de Galles', image: `${BASE_URL}/suit-3.jpeg`, prix: '$1,200', desc: '3-Piece · Flannel' },
-      { id: 's4', nom_fr: 'Complet Gris Chevron', image: `${BASE_URL}/suit-4.jpeg`, prix: '$1,180', desc: '3-Piece · Herringbone' },
+      { id: 's1', nom_fr: 'Complet Bleu Pétrole', image: `${BASE_URL}/suit-1.jpeg`, prix: '$1,100', desc: '3-Piece · Wool', isMultiGarment: true },
+      { id: 's2', nom_fr: 'Complet Charbon', image: `${BASE_URL}/suit-2.jpeg`, prix: '$1,150', desc: '3-Piece · Premium Wool', isMultiGarment: true },
+      { id: 's3', nom_fr: 'Complet Prince de Galles', image: `${BASE_URL}/suit-3.jpeg`, prix: '$1,200', desc: '3-Piece · Flannel', isMultiGarment: true },
+      { id: 's4', nom_fr: 'Complet Gris Chevron', image: `${BASE_URL}/suit-4.jpeg`, prix: '$1,180', desc: '3-Piece · Herringbone', isMultiGarment: true },
     ]
   },
   outfits: {
     label: 'Essayez nos Outfits', label_en: 'Try our Outfits', iconImage: `${BASE_URL}/outfit-1.jpeg`, categorie: 'one-pieces',
     items: [
-      { id: 'o1', nom_fr: 'Outfit Blazer Cobalt', image: `${BASE_URL}/outfit-1.jpeg`, prix: '$980', desc: 'Look Complet · Blazer + Chemise + Jean' },
+      { id: 'o1', nom_fr: 'Outfit Blazer Cobalt', image: `${BASE_URL}/outfit-1.jpeg`, prix: '$980', desc: 'Look Complet · Blazer + Chemise + Jean', isMultiGarment: true },
     ]
   },
   jackets: {
@@ -761,6 +761,7 @@ export default function SurmesurTryOn() {
     fd.append('city_id', selectedCity?.id || '')
     fd.append('city_label', selectedCity?.label || '')
     fd.append('gen_type', genType)
+    fd.append('is_multi_garment', item?.isMultiGarment ? 'true' : 'false')
     if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
     const res = await fetch('/api/tryon', { method: 'POST', body: fd })
     const data = await res.json()
@@ -891,6 +892,7 @@ export default function SurmesurTryOn() {
       fd.append('city_id', selectedCity?.id || '')
       fd.append('city_label', selectedCity?.label || '')
       fd.append('gen_type', replaceMode !== null ? 'replace' : 'generate')
+      fd.append('is_multi_garment', pendingItem?.isMultiGarment ? 'true' : 'false')
       if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
 
       const res = await fetch('/api/tryon', { method: 'POST', body: fd })
@@ -947,6 +949,7 @@ export default function SurmesurTryOn() {
       fd.append('city_id', selectedCity?.id || '')
       fd.append('city_label', selectedCity?.label || '')
       fd.append('gen_type', 'regenerate')
+      fd.append('is_multi_garment', gen.item?.isMultiGarment ? 'true' : 'false')
       if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
 
       const res = await fetch('/api/tryon', { method: 'POST', body: fd })
