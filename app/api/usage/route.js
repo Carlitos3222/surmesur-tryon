@@ -16,12 +16,15 @@ import { getUsageReport, getUsageLog, isUsageTrackingConfigured } from '../../..
 //       itemsRanked)
 //   /api/usage?key=VOTRE_CLE&format=csv       → journal détaillé en CSV,
 //     une ligne PAR GÉNÉRATION : date, heure, boutique, type, pièce (id +
-//     nom), nom du client, téléphone, numéro de client, prediction_id,
-//     et l'URL de l'image générée (image_url)
+//     nom), nom du client, téléphone, numéro de client, prediction_id
 //   /api/usage?key=VOTRE_CLE&format=items     → CSV résumé par pièce
 //     (une ligne par pièce du catalogue, triée par rang : total de
 //     générations + une colonne par mois) — les 3 premières lignes (rang
 //     1 à 3) sont les pièces les plus générées.
+//
+// Important — vie privée : le rapport n'inclut JAMAIS l'image générée du
+// client (photo du client habillé de la pièce). Seule la pièce du catalogue
+// essayée (piece_id / piece_nom) est rapportée, jamais la photo elle-même.
 //
 // Sécurité : protégé par la variable d'environnement USAGE_ADMIN_KEY.
 // Sans cette variable configurée, l'accès est refusé (pour éviter d'exposer
@@ -54,7 +57,7 @@ export async function GET(request) {
   if (format === 'csv') {
     const limit = parseInt(searchParams.get('limit') || '5000')
     const log = await getUsageLog(limit)
-    const header = 'date,heure,boutique,type,piece_id,piece_nom,client_nom,client_telephone,client_id,prediction_id,image_url'
+    const header = 'date,heure,boutique,type,piece_id,piece_nom,client_nom,client_telephone,client_id,prediction_id'
     const rows = log.map(e => {
       const d = e.ts ? new Date(e.ts) : null
       const date = d ? d.toISOString().slice(0, 10) : ''
@@ -64,7 +67,6 @@ export async function GET(request) {
         date, heure, esc(e.cityLabel || e.cityId), esc(e.genType),
         esc(e.itemId), esc(e.itemName),
         esc(e.client?.name), esc(e.client?.phone), esc(e.client?.customerId), esc(e.id),
-        esc(e.imageUrl),
       ].join(',')
     })
     const csv = [header, ...rows].join('\n')

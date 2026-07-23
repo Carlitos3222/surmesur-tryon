@@ -1,4 +1,4 @@
-import { logGeneration, logGenerationResult } from '../../../lib/usage'
+import { logGeneration } from '../../../lib/usage'
 
 export async function POST(request) {
   try {
@@ -180,11 +180,6 @@ Show shirt collar and cuffs under jacket when worn. White studio background, sof
     }
 
     if (!result) return Response.json({ error: 'Timeout — réessayez' }, { status: 408 })
-
-    // Enregistre l'image générée pour qu'elle apparaisse dans le rapport
-    // (journal détaillé), en plus du comptage déjà fait plus haut.
-    await logGenerationResult({ predictionId, resultUrl: result })
-
     return Response.json({ output: result })
 
   } catch (error) {
