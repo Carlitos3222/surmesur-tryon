@@ -6,7 +6,8 @@ import { getUsageReport, getUsageLog, isUsageTrackingConfigured, itemCategoryLab
 // facturation à Surmesur.
 //
 // Utilisation :
-//   /api/usage?key=VOTRE_CLE                 → rapport agrégé JSON :
+//   /api/usage?key=VOTRE_CLE                 → rapport agrégé JSON (TOUTES
+//     boutiques confondues) :
 //     - total : nombre total de générations (toutes périodes confondues)
 //     - byMonth : nombre de générations par mois
 //     - byCityMonth : nombre de générations par boutique, par mois
@@ -27,6 +28,14 @@ import { getUsageReport, getUsageLog, isUsageTrackingConfigured, itemCategoryLab
 //     avec le lien vers sa photo produit, triée par rang : total de
 //     générations + une colonne par mois) — les 3 premières lignes (rang
 //     1 à 3) sont les pièces les plus générées.
+//
+//   Ajoute &city=ID_BOUTIQUE (ex: &city=montreal) à N'IMPORTE LEQUEL des 3
+//   formats ci-dessus pour obtenir le rapport d'UN SEUL magasin, séparément
+//   — mêmes concepts (total, par mois, par pièce classée, top pièces,
+//   journal détaillé), mais limité à ce magasin. Les ID valides correspondent
+//   aux boutiques du sélecteur de ville de l'app (ex: montreal, quebec,
+//   laval, ottawa, toronto, mississauga, waterloo, vancouver, pittsburgh,
+//   mexico).
 //
 // Important — vie privée : le rapport n'inclut JAMAIS l'image générée du
 // client (photo du client habillé de la pièce). Seule la photo DU PRODUIT
@@ -62,10 +71,11 @@ export async function GET(request) {
   }
 
   const format = searchParams.get('format') || 'json'
+  const city = searchParams.get('city') || null
 
   if (format === 'csv') {
     const limit = parseInt(searchParams.get('limit') || '5000')
-    const log = await getUsageLog(limit)
+    const log = await getUsageLog(limit, city)
     const header = 'date,heure,boutique,type,piece_id,piece_nom,piece_categorie,piece_image_url,client_nom,client_telephone,client_id,prediction_id'
     const rows = log.map(e => {
       const d = e.ts ? new Date(e.ts) : null
@@ -79,11 +89,12 @@ export async function GET(request) {
       ].join(',')
     })
     const csv = [header, ...rows].join('\n')
+    const filename = city ? `generations-surmesur-${city}.csv` : 'generations-surmesur.csv'
     return new Response(csv, {
       status: 200,
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="generations-surmesur.csv"',
+        'Content-Disposition': `attachment; filename="${filename}"`,
       },
     })
   }
@@ -93,7 +104,7 @@ export async function GET(request) {
   // répondre à "quelles pièces se vendent le mieux / intéressent le plus les
   // clients".
   if (format === 'items') {
-    const report = await getUsageReport()
+    const report = await getUsageReport(city)
     if (!report.configured) {
       return Response.json({ error: "Le stockage Redis n'est pas configuré." }, { status: 500 })
     }
@@ -104,15 +115,16 @@ export async function GET(request) {
       ...report.months.map(m => it.byMonth?.[m] || 0),
     ].join(','))
     const csv = [header, ...rows].join('\n')
+    const filename = city ? `pieces-surmesur-${city}.csv` : 'pieces-surmesur.csv'
     return new Response(csv, {
       status: 200,
       headers: {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="pieces-surmesur.csv"',
+        'Content-Disposition': `attachment; filename="${filename}"`,
       },
     })
   }
 
-  const report = await getUsageReport()
+  const report = await getUsageReport(city)
   return Response.json(report)
 }
