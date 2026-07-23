@@ -1,3 +1,5 @@
+import { logGeneration } from '../../../lib/usage'
+
 export async function POST(request) {
   try {
     const formData = await request.formData()
@@ -8,6 +10,11 @@ export async function POST(request) {
     const seed = parseInt(formData.get('seed') || Math.floor(Math.random() * 1000000))
     const mensurationsRaw = formData.get('mensurations')
     const mensurations = mensurationsRaw ? JSON.parse(mensurationsRaw) : null
+    const cityId = formData.get('city_id') || null
+    const cityLabel = formData.get('city_label') || null
+    const genType = formData.get('gen_type') || 'generate'
+    const clientRaw = formData.get('client_info')
+    const client = clientRaw ? (() => { try { return JSON.parse(clientRaw) } catch { return null } })() : null
 
     // Construire le bloc mensurations enrichi
     let mensurationsBlock = ''
@@ -135,6 +142,12 @@ Show shirt collar and cuffs under jacket when worn. White studio background, sof
     if (!predictionId) {
       return Response.json({ error: `Pas d'ID de prédiction: ${JSON.stringify(data)}` }, { status: 500 })
     }
+
+    // IMPORTANT — comptabilisation pour facturation Surmesur :
+    // Fashn a accepté et va facturer ce job dès qu'un predictionId est émis,
+    // peu importe ce qui se passe ensuite (succès, échec, ou timeout du polling
+    // ci-dessous). On logue donc l'utilisation ICI, pas après le polling.
+    await logGeneration({ predictionId, cityId, cityLabel, genType, client })
 
     // Polling jusqu'au résultat
     let result = null

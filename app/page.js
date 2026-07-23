@@ -745,7 +745,7 @@ export default function SurmesurTryOn() {
   }
 
   // Génération unique
-  const generateOne = async (item, modelSource, photoClientFile, mensurationsData = null) => {
+  const generateOne = async (item, modelSource, photoClientFile, mensurationsData = null, genType = 'surprise') => {
     const fd = new FormData()
     if (modelSource) {
       fd.append('model_url', modelSource)
@@ -758,6 +758,10 @@ export default function SurmesurTryOn() {
     if (mensurationsData) {
       fd.append('mensurations', JSON.stringify(mensurationsData))
     }
+    fd.append('city_id', selectedCity?.id || '')
+    fd.append('city_label', selectedCity?.label || '')
+    fd.append('gen_type', genType)
+    if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
     const res = await fetch('/api/tryon', { method: 'POST', body: fd })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || 'Erreur API')
@@ -792,7 +796,7 @@ export default function SurmesurTryOn() {
       const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
 
       try {
-        const resultUrl = await generateOne(suit, null, photoClient)
+        const resultUrl = await generateOne(suit, null, photoClient, null, 'surprise-mariage')
         clearInterval(piv); clearInterval(msgiv)
         setProgress(100)
         setGenerations([{ item: suit, resultUrl }])
@@ -833,7 +837,7 @@ export default function SurmesurTryOn() {
       const msgiv = setInterval(() => setLoadingMsg(m => (m + 1) % LOADING_MESSAGES.length), 4000)
 
       try {
-        const resultUrl = await generateOne(piece, lastResultUrl, photoClient)
+        const resultUrl = await generateOne(piece, lastResultUrl, photoClient, null, 'surprise-piece')
         clearInterval(piv); clearInterval(msgiv)
         setProgress(100)
         lastResultUrl = resultUrl
@@ -884,6 +888,10 @@ export default function SurmesurTryOn() {
       fd.append('garment_url', pendingItem.image)
       fd.append('background_prompt', '')
       fd.append('seed', Math.floor(Math.random() * 1000000).toString())
+      fd.append('city_id', selectedCity?.id || '')
+      fd.append('city_label', selectedCity?.label || '')
+      fd.append('gen_type', replaceMode !== null ? 'replace' : 'generate')
+      if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
 
       const res = await fetch('/api/tryon', { method: 'POST', body: fd })
       const data = await res.json()
@@ -936,6 +944,10 @@ export default function SurmesurTryOn() {
       fd.append('garment_url', gen.item.image)
       fd.append('background_prompt', '')
       fd.append('seed', Math.floor(Math.random() * 1000000).toString())
+      fd.append('city_id', selectedCity?.id || '')
+      fd.append('city_label', selectedCity?.label || '')
+      fd.append('gen_type', 'regenerate')
+      if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
 
       const res = await fetch('/api/tryon', { method: 'POST', body: fd })
       const data = await res.json()
