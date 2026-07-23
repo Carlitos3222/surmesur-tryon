@@ -764,6 +764,7 @@ export default function SurmesurTryOn() {
     fd.append('is_multi_garment', item?.isMultiGarment ? 'true' : 'false')
     fd.append('item_id', item?.id || '')
     fd.append('item_name', item?.nom_fr || '')
+    fd.append('item_image', item?.image || '')
     if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
     const res = await fetch('/api/tryon', { method: 'POST', body: fd })
     const data = await res.json()
@@ -897,6 +898,7 @@ export default function SurmesurTryOn() {
       fd.append('is_multi_garment', pendingItem?.isMultiGarment ? 'true' : 'false')
       fd.append('item_id', pendingItem?.id || '')
       fd.append('item_name', pendingItem?.nom_fr || '')
+      fd.append('item_image', pendingItem?.image || '')
       if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
 
       const res = await fetch('/api/tryon', { method: 'POST', body: fd })
@@ -956,6 +958,7 @@ export default function SurmesurTryOn() {
       fd.append('is_multi_garment', gen.item?.isMultiGarment ? 'true' : 'false')
       fd.append('item_id', gen.item?.id || '')
       fd.append('item_name', gen.item?.nom_fr || '')
+      fd.append('item_image', gen.item?.image || '')
       if (clientInfo) fd.append('client_info', JSON.stringify(clientInfo))
 
       const res = await fetch('/api/tryon', { method: 'POST', body: fd })

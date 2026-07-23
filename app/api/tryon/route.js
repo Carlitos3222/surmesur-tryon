@@ -16,6 +16,7 @@ export async function POST(request) {
     const isMultiGarment = formData.get('is_multi_garment') === 'true'
     const itemId = formData.get('item_id') || null
     const itemName = formData.get('item_name') || null
+    const itemImage = formData.get('item_image') || null
     const clientRaw = formData.get('client_info')
     const client = clientRaw ? (() => { try { return JSON.parse(clientRaw) } catch { return null } })() : null
 
@@ -157,7 +158,7 @@ Show shirt collar and cuffs under jacket when worn. White studio background, sof
     // Fashn a accepté et va facturer ce job dès qu'un predictionId est émis,
     // peu importe ce qui se passe ensuite (succès, échec, ou timeout du polling
     // ci-dessous). On logue donc l'utilisation ICI, pas après le polling.
-    await logGeneration({ predictionId, cityId, cityLabel, genType, client, itemId, itemName })
+    await logGeneration({ predictionId, cityId, cityLabel, genType, client, itemId, itemName, itemImage })
 
     // Polling jusqu'au résultat
     let result = null

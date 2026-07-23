@@ -19,16 +19,21 @@ import { getUsageReport, getUsageLog, isUsageTrackingConfigured, itemCategoryLab
 //       itemsRanked)
 //   /api/usage?key=VOTRE_CLE&format=csv       → journal détaillé en CSV,
 //     une ligne PAR GÉNÉRATION : date, heure, boutique, type, pièce (id +
-//     nom + catégorie : Complet / Outfit / Veston / Chemise / Pantalon),
-//     nom du client, téléphone, numéro de client, prediction_id
+//     nom + catégorie : Complet / Outfit / Veston / Chemise / Pantalon +
+//     lien vers la photo DU PRODUIT au catalogue), nom du client, téléphone,
+//     numéro de client, prediction_id
 //   /api/usage?key=VOTRE_CLE&format=items     → CSV résumé par pièce
 //     (une ligne par pièce du catalogue — complets et outfits inclus —,
-//     triée par rang : total de générations + une colonne par mois) — les
-//     3 premières lignes (rang 1 à 3) sont les pièces les plus générées.
+//     avec le lien vers sa photo produit, triée par rang : total de
+//     générations + une colonne par mois) — les 3 premières lignes (rang
+//     1 à 3) sont les pièces les plus générées.
 //
 // Important — vie privée : le rapport n'inclut JAMAIS l'image générée du
-// client (photo du client habillé de la pièce). Seule la pièce du catalogue
-// essayée (piece_id / piece_nom) est rapportée, jamais la photo elle-même.
+// client (photo du client habillé de la pièce). Seule la photo DU PRODUIT
+// du catalogue (piece_id / piece_nom / piece_image_url) est rapportée —
+// jamais la photo du client lui-même. Comme cette image est lue dynamiquement
+// depuis le catalogue à chaque génération, toute nouvelle pièce ajoutée plus
+// tard (changement de saison, promotion, etc.) apparaît automatiquement.
 //
 // Sécurité : protégé par la variable d'environnement USAGE_ADMIN_KEY.
 // Sans cette variable configurée, l'accès est refusé (pour éviter d'exposer
@@ -61,7 +66,7 @@ export async function GET(request) {
   if (format === 'csv') {
     const limit = parseInt(searchParams.get('limit') || '5000')
     const log = await getUsageLog(limit)
-    const header = 'date,heure,boutique,type,piece_id,piece_nom,piece_categorie,client_nom,client_telephone,client_id,prediction_id'
+    const header = 'date,heure,boutique,type,piece_id,piece_nom,piece_categorie,piece_image_url,client_nom,client_telephone,client_id,prediction_id'
     const rows = log.map(e => {
       const d = e.ts ? new Date(e.ts) : null
       const date = d ? d.toISOString().slice(0, 10) : ''
@@ -69,7 +74,7 @@ export async function GET(request) {
       const esc = (v) => v == null ? '' : `"${String(v).replace(/"/g, '""')}"`
       return [
         date, heure, esc(e.cityLabel || e.cityId), esc(e.genType),
-        esc(e.itemId), esc(e.itemName), esc(itemCategoryLabel(e.itemId)),
+        esc(e.itemId), esc(e.itemName), esc(itemCategoryLabel(e.itemId)), esc(e.itemImage),
         esc(e.client?.name), esc(e.client?.phone), esc(e.client?.customerId), esc(e.id),
       ].join(',')
     })
@@ -93,9 +98,9 @@ export async function GET(request) {
       return Response.json({ error: "Le stockage Redis n'est pas configuré." }, { status: 500 })
     }
     const esc = (v) => v == null ? '' : `"${String(v).replace(/"/g, '""')}"`
-    const header = ['rang', 'piece_id', 'piece_nom', 'piece_categorie', 'total', ...report.months].join(',')
+    const header = ['rang', 'piece_id', 'piece_nom', 'piece_categorie', 'piece_image_url', 'total', ...report.months].join(',')
     const rows = (report.itemsRanked || []).map((it, idx) => [
-      idx + 1, esc(it.itemId), esc(it.itemName), esc(it.itemCategory), it.total,
+      idx + 1, esc(it.itemId), esc(it.itemName), esc(it.itemCategory), esc(it.itemImage), it.total,
       ...report.months.map(m => it.byMonth?.[m] || 0),
     ].join(','))
     const csv = [header, ...rows].join('\n')
