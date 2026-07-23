@@ -1711,98 +1711,6 @@ export default function SurmesurTryOn() {
               </div>
             )}
 
-            {/* Spinner mobile génération manuelle */}
-            {isMobile && generating && (
-              <div ref={loadingRef} style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
-                {pendingItem && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', padding: '0.6rem', background: '#fafaf8', borderRadius: '3px', textAlign: 'left' }}>
-                    <img src={pendingItem.image} alt={pendingItem.nom_fr} style={{ width: '44px', height: '55px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
-                    <div>
-                      <div style={{ fontSize: '0.78rem', fontWeight: 400, marginBottom: '0.1rem' }}>{pendingItem.nom_fr}</div>
-                      <div style={{ fontSize: '0.62rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{displayItemPrice(pendingItem.prix)}</div>
-                    </div>
-                  </div>
-                )}
-                <div style={{ width: '44px', height: '44px', margin: '0 auto 0.75rem', borderRadius: '50%', border: '2px solid #e8e4df', borderTop: '2px solid #C9A96E', animation: 'spin 1s linear infinite' }} />
-                <div style={{ fontSize: '0.85rem', fontWeight: 300, marginBottom: '0.2rem' }}>{t.loadingMsgs[loadingMsg]}</div>
-                <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{t.aiWorking}</div>
-                <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
-                <div style={{ fontSize: '0.58rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.3rem' }}>{Math.round(progress)}%</div>
-              </div>
-            )}
-
-            {/* Results section */}
-            {generations.length > 0 && (
-              <div style={s.resultSection} ref={resultRef}>
-                <div style={s.resultLabel}>{t.currentLook}</div>
-                {currentResult && (
-                  <>
-                    <AnimatePresence mode="wait">
-                      <motion.img key={currentResult} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} src={currentResult} alt="Look généré" style={s.resultImg} />
-                    </AnimatePresence>
-
-                    {activeResultIdx === generations.length - 1 && !isGenerating && replaceMode === null && (
-                      <button style={s.btnRegen} onClick={handleRegenerate}>{t.regenerate}</button>
-                    )}
-
-                    {/* Boutons partage social */}
-                    <div style={{ marginTop: '1rem' }}>
-                      <div style={{ fontSize: '0.6rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.6rem' }}>
-                        ✦ PARTAGER MON LOOK · SHARE MY LOOK
-                      </div>
-                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        {[
-                          { label: 'Télécharger', icon: '⬇', color: '#C9A96E', action: async () => {
-                            try {
-                              const res = await fetch(currentResult)
-                              const blob = await res.blob()
-                              const url = URL.createObjectURL(blob)
-                              const a = document.createElement('a')
-                              a.href = url
-                              a.download = `look-surmesur.png`
-                              a.click()
-                              URL.revokeObjectURL(url)
-                            } catch { window.open(currentResult, '_blank') }
-                          }},
-                          { label: 'WhatsApp', icon: '💬', color: '#25D366', action: () => {
-                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`, '_blank')
-                          }},
-                          { label: 'Message', icon: '✉️', color: '#555', action: () => {
-                            window.location.href = `sms:?body=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`
-                          }},
-                        ].map(({ label, icon, color, action }) => (
-                          <button
-                            key={label}
-                            onClick={action}
-                            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.45rem 0.75rem', background: '#fff', border: `1px solid ${color}`, borderRadius: '3px', cursor: 'pointer', fontSize: '0.65rem', fontFamily: 'sans-serif', color, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}
-                          >
-                            <span>{icon}</span>
-                            <span>{label}</span>
-                          </button>
-                        ))}
-                      </div>
-                      <div style={{ fontSize: '0.55rem', color: '#bbb', fontFamily: 'sans-serif', marginTop: '0.5rem', fontStyle: 'italic' }}>
-                        ✦ Powered by Surmesur Virtual Try-On · surmesur-tryon.vercel.app
-                      </div>
-                    </div>
-
-                    {/* Avertissement sous l'image générée — supprimé, déplacé sous le bouton Essayer */}
-                  </>
-                )}
-                <div style={s.thumbRow}>
-                  {generations.map((gen, i) => (
-                    <motion.div key={i} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} style={s.thumb(i === activeResultIdx)} onClick={() => setActiveResultIdx(i)}>
-                      <img src={gen.resultUrl} alt={gen.item.nom_fr} style={s.thumbImg} />
-                      <div style={s.thumbLabel}>{gen.item.nom_fr}</div>
-                      {!isGenerating && (
-                        <button style={s.thumbEdit} onClick={(e) => { e.stopPropagation(); startReplace(i) }}>✎</button>
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Replace mode banner */}
             {replaceMode !== null && (
               <div style={s.replaceBanner}>
@@ -2223,6 +2131,98 @@ export default function SurmesurTryOn() {
                   </div>
                 )}
               </>
+            )}
+
+            {/* Spinner mobile génération manuelle — juste après le catalogue, pour voir l'animation directement */}
+            {isMobile && generating && (
+              <div ref={loadingRef} style={{ background: '#fff', border: '1px solid #e8e4df', borderRadius: '4px', padding: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+                {pendingItem && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', padding: '0.6rem', background: '#fafaf8', borderRadius: '3px', textAlign: 'left' }}>
+                    <img src={pendingItem.image} alt={pendingItem.nom_fr} style={{ width: '44px', height: '55px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 400, marginBottom: '0.1rem' }}>{pendingItem.nom_fr}</div>
+                      <div style={{ fontSize: '0.62rem', color: '#C9A96E', fontFamily: 'sans-serif' }}>{displayItemPrice(pendingItem.prix)}</div>
+                    </div>
+                  </div>
+                )}
+                <div style={{ width: '44px', height: '44px', margin: '0 auto 0.75rem', borderRadius: '50%', border: '2px solid #e8e4df', borderTop: '2px solid #C9A96E', animation: 'spin 1s linear infinite' }} />
+                <div style={{ fontSize: '0.85rem', fontWeight: 300, marginBottom: '0.2rem' }}>{t.loadingMsgs[loadingMsg]}</div>
+                <div style={{ fontSize: '0.62rem', color: '#aaa', fontFamily: 'sans-serif', marginBottom: '0.75rem' }}>{t.aiWorking}</div>
+                <div style={s.progWrap}><div style={s.progBar(progress)} /></div>
+                <div style={{ fontSize: '0.58rem', color: '#C9A96E', fontFamily: 'sans-serif', marginTop: '0.3rem' }}>{Math.round(progress)}%</div>
+              </div>
+            )}
+
+            {/* Results section — déplacée après le catalogue : le client voit l'animation de génération et le résultat directement après avoir cliqué sur "Régénérer" ou "Essayer" */}
+            {generations.length > 0 && (
+              <div style={s.resultSection} ref={resultRef}>
+                <div style={s.resultLabel}>{t.currentLook}</div>
+                {currentResult && (
+                  <>
+                    <AnimatePresence mode="wait">
+                      <motion.img key={currentResult} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} src={currentResult} alt="Look généré" style={s.resultImg} />
+                    </AnimatePresence>
+
+                    {activeResultIdx === generations.length - 1 && !isGenerating && replaceMode === null && (
+                      <button style={s.btnRegen} onClick={handleRegenerate}>{t.regenerate}</button>
+                    )}
+
+                    {/* Boutons partage social */}
+                    <div style={{ marginTop: '1rem' }}>
+                      <div style={{ fontSize: '0.6rem', letterSpacing: '0.18em', color: '#888', fontFamily: 'sans-serif', marginBottom: '0.6rem' }}>
+                        ✦ PARTAGER MON LOOK · SHARE MY LOOK
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {[
+                          { label: 'Télécharger', icon: '⬇', color: '#C9A96E', action: async () => {
+                            try {
+                              const res = await fetch(currentResult)
+                              const blob = await res.blob()
+                              const url = URL.createObjectURL(blob)
+                              const a = document.createElement('a')
+                              a.href = url
+                              a.download = `look-surmesur.png`
+                              a.click()
+                              URL.revokeObjectURL(url)
+                            } catch { window.open(currentResult, '_blank') }
+                          }},
+                          { label: 'WhatsApp', icon: '💬', color: '#25D366', action: () => {
+                            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`, '_blank')
+                          }},
+                          { label: 'Message', icon: '✉️', color: '#555', action: () => {
+                            window.location.href = `sms:?body=${encodeURIComponent('Regarde mon look Surmesur ✦ ' + currentResult)}`
+                          }},
+                        ].map(({ label, icon, color, action }) => (
+                          <button
+                            key={label}
+                            onClick={action}
+                            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', padding: '0.45rem 0.75rem', background: '#fff', border: `1px solid ${color}`, borderRadius: '3px', cursor: 'pointer', fontSize: '0.65rem', fontFamily: 'sans-serif', color, letterSpacing: '0.05em', whiteSpace: 'nowrap' }}
+                          >
+                            <span>{icon}</span>
+                            <span>{label}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{ fontSize: '0.55rem', color: '#bbb', fontFamily: 'sans-serif', marginTop: '0.5rem', fontStyle: 'italic' }}>
+                        ✦ Powered by Surmesur Virtual Try-On · surmesur-tryon.vercel.app
+                      </div>
+                    </div>
+
+                    {/* Avertissement sous l'image générée — supprimé, déplacé sous le bouton Essayer */}
+                  </>
+                )}
+                <div style={s.thumbRow}>
+                  {generations.map((gen, i) => (
+                    <motion.div key={i} layout initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} style={s.thumb(i === activeResultIdx)} onClick={() => setActiveResultIdx(i)}>
+                      <img src={gen.resultUrl} alt={gen.item.nom_fr} style={s.thumbImg} />
+                      <div style={s.thumbLabel}>{gen.item.nom_fr}</div>
+                      {!isGenerating && (
+                        <button style={s.thumbEdit} onClick={(e) => { e.stopPropagation(); startReplace(i) }}>✎</button>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             )}
 
             <canvas ref={canvasRef} style={{ display: 'none' }} />
